@@ -9,7 +9,7 @@ Abrir o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/bru
 
 ### Running
 1. Abra o terminal e execute: <br/>
-`git clone https://github.com/brunocampos01/challenges/tree/master/indicium`<br/>
+`git clone https://github.com/brunocampos01/challenges/`<br/>
 `cd indicium`
 1. Run `./run.sh`.
 2. About 5-10 minutes of output will display on the screen as the steps run.
