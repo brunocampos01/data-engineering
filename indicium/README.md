@@ -10,7 +10,7 @@ Abrir o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/bru
 - Python 3.6 ou superior 
 
 ### Running
-1. Abra o terminal e execute: <br/>
+1. Abra o terminal e clone o repositório: <br/>
 `git clone https://github.com/brunocampos01/challenges/`<br/>
 `cd challenges/indicium`
 2. Execute o script:<br/>
@@ -18,9 +18,9 @@ Abrir o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/bru
 
 ### Output 1
 - São 3 imagens:
- - Valor Total Vendido por Contato
- - valor_total_vendido_por_mês-2017
- - valor_total_vendido_por_mês-2017
+ - Valor Total Vendido por Contato.jpg
+ - valor_total_vendido_por_mês-2017.jpg
+ - valor_total_vendido_por_mês-2017.jpg
  
 OBS: as imagens já constam salvas no diretório. Elas são geradas a partir da execução do script_etl.py
 
