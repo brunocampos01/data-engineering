@@ -6,7 +6,7 @@ A sua tarefa é escrever uma pequena ETL usando esses arquivos de input e gerand
 ### Quickstart
 Abrir o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/brunocampos01/challenges/blob/master/indicium/DESAFIO%20EST%C3%81GIO%20DATA%20ENGINEERING.ipynb) 
 
-### Pre-requisitos:
+### Pré-requisítos:
 - Python 3.6 ou superior 
 
 ### Running
