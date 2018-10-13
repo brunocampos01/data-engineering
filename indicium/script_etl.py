@@ -18,17 +18,17 @@ contacts = pd.read_csv('/home/brunocampos01/projetos/challenges/indicium/contact
 contacts.columns = ['contactsId', 'contactsName', 'contactsDateCreated', 'contactsCreatedBy',
                     'contactsEmails', 'contactsPhones', 'contactsEmployers', 'employersId', 
                     'contactsHomeAdress', 'contactsLatLong', 'contactsRelatedToLead', 'contactsResponsible']
-print(contacts.info())
+#print(contacts.info())
 
 # ### Conversão de tipos (date)
 deals['dealsDateCreated'] = pd.to_datetime(deals['dealsDateCreated'])
-deals.info()
+#deals.info()
 
 contacts['contactsDateCreated'] = pd.to_datetime(contacts['contactsDateCreated'])
-contacts.info()
+#contacts.info()
 
 companies['companiesDateCreated'] = pd.to_datetime(companies['companiesDateCreated'])
-companies.info()
+#companies.info()
 
 # Valores inválidos
 # Não é possível haver dealsDateCreated, contactsDateCreated e companiesDateCreated no futuro
@@ -57,7 +57,7 @@ colunas_necessarias_contacts = ['contactsId','contactsName']
 deals_contacts = pd.merge(deals, contacts[colunas_necessarias_contacts], left_on='contactsId', right_on='contactsId')
 
 import matplotlib.pyplot as plt
-get_ipython().run_line_magic('matplotlib', 'inline')
+#get_ipython().run_line_magic('matplotlib', 'inline')
 
 # para visualizar de forma ampla dentro do notebook
 plt.rcParams['figure.figsize'] = (15, 8)
@@ -73,6 +73,11 @@ plt.title("Valor Total Vendido por Contato")
 plt.legend(loc="upper right")
 plt.legend()
 plt.show()
+
+# salvamento da imagem
+fig = n_vendas_mes_grafico.get_figure()
+fig.savefig(f'Valor Total Vendido por Contato.jpg')
+print(f"Output (Valor_Total_Vendido_por_Contato) salvo.")
 
 # organização dos dados: valor total vendido por mês a partir do ano
 # percorre ano
@@ -94,6 +99,11 @@ for ano in range(2017,2019):
     plt.legend(loc="upper right")
     plt.legend()
     plt.show()
+
+    # salvamento da imagem
+    fig = n_vendas_mes_grafico.get_figure()
+    fig.savefig(f'valor_total_vendido_por_mês-{ano}.jpg')
+    print(f"Output valor_total_vendido_por_mês-{ano} salvo.")
 
 # # OUTPUT 02: Lista das vendas por setores ordenado pelo mês
 # O segundo output deve ser uma lista dos setores de empresa, ordenado por quanto esse setor representa no total vendido pela empresa no mês. Por exemplo, considerando que a empresa vendeu 10k total, se o 8k foi vendido para empresas do setor 1 e 2k para empresas do setor 2 então a lista resultante seria:
@@ -147,7 +157,7 @@ for ano in range(2017,2019):
             table_result = table_result.append(data)
             
             table_result = table_result.drop_duplicates(keep='first')
-table_result.info()
+#table_result.info()
 
 # Mapeamento e ordenação
 # mapeamento do nome do setor. Aqui a tabela é bem menor e não é necessário fazer comparações
@@ -160,3 +170,4 @@ table_result = table_result.sort_values(by=['Ano', 'Mês', 'Valor Total Vendido 
 # Salvamento do dataframe
 table_result.to_csv('/home/brunocampos01/projetos/challenges/indicium/output.csv', 
                     index=False, sep=',', encoding='utf-8')
+print('OUTPUT 02: Lista das vendas por setores ordenado pelo mês foi salvo no arquivo: output.csv')
