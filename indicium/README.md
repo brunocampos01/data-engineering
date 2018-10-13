@@ -6,7 +6,7 @@ A sua tarefa é escrever uma pequena ETL usando esses arquivos de input e gerand
 ### Quickstart
 Abrir o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/brunocampos01/challenges/blob/master/indicium/DESAFIO%20EST%C3%81GIO%20DATA%20ENGINEERING.ipynb) 
 
-### Pre-request:
+### Request:
 - Python 3.6 ou superior 
 
 ### Running
@@ -25,5 +25,5 @@ Abrir o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/bru
 OBS: as imagens já constam salvas no diretório. Elas são geradas a partir da execução do script_etl.py
 
 ### Output 2
-- É a lista dos setores de empresa, ordenado por quanto esse setor representa no total vendido pela empresa no mês ** a partir de cada ano.**
+- É a lista dos setores de empresa, ordenado por quanto esse setor representa no total vendido pela empresa no mês  **a partir de cada ano.**
 - Arquivo: [output.csv](https://github.com/brunocampos01/challenges/blob/master/indicium/output.csv)
