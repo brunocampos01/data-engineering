@@ -75,7 +75,7 @@ plt.legend()
 plt.show()
 
 # salvamento da imagem
-fig = n_vendas_mes_grafico.get_figure()
+fig = n_vendas_contato.get_figure()
 fig.savefig(f'Valor Total Vendido por Contato.jpg')
 print(f"Output (Valor_Total_Vendido_por_Contato) salvo.")
 
