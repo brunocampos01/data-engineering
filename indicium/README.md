@@ -4,12 +4,12 @@
 A sua tarefa é escrever uma pequena ETL usando esses arquivos de input e gerando dois outputs.
 
 ### Quickstart
-Abrir o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/brunocampos01/challenges/blob/master/indicium/DESAFIO%20EST%C3%81GIO%20DATA%20ENGINEERING.ipynb) 
+Para visualizar os códigos e análises, abra o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/brunocampos01/challenges/blob/master/indicium/DESAFIO%20EST%C3%81GIO%20DATA%20ENGINEERING.ipynb) 
 
 ### Request:
-- Python 3.6 ou superior 
+Python 3.6 ou superior 
 
-### Running
+### Running ETL
 1. Abra o terminal e clone o repositório: <br/>
 `git clone https://github.com/brunocampos01/challenges/`<br/>
 `cd challenges/indicium`
@@ -20,7 +20,7 @@ Abrir o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/bru
 - São 3 imagens:
  - Valor Total Vendido por Contato.jpg
  - valor_total_vendido_por_mês-2017.jpg
- - valor_total_vendido_por_mês-2017.jpg
+ - valor_total_vendido_por_mês-2018.jpg
  
 OBS: as imagens já constam salvas no diretório. Elas são geradas a partir da execução do script_etl.py
 
