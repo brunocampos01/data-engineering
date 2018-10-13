@@ -15,3 +15,15 @@ Abrir o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/bru
 `cd challenges/indicium`
 2. Execute o script:<br/>
 `python3 script_etl.py`
+
+### Output 1
+- São 3 imagens:
+ - Valor Total Vendido por Contato
+ - valor_total_vendido_por_mês-2017
+ - valor_total_vendido_por_mês-2017
+ 
+OBS: as imagens já constam salvas no diretório. Elas são geradas a partir da execução do script_etl.py
+
+### Output 2
+- É a lista dos setores de empresa, ordenado por quanto esse setor representa no total vendido pela empresa no mês ** a partir de cada ano.**
+- Arquivo: [output.csv](https://github.com/brunocampos01/challenges/blob/master/indicium/output.csv)
