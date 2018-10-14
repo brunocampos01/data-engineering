@@ -8,6 +8,7 @@ Para visualizar os códigos e análises, abra o arquivo [DESAFIO ESTÁGIO DATA E
 
 ### Pre Requirements:
 - Python 3.6 ou superior 
+- Bibliotecas: Numpy e Pandas
 - Git instalado no computador que irá executar o ETL
 
 ### Running ETL
