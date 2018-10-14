@@ -6,7 +6,7 @@ A sua tarefa é escrever uma pequena ETL usando esses arquivos de input e gerand
 ### Quickstart
 Para visualizar os códigos e análises, abra o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/brunocampos01/challenges/blob/master/indicium/DESAFIO%20EST%C3%81GIO%20DATA%20ENGINEERING.ipynb) 
 
-### Request:
+### Pre Requirements:
 - Python 3.6 ou superior 
 - Git instalado no computador que irá executar o ETL
 
