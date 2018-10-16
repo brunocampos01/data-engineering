@@ -4,13 +4,13 @@
 import pandas as pd
 # usei utf8 para corrigir a leitura dos acentos
 # tsv é separado por tab
-deals = pd.read_csv('/home/brunocampos01/projetos/challenges/indicium/deals.tsv', sep='\t',
+deals = pd.read_csv('~/challenges/indicium/deals.tsv', sep='\t',
                  encoding='utf-8')
-sectors = pd.read_csv('/home/brunocampos01/projetos/challenges/indicium/sectors.tsv', sep='\t',
+sectors = pd.read_csv('~/challenges/indicium/sectors.tsv', sep='\t',
                  encoding='utf-8')
-companies = pd.read_csv('/home/brunocampos01/projetos/challenges/indicium/companies.tsv', sep='\t',
+companies = pd.read_csv('~/challenges/indicium/companies.tsv', sep='\t',
                  encoding='utf-8')
-contacts = pd.read_csv('/home/brunocampos01/projetos/challenges/indicium/contacts.tsv', sep='\t',
+contacts = pd.read_csv('~/challenges/indicium/contacts.tsv', sep='\t',
                  encoding='utf-8')
 
 # Análise e limpeza dos dados
