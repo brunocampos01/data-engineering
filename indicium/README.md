@@ -20,9 +20,9 @@ Para visualizar os códigos e análises, abra o arquivo [DESAFIO ESTÁGIO DATA E
 
 ### Output 1
 - São 3 imagens:
- - Valor Total Vendido por Contato.jpg
- - valor_total_vendido_por_mês-2017.jpg
- - valor_total_vendido_por_mês-2018.jpg
+  - Valor Total Vendido por Contato.jpg
+  - valor_total_vendido_por_mês-2017.jpg
+  - valor_total_vendido_por_mês-2018.jpg
  
 OBS: as imagens já constam salvas no diretório. Elas são geradas a partir da execução do script_etl.py
 
