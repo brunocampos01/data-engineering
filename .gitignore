@@ -16,6 +16,8 @@ docs/_build/
 build/
 dist/
 venv/
+kaggle/
+hackerank/
 
 # Python-boilerplate auto generated files
 src/ejudge_server/__meta__.py
