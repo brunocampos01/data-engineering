@@ -1,7 +1,7 @@
 # DESAFIO ESTÁGIO DATA ENGINEERING
 
 ### About
-A sua tarefa é escrever uma pequena ETL usando esses arquivos de input e gerando dois outputs.
+A sua tarefa é escrever um ETL usando esses arquivos de input e gerando dois outputs.
 
 ### Quickstart
 Para visualizar os códigos e análises, abra o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/brunocampos01/challenges/blob/master/indicium/DESAFIO%20EST%C3%81GIO%20DATA%20ENGINEERING.ipynb) 
