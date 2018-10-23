@@ -1,7 +1,7 @@
 # Challenges
 
 ## Jobs
-- [Indicium (Job)](https://github.com/brunocampos01/challenges/tree/master/indicium)
+- [Indicium](https://github.com/brunocampos01/challenges/tree/master/indicium)
 - [Nubank]()
 
 ## Kaggle
