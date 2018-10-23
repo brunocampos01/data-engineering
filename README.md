@@ -8,3 +8,6 @@
 - [Porto Seguro Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
 
 ---
+# My projects in Data Science
+- exploration_CEAPS
+- exploration_salary_SEA
