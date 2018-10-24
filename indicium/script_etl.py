@@ -168,6 +168,6 @@ table_result = table_result.sort_values(by=['Ano', 'Mês', 'Valor Total Vendido 
                                         ascending=False)
 
 # Salvamento do dataframe
-table_result.to_csv('/home/brunocampos01/projetos/challenges/indicium/output.csv', 
+table_result.to_csv('output.csv', 
                     index=False, sep=',', encoding='utf-8')
 print('OUTPUT 02: Lista das vendas por setores ordenado pelo mês foi salvo no arquivo: output.csv')
