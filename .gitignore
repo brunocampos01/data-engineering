@@ -27,5 +27,7 @@ src/ejudge_server/__meta__.py
 # Testing and temporary files
 .tox/
 Desafio Estágio Data Engineering.pdf
+Desafio Back-End.pdf
 etl_SELIC.ipynb
 etl_PETR4.ipynb
+
