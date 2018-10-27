@@ -1,31 +1,34 @@
-# DESAFIO ESTÁGIO DATA ENGINEERING
+# DESAFIO DEV BACK-END 
 
 ### About
-A sua tarefa é escrever um ETL usando esses arquivos de input e gerando dois outputs.
+# Desafio AAWZ
+
+## Título
+Desenvolver uma análise quantitativa e gráfica relacionando o aumento das ações da
+Petrobrás (PETR4) com as variações da taxa SELIC para os últimos 10 anos.
+
+## Objetivo
+Fazer um programa em python para:
+- Extrair as informações dos sites: https://www.infomoney.com.br/petrobras-petr4/cotacoes e 
+https://www.bcb.gov.br/pec/copom/port/taxaselic.asp e tratá-las;
+- Armazenar as informações tratadas no SQLite;
+  - Utilizar, de preferência, ORM (object relational mapping)
+- Ler as informações do banco e apresentar em formato gráfico.
+
+## Restrições
+- Utilizar a biblioteca pandas do Python
 
 ### Quickstart
-Para visualizar os códigos e análises, abra o arquivo [DESAFIO ESTÁGIO DATA ENGINEERING.ipynb](https://github.com/brunocampos01/challenges/blob/master/indicium/DESAFIO%20EST%C3%81GIO%20DATA%20ENGINEERING.ipynb) 
+Para visualizar os códigos e análises, abra o arquivo [desafio_AAWZ.ipynb](https://github.com/brunocampos01/challenges/blob/master/aawz/desafio_AAWZ.ipynb) 
 
 ### Pre Requirements:
 - Python 3.6 ou superior 
-- Bibliotecas: Numpy e Pandas
-- Git instalado no computador que irá executar o ETL
+- Bibliotecas: Numpy, Pandas, matplotlib, sqlite3, sqlalchemy, bs4, requests 
+- Git instalado no computador que irá executar
 
 ### Running ETL
 1. Abra o terminal e clone o repositório: <br/>
 `git clone https://github.com/brunocampos01/challenges/`<br/>
-`cd challenges/indicium`
+`cd challenges/aawz`
 2. Execute o script:<br/>
-`python3 script_etl.py`
-
-### Output 1
-- São 3 imagens:
-  - Valor Total Vendido por Contato.jpg
-  - valor_total_vendido_por_mês-2017.jpg
-  - valor_total_vendido_por_mês-2018.jpg
- 
-OBS: as imagens já constam salvas no diretório. Elas são geradas a partir da execução do script_etl.py
-
-### Output 2
-- É a lista dos setores de empresa, ordenado por quanto esse setor representa no total vendido pela empresa no mês  **a partir de cada ano.**
-- Arquivo: [output.csv](https://github.com/brunocampos01/challenges/blob/master/indicium/output.csv)
+`python3 desafio_AAWZ.py`
