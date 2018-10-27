@@ -1,4 +1,3 @@
-![License](https://img.shields.io/badge/Code%20License-MIT-blue.svg)
 # Challenges
 This repository is to summarize the challenges I am involved in.
 
