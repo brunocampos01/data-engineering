@@ -2,7 +2,7 @@
 
 ## Jobs
 - [Indicium](https://github.com/brunocampos01/challenges/tree/master/indicium)
-- [AAWZ]()
+- [AAWZ](https://github.com/brunocampos01/challenges/tree/master/aawz)
 - [Nubank]()
 
 ## Kaggle
