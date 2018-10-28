@@ -2,8 +2,8 @@
 This repository is to summarize the challenges I am involved in.
 
 ## Jobs
-- [Indicium](https://github.com/brunocampos01/challenge_indicium)
-- [AAWZ](https://github.com/brunocampos01/challenge_aawz)
+- [Indicium](https://github.com/brunocampos01/challenge-indicium)
+- [AAWZ](https://github.com/brunocampos01/challenge-aawz)
 - [Nubank]()
 
 ---
