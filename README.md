@@ -14,9 +14,6 @@ This repository is to summarize the challenges I am involved in.
 ## Code:nation
 
 ---
-## HackerRank
-
----
 ## Revelo
 
 
