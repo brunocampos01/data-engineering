@@ -9,14 +9,13 @@ This repository is to summarize the challenges I am involved in.
 - [Neoway](https://github.com/brunocampos01/challenge-neoway)
 ---
 ## Kaggle
-- [Porto Seguro Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
+- [Porto Seguro: Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
+- [Allstate: claims severity](https://github.com/brunocampos01/allstate-claims-severity)
 
 ---
 ## Code:nation
 
 ---
-## Revelo
-
 
 ## Author
 - Bruno Aurélio Rôzza de Moura Campos (brunocampos01@gmail.com)
