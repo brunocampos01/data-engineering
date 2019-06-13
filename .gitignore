@@ -29,4 +29,4 @@ src/ejudge_server/__meta__.py
 # Directory
 challenge*
 kaggle/*
-revelo/*
+revelo/
