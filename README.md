@@ -5,7 +5,7 @@ This repository is to summarize the challenges I am involved in.
 
 ## Jobs
 - [Indicium](https://github.com/brunocampos01/challenge-indicium)
-- [AAWZ](https://github.com/brunocampos01/challenge-aawz)
+- [back-end](https://github.com/brunocampos01/challenge-back-end)
 - [Nubank](https://github.com/brunocampos01/challenge-nubank)
 - [Chaordic](https://github.com/brunocampos01/challenge-chaordic)
 - [Neoway](https://github.com/brunocampos01/challenge-neoway)
