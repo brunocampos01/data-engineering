@@ -10,6 +10,7 @@ This repository is to summarize the challenges I am involved in.
 - [Chaordic](https://github.com/brunocampos01/challenge-chaordic)
 - [Neoway](https://github.com/brunocampos01/challenge-neoway)
 - [Keyrus](https://github.com/brunocampos01/challenge-keyrus)
+- [Softplan - Data Scientist](https://github.com/brunocampos01/challenge-softplan)
 
 ## Kaggle
 - [Porto Seguro: Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
