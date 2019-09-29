@@ -11,6 +11,7 @@ This repository is to summarize the challenges I am involved in.
 - [Neoway](https://github.com/brunocampos01/challenge-neoway)
 - [Keyrus](https://github.com/brunocampos01/challenge-keyrus)
 - [Softplan - Data Scientist](https://github.com/brunocampos01/challenge-softplan)
+- [Webmotors](https://github.com/brunocampos01/challenge-webmotors-data-engineer)
 
 ## Kaggle
 - [Porto Seguro: Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
