@@ -20,8 +20,6 @@ This repository is to summarize the challenges I am involved in.
 ## Revelo
 - [Python](https://github.com/brunocampos01/revelo-questions)
 
-## Code:nation
-
 ---
 
 ## Author
