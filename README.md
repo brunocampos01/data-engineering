@@ -8,7 +8,6 @@ This repository is to summarize the challenges I am involved in.
 - [back-end](https://github.com/brunocampos01/challenge-back-end)
 - [Nubank](https://github.com/brunocampos01/challenge-nubank)
 - [Chaordic](https://github.com/brunocampos01/challenge-chaordic)
-- [Neoway](https://github.com/brunocampos01/challenge-neoway)
 - [Keyrus](https://github.com/brunocampos01/challenge-keyrus)
 - [Softplan - Data Scientist](https://github.com/brunocampos01/challenge-softplan)
 - [Webmotors](https://github.com/brunocampos01/challenge-webmotors-data-engineer)
