@@ -11,6 +11,7 @@ This repository is to summarize the challenges I am involved in.
 - [Keyrus](https://github.com/brunocampos01/challenge-keyrus)
 - [Softplan - Data Scientist](https://github.com/brunocampos01/challenge-softplan)
 - [Webmotors](https://github.com/brunocampos01/challenge-webmotors-data-engineer)
+- [Olist - Data Engineer and Data Scientist](https://github.com/olist/work-at-olist-data)
 
 ## Kaggle
 - [Porto Seguro: Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
