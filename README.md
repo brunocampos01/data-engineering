@@ -17,9 +17,6 @@ This repository is to summarize the challenges I am involved in.
 - [Porto Seguro: Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
 - [Allstate: claims severity](https://github.com/brunocampos01/allstate-claims-severity)
 
-## Revelo
-- [Python](https://github.com/brunocampos01/revelo-questions)
-
 ---
 
 <p  align="left">
