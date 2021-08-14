@@ -9,7 +9,7 @@ This repository is to summarize the challenges I am involved in.
 - [Nubank](https://github.com/brunocampos01/challenge-nubank)
 - [Chaordic](https://github.com/brunocampos01/challenge-chaordic)
 - [Keyrus](https://github.com/brunocampos01/challenge-keyrus)
-- [Softplan - Data Scientist](https://github.com/brunocampos01/challenge-softplan)
+- [Data Scientist](https://github.com/brunocampos01/predicting-retail-churn-with-azure-ml-studio)
 - [Webmotors](https://github.com/brunocampos01/challenge-webmotors-data-engineer)
 - [Olist - Data Engineer and Data Scientist](https://github.com/olist/work-at-olist-data)
 
