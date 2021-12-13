@@ -1,19 +1,19 @@
 # Challenges
 ![License](https://img.shields.io/badge/Code%20License-MIT-blue.svg)
 
-This repository is to summarize the challenges I am involved in.
+This repository is to summarize the job challenges.
 
-## Jobs
-- [Indicium](https://github.com/brunocampos01/challenge-indicium)
-- [back-end](https://github.com/brunocampos01/challenge-back-end)
-- [Nubank](https://github.com/brunocampos01/challenge-nubank)
-- [Chaordic](https://github.com/brunocampos01/challenge-chaordic)
-- [Keyrus](https://github.com/brunocampos01/challenge-keyrus)
-- [Data Scientist](https://github.com/brunocampos01/predicting-retail-churn-with-azure-ml-studio)
-- [Webmotors](https://github.com/brunocampos01/challenge-webmotors-data-engineer)
-- [Olist - Data Engineer and Data Scientist](https://github.com/olist/work-at-olist-data)
+## Job Challenges
+- [Intern: Indicium](https://github.com/brunocampos01/challenge-indicium)
+- [backend: financial job](https://github.com/brunocampos01/challenge-back-end)
+- [Intern: Nubank](https://github.com/brunocampos01/challenge-nubank)
+- [Intern: Chaordic (Linx Impulse)](https://github.com/brunocampos01/challenge-chaordic)
+- [Data Scientist: Keyrus](https://github.com/brunocampos01/challenge-keyrus)
+- [Data Scientist: Softplan](https://github.com/brunocampos01/predicting-retail-churn-with-azure-ml-studio)
+- [Data Engineer: Webmotors](https://github.com/brunocampos01/challenge-webmotors-data-engineer)
+- [Data Engineer and Data Scientist: Olist](https://github.com/olist/work-at-olist-data)
 
-## Kaggle
+## Kaggle Competitions
 - [Porto Seguro: Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
 - [Allstate: claims severity](https://github.com/brunocampos01/allstate-claims-severity)
 
