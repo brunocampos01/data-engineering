@@ -5,13 +5,13 @@ This repository is to summarize the job challenges.
 
 ## Job Challenges
 - [Intern: Indicium](https://github.com/brunocampos01/challenge-indicium)
-- [backend: financial job](https://github.com/brunocampos01/challenge-back-end)
 - [Intern: Nubank](https://github.com/brunocampos01/challenge-nubank)
 - [Intern: Chaordic (Linx Impulse)](https://github.com/brunocampos01/challenge-chaordic)
+- [Data Engineer: financial job](https://github.com/brunocampos01/challenge-back-end)
+- [Data Engineer: Webmotors](https://github.com/brunocampos01/challenge-webmotors-data-engineer)
+- [Data Engineer: Olist](https://github.com/olist/work-at-olist-data)
 - [Data Scientist: Keyrus](https://github.com/brunocampos01/challenge-keyrus)
 - [Data Scientist: Softplan](https://github.com/brunocampos01/predicting-retail-churn-with-azure-ml-studio)
-- [Data Engineer: Webmotors](https://github.com/brunocampos01/challenge-webmotors-data-engineer)
-- [Data Engineer and Data Scientist: Olist](https://github.com/olist/work-at-olist-data)
 
 ## Kaggle Competitions
 - [Porto Seguro: Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
