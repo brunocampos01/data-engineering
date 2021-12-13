@@ -1,4 +1,4 @@
-# Challenges
+# Job Challenges
 ![License](https://img.shields.io/badge/Code%20License-MIT-blue.svg)
 
 This repository is to summarize the job challenges.
