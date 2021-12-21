@@ -15,7 +15,8 @@ This repository is to summarize the job challenges.
 
 ## Kaggle Competitions
 - [Porto Seguro: Safe's Driver Prediction](https://github.com/brunocampos01/porto-seguro-safe-driver-prediction)
-- [Allstate: claims severity](https://github.com/brunocampos01/allstate-claims-severity)
+- [Allstate: Claims Severity](https://github.com/brunocampos01/allstate-claims-severity)
+- [Finding Donors](https://github.com/brunocampos01/finding-donors)
 
 ---
 
