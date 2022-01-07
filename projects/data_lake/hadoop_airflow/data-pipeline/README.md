@@ -146,7 +146,7 @@ sudo rm -rf /ssddisk/data-pipeline/logs/scheduler*
 ---
 
 ### Design Pattern
-- The data pipeline design follows the pattern of **template** where in the folder `plugins/operators`, `plugins/validators` and `plugins/tranfers` keep the abstract classes with a default method (execute).
+- The data pipeline design follows the pattern of **template** where in the folder `plugins/operators` and `plugins/ingestion` keep the abstract classes with a default method (execute).
 <br/>
 This method contains the logic of the algorithm. It is composed only of calls.
 
