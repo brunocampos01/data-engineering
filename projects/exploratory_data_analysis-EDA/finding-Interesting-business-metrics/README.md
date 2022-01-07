@@ -28,7 +28,7 @@ This project is tested with:
 | Python         | 3.10    |
 | Pip            | 21.2.4  |
 
-I recommend using Python [venv](https://github.com/brunocampos01/becoming-a-expert-python#virtual-environment).
+I recommend using Python [venv](https://github.com/brunocampos01/becoming-an-expert-python#what-is-a-virtual-environment-and-how-it-works).
 
 #### Install Libraries
 ```
@@ -36,9 +36,9 @@ pip install --require-hashes -r requirements.txt
 ```
 
 ## **Image Display**
+<img src="reports/valor_total_vendido_por_mês-2017.png" align="left" height=auto width=45%/>
+<img src="reports/valor_total_vendido_por_mês-2018.png" align="right" height=auto width=45%/>
 <img src="reports/valor_total_vendido_por_contato.png" align="center" height=auto width=100%/>
-<img src="reports/valor_total_vendido_por_mês-2017.png" align="left" height=auto width=50%/>
-<img src="reports/valor_total_vendido_por_mês-2018.png" align="right" height=auto width=50%/>
 
 <br/>
 

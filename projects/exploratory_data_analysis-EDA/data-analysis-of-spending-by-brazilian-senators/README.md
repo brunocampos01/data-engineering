@@ -36,7 +36,7 @@ This project is tested with:
 | Python         | 3.10    |
 | Pip            | 21.2.4  |
 
-I recommend using Python [venv](https://github.com/brunocampos01/becoming-an-expert-python#virtual-environment).
+I recommend using Python [venv](https://github.com/brunocampos01/becoming-an-expert-python#what-is-a-virtual-environment-and-how-it-works).
 
 #### Install Libraries
 ```
