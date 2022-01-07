@@ -39,6 +39,7 @@ These are the 4 steps of the algorithm:
 4. Merge the intermediate results to have the final reverse index
 <br/>
 <br/>
+
 ![alt text](images/figura_4.png "")
 
 ---
@@ -73,7 +74,7 @@ spark-submit jobs/job_generate_dict.py
 spark-submit jobs/job_map_wordid_documentid.py
 ```
 
-See execution progress at `tmp/log_reverse_index.log`. Example:
+Watch execution progress at `tmp/log_reverse_index.log`. Example:
 ```bash
 06-Jan-22 20:42:16 - WARNING: Processing doc: dataset/4
 06-Jan-22 20:42:50 - WARNING: total words = 117240
