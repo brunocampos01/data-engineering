@@ -166,9 +166,9 @@ def join_pyspark_df(df: pyspark.sql.dataframe.DataFrame,
 def udf_break_into_list(text: str) -> list:
     """
     input:
-        text = <retProc NSU=\"000000722413426\" NSUAN=\"000007047235052\"> ...
+        text = <retProc NSU=\"000000111111111\" NSUAN=\"000001111111111\"> ...
     output:
-        ['<retProc/>\\"000000722413426\\" NSUAN=\\"000007047235052\\"&gt;\n    ', ... ]
+        ['<retProc/>\\"000000111111116\\" NSUAN=\\"000001111111112\\"&gt;\n    ', ... ]
     """
     list_tag_lote = ['loteDistFile_name', 'loteConsNSUFalt']
 
@@ -197,12 +197,12 @@ def pre_process_content(df: pyspark.sql.dataframe.DataFrame,
 def remove_namespaces(text) -> str:
     """
     input:
-        <proc schema="procEventoCTe_v3.00.xsd" ipTransmissor="10.64.111.123">
-            <procEventoCTe xmlns="http://www.portalfiscal.inf.br/cte" versao="3.00">
+        <proc schema="proxxxxxxv3.00.xsd" ip=192.11.111.123">
+            <procEvent xmlns="http://www.xpto.company.com/" v="3.00">
                 ...
     output:
-        <proc schema="procEventoCTe_v3.00.xsd" ipTransmissor="10.64.111.123">
-            <procEventoCTe versao="3.00">
+        <proc schema="proxxxxxxv3.00.xsd" ip=192.11.111.123">
+            <procEvent versao="3.00">
                 ...
     """
     return pf.regexp_replace(text, ' xmlns=".*?"', '')
@@ -211,9 +211,9 @@ def remove_namespaces(text) -> str:
 def remove_spaces(text) -> str:
     """
     input:
-        <proc  schema="procEventoCTe_v3.00.xsd"       ipTransmissor="10.64.111.123  ">
+        <proc  schema="procEvent3.00.xsd"       ip=192.11.111.123  ">
     output:
-        <proc schema="procEventoCTe_v3.00.xsd" ipTransmissor="10.64.111.123">
+        <proc schema="procEvent3.00.xsd" ip=192.11.111.123">
     """
     return pf.regexp_replace(text, '  ', ' ')
 
@@ -222,16 +222,16 @@ def remove_spaces(text) -> str:
 def udf_remove_signature(text) -> str:
     """
     input:
-        <eventoCTe versao="3.00">
+        <event v="3.00">
                 ...
                 <Signature>
                     ...
                 </Signature>
-        </eventoCTe>
+        </event>
     output:
-        <eventoCTe versao="3.00">
+        <event v="3.00">
                 ...
-        </eventoCTe>
+        </event>
     """
     row = etree.fromstring(text, parser=etree.XMLParser(recover=True))
 
