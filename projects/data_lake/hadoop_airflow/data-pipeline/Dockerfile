@@ -50,7 +50,7 @@ RUN apt-get install -y --no-install-recommends \
     libpq-dev \
     libssl-dev
 
-RUN pip install --no-cache-dir -r data_pipeline/requirements.txt
+RUN pip install --require-hashes --no-cache-dir -r requirements.txt
 
 # clean
 RUN apt-get autoremove -yqq --purge \
