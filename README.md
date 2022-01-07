@@ -178,8 +178,8 @@ TODO
 - Apache Airflow: generating multiples DAG
 
 ### **Exploratory Data Analysis (EDA)**
-- The spending of brazilians senators
-- Vendas de promotores
+- [The Spending of Brazilians Senators](projects/exploratory_data_analysis-EDA/data-analysis-of-spending-by-brazilian-senators)
+- [Finding Interesting Business Metrics](projects/exploratory_data_analysis-EDA/finding-interesting-business-metrics)
 
 ### **Big Projects**
 - [Data lake]() using Apache Hadoop (YARN, Hive, HDFS), Tez, Spark, Sqoop, Ranger and Azkaban
