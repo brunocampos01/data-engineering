@@ -1,0 +1,48 @@
+nodes:
+
+- name: localtrabalho
+  type: command
+  config:
+    command: sqoop job --exec senior-update-localtrabalho
+
+- name: motivosdesligamento
+  type: command
+  config:
+    command: sqoop job --exec senior-update-motivosdesligamento
+  dependsOn:
+    - localtrabalho
+
+- name: causasdesligamento
+  type: command
+  config:
+    command: sqoop job --exec senior-update-causasdesligamento
+  dependsOn:
+    - motivosdesligamento
+
+- name: instrucaocolaborador
+  type: command
+  config:
+    command: sqoop job --exec senior-update-instrucaocolaborador
+  dependsOn:
+    - causasdesligamento
+
+- name: situacaocolaborador
+  type: command
+  config:
+    command: sqoop job --exec senior-update-situacaocolaborador
+  dependsOn:
+    - instrucaocolaborador
+
+- name: escalatrabalho
+  type: command
+  config:
+    command: sqoop job --exec senior-update-escalatrabalho
+  dependsOn:
+    - situacaocolaborador
+
+- name: empresas
+  type: command
+  config:
+    command: sqoop job --exec senior-update-empresas
+  dependsOn:
+    - escalatrabalho

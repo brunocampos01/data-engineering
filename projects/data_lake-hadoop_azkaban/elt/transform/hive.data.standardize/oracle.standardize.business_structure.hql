@@ -1,0 +1,27 @@
+INSERT OVERWRITE TABLE default.dim_business_structure
+select
+  stgbs.skbusinessstructure,
+  stgbs.nkbusinessstructure,
+  stgbs.costCenterName,
+  stgbs.costCenterType,
+  stgbs.costCenterStatus,
+  stgbs.costCenterApportionmentgroup,
+  stgbs.costCenterClassification,
+  stgbs.wagebillclassification,
+  stgbs.costCenterManager,
+  stgbs.costCenterManageremail,
+  stgbs.costCenterResponsible,
+  stgbs.costCenterResponsibleemail,
+  stgbs.businessUnitId,
+  stgbs.businessUnitInitials,
+  stgbs.businessUnitName,
+  stgbs.verticalName,
+  stgbs.verticalType,
+  stgbs.verticalInitials,
+  stgbs.boardName,
+  stgbs.resultCenterName,
+  stgbs.resultCenterClassification,
+  stgbs.resultCenterMode,
+  stgbs.resultCenterPhase,
+  stgbs.managementName
+from staging.oracle_business_structure stgbs

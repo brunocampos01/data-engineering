@@ -1,0 +1,5 @@
+nodes:
+- name: oracle-pa-project
+  type: command
+  config:
+    command: sqoop job --exec oracle-pa-project

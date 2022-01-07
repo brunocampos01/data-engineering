@@ -1,0 +1,5 @@
+nodes:
+- name: users-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.users.update.overwrite.py

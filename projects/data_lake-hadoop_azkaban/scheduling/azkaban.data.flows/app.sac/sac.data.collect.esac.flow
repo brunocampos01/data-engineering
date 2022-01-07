@@ -1,0 +1,26 @@
+nodes:
+- name: sac-update-projeto
+  type: command
+  config:
+    command: sqoop job --exec sac-update-projeto
+
+- name: sac-update-tipoatividade
+  type: command
+  config: 
+    command: sqoop job --exec sac-update-tipoatividade
+
+- name: sac-update-sistema
+  type: command
+  config:
+    command: sqoop job --exec sac-update-sistema
+  dependsOn:
+    - sac-update-projeto
+
+- name: sac-update-colaborador
+  type: command
+  config:
+    command: sqoop job --exec sac-update-colaborador
+  dependsOn:
+    - sac-update-projeto
+    - sac-update-sistema
+    - sac-update-tipoatividade

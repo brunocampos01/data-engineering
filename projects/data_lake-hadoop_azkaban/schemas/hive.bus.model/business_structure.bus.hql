@@ -1,0 +1,30 @@
+CREATE TABLE IF NOT EXISTS default.dim_business_structure (
+  id string,
+  costCenterCode string,
+  costCenterName string,
+  costCenterType string,
+  costCenterStatus string,
+  costCenterApportionmentgroup string,
+  costCenterClassification string,
+  wagebillClassification string,
+  costCenterManager string,
+  costCenterManageremail string,
+  costCenterResponsible string,
+  costCenterResponsibleemail string,
+  resultCenterName string,
+  resultCenterClassification string,
+  resultCenterMode string,
+  resultCenterPhase string,
+  managementName string,
+  verticalName string,
+  verticalType string,
+  verticalInitials string,
+  businessUnitId string,
+  businessUnitInitials string,
+  businessUnitName string,
+  boardName string,
+  UNIQUE (id) DISABLE,
+  PRIMARY KEY (id) DISABLE NOVALIDATE
+) COMMENT 'Dimensão de Estrutura de negócio, contemplando centro de custo, centro de resultado, unidade de negócio, vertical, gerência e diretoria'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS ORC TBLPROPERTIES("PRIMARY KEY"="id", "transactional"="true", "orc.compress"="ZLIB");
