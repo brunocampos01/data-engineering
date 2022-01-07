@@ -150,6 +150,7 @@ sudo rm -rf /ssddisk/data-pipeline/logs/scheduler*
 - The data pipeline design follows the pattern of **template** where in the folder `plugins/operators`, `plugins/validators` and `plugins/tranfers` keep the abstract classes with a default method (execute).
 <br/>
 This method contains the logic of the algorithm. It is composed only of calls.
+
 - In `plugins/hooks`, `plugins/security` and `plugins/utils` has class and concret functions that implementam everything that is done in the abstract classes. Many of them extend airflow classes.
 - Motivation to chose this pattern: the **template** is based on inheritance and as the data pipeline tool already delivers a lot of ready-made functionality, it facilitated the extension and reuse of code.
 
