@@ -1,5 +1,4 @@
 # Batch: Data Pipeline
-In this documentation there are procedures for managing the data pipeline.
 
 ## Requirements
 | Requisite      | Version  |
