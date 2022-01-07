@@ -16,7 +16,7 @@ def generate_conn_config(
     data = {
         "oracle": {
             "DFE": {
-                "conn": "DFE",
+                "conn": "name_conn",
                 "conn_type": "Oracle",
                 "host": "localhost",
                 "login": oracle_login,
@@ -47,105 +47,15 @@ def generate_conn_config(
                 "extra": "{\"db\":0}",
                 "describe": "file_name"
             },
-            "cache_nfce": {
-                "conn": "cache_nfce",
+            "cache_doc_name": {
+                "conn": "cache_doc_name",
                 "conn_type": "Redis",
                 "host": hostname,
                 "login": "None",
                 "password": "None",
                 "port": "7001",
                 "extra": "{\"db\":1}",
-                "describe": "nfce"
-            },
-            "cache_cte": {
-                "conn": "cache_cte",
-                "conn_type": "Redis",
-                "host": hostname,
-                "login": "None",
-                "password": "None",
-                "port": "7001",
-                "extra": "{\"db\":2}",
-                "describe": "cte"
-            },
-            "cache_sintegra": {
-                "conn": "cache_sintegra",
-                "conn_type": "Redis",
-                "host": hostname,
-                "login": "None",
-                "password": "None",
-                "extra": "{\"db\":3}",
-                "port": "7001",
-                "describe": "sintegra"
-            },
-            "cache_mdfe": {
-                "conn": "cache_mdfe",
-                "conn_type": "Redis",
-                "host": hostname,
-                "login": "None",
-                "password": "None",
-                "port": "7001",
-                "extra": "{\"db\":4}",
-                "describe": "mdfe"
-            },
-            "cache_efd": {
-                "conn": "cache_efd",
-                "conn_type": "Redis",
-                "host": hostname,
-                "login": "None",
-                "password": "None",
-                "port": "7001",
-                "extra": "{\"db\":5}",
-                "describe": "efd"
-            },
-            "cache_dime": {
-                "conn": "cache_dime",
-                "conn_type": "Redis",
-                "host": hostname,
-                "login": "None",
-                "password": "None",
-                "port": "7001",
-                "extra": "{\"db\":6}",
-                "describe": "dime"
-            },
-            "cache_ccg": {
-                "conn": "cache_ccg",
-                "conn_type": "Redis",
-                "host": hostname,
-                "login": "None",
-                "password": "None",
-                "port": "7001",
-                "extra": "{\"db\":7}",
-                "describe": "ccg"
-            },
-            "cache_ccc": {
-                "conn": "cache_ccc",
-                "conn_type": "Redis",
-                "host": hostname,
-                "login": "None",
-                "password": "None",
-                "port": "7001",
-                "extra": "{\"db\":8}",
-                "describe": "ccc"
-            },
-            "cache_acc": {
-                "conn": "cache_acc",
-                "conn_type": "Redis",
-                "host": hostname,
-                "login": "None",
-                "password": "None",
-                "port": "7001",
-                "extra": "{\"db\":9}",
-                "describe": "cartao_de_credito PJ"
-            },
-            "cache_dimp": {
-                "conn": "cache_dimp",
-                "conn_type": "Redis",
-                "host": hostname,
-                "login": "None",
-                "password": "None",
-                "port": "7001",
-                "extra": "{\"db\":10}",
-                "describe": "dimp"
+                "describe": "doc_name"
             },
             "cache_validation": {
                 "conn": "cache_validation",
@@ -215,7 +125,7 @@ def main():
     big_data_login = os.environ.get("big_data_LOGIN")
     big_data_password = os.environ.get("big_data_PASSWORD")
 
-    hive_conn = 'cluster1node04.xpto.company'
+    hive_conn = 'cluster1node03.xpto.company'
     impala_conn = 'cluster1node01.xpto.company'
     hdfs_conn = 'cluster1node02.xpto.company'
 
