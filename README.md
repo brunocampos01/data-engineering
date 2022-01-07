@@ -182,8 +182,8 @@ TODO
 - [Finding Interesting Business Metrics](projects/exploratory_data_analysis-EDA/finding-interesting-business-metrics)
 
 ### **Big Projects**
-- [Data lake]() using Apache Hadoop (YARN, Hive, HDFS), Tez, Spark, Sqoop, Ranger and Azkaban
-- [Data lake]() using Apache Hadoop (YARN, Hive, HDFS), Impala, Spark, Oracle database, Redis, Sentry and Airflow
+- [Data lake using Apache Hadoop (YARN, Hive, HDFS), Tez, Spark, Sqoop, Ranger and Azkaban](projects/data_lake-hadoop_azkaban)
+- [Data lake using Apache Hadoop (YARN, Hive, HDFS), Impala, Spark, Oracle database, Redis, Sentry and Airflow](projects/data_lake-hadoop_airflow)
 
 <br/>
 
