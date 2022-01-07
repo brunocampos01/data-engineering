@@ -1,0 +1,50 @@
+nodes:
+- name: empresas-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Empresas id,OData__x006e_l99,Title,CNPJ,vlnb,mjfo empresas empresas.json
+
+- name: unidades-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Unidades id,Title,C_x00f3_digo,Sigla unidades unidades.json
+
+- name: verticais-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Verticais Id,Title,UnidadeId,Vertical_x002f_Transversal,OData__x0067_wh6 verticais verticais.json
+
+- name: centros-de-resultado-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Centros%20de%20Resultado Id,Title,Vertical_x0020_Neg_x00f3_cioId,UnidadeId,mrkb,DiretoriaId,a2wx,cbet,OData__x0075_fr4 centros_de_resultado centros_de_resultado.json
+
+- name: centros-de-custo-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Centros%20de%20Custo Id,Title,C_x00f3_digo,UNId,GestorId,Respons_x00e1_vel_x0020_Or_x00e7Id,Tipo_x0020_CC,Status,CR_x0020__x002d__x0020_Centro_x0Id,Diretoria0Id,Ger_x00ea_nciaId,mmlr,OData__x0062_m22,b6ss,xdyd centros_de_custo centros_de_custo.json
+
+- name: produtos-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Produtos Id,Title,u7r1,UnidadeId,Centro_x0020_ResultadoId,stwf,Status,Hist_x00f3_rico produtos produtos.json
+
+- name: servicos-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Serviços Id,Title,Classe,Tipo_x0020_Faturamento,Recorr_x00ea_ncia,Status,Item_x0020_Servi_x00e7_o,TC_x0020__x002d__x0020_Tax_x0020,OData__x0068_149,Descri_x00e7__x00e3_o_x0020_do_x,CNAE,UnidadeId servicos servicos.json
+
+- name: diretoria-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Diretoria Id,Title,Unidade_x0020_de_x0020_Neg_x00f3Id,ebdz diretoria diretoria.json
+
+- name: gerencias-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Gerências Id,Title,Centro_x0020_de_x0020_ResultadoId gerencias gerencias.json
+
+- name: plano-de-contas-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.lists.update.overwrite.py Controladoria Plano%20de%20Contas Id,Title,bspg,cifb,Descri_x00e7__x00e3_o,Grupo,Status,Como_x0020_Or_x00e7_ar,Tipo_x0020_de_x0020_Rateio,r7tf,f0f0,ryhb,an2r plano_de_contas plano_de_contas.json

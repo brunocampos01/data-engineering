@@ -1,0 +1,5 @@
+nodes:
+- name: ods-effort-appointments
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/sla -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/load/hive.data.sync/ods/effort_appointments.load.hql

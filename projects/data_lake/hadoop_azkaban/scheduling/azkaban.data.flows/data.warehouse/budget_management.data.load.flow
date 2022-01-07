@@ -1,0 +1,75 @@
+nodes:
+- name: bm-dim-account
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.account.hql
+
+- name: bm-dim-account-hierarchy
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.account_hierarchy.hql
+  dependsOn:
+    - bm-dim-account
+
+- name: bm-dim-company
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.company.hql
+  dependsOn:
+    - bm-dim-account-hierarchy
+
+- name: bm-dim-cost_center
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.cost_center.hql
+  dependsOn:
+    - bm-dim-company
+
+- name: bm-dim-intercia
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.intercia.hql
+  dependsOn:
+    - bm-dim-cost_center
+
+- name: bm-dim-product
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.product.hql
+  dependsOn:
+    - bm-dim-intercia
+
+- name: bm-dim-project
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.project.hql
+  dependsOn:
+    - bm-dim-product
+
+- name: bm-dim-segment
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.segment.hql
+  dependsOn:
+    - bm-dim-project
+
+- name: bm-dim-service
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.service.hql
+  dependsOn:
+    - bm-dim-segment
+
+- name: bm-dim-version
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/dim.version.hql
+  dependsOn:
+    - bm-dim-service
+
+- name: bm-fact-budget_management
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/budget_management -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/budget_management/fact.budget_management.hql
+  dependsOn:
+    - bm-dim-version

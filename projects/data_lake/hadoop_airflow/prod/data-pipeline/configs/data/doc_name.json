@@ -1,0 +1,67 @@
+{
+  "file_name": {
+    "name": "file_name",
+    "doc_type": "xml",
+    "agg_by": "day",
+    "executor_cores": "4",
+    "executor_memory": "8g",
+    "executor_instances": "4",
+    "driver_memory": "4g",
+    "cache_blob": "cache_file_name",
+    "max_registry_by_avro": "10000",
+    "hdfs_data_schema": {
+      "db_comment": "oracle: storage_inst",
+      "raw": {
+        "table_comment": "oracle: file_name",
+        "cols": [
+          {
+            "name": "id",
+            "type": "string",
+            "comment": "oracle: id_storage"
+          },
+          {
+            "name": "text",
+            "type": "string",
+            "comment": "oracle: text"
+          }
+        ]
+      },
+      "pre_processed": {
+        "table_comment": "oracle: file_name -> hive: raw",
+        "cols": [
+          {
+            "name": "id",
+            "type": "string",
+            "comment": "oracle: id_storage -> hive: id"
+          },
+          {
+            "name": "file",
+            "type": "string",
+            "comment": "oracle: text -> hive: text"
+          }
+        ]
+      }
+    },
+    "source_ctrl": {
+      "oracle_conn": "oracle_inst",
+      "db_name": "oracle_db",
+      "table_name": "oracle_table",
+      "cols": {
+        "fk": "ID_STORAGE",
+        "control_var": "control_var_col",
+        "dt_ref": "dt_ref_col",
+        "dt_created": "dt_created_col",
+        "extra_cols": ""
+      }
+    },
+    "source_blob": {
+      "oracle_conn": "oracle_inst",
+      "db_name": "oracle_db_2",
+      "table_name": "oracle_table_2",
+      "cols": {
+        "pk": "id",
+        "blob": "text"
+      }
+    }
+  }
+}

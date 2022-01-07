@@ -1,0 +1,3 @@
+@reboot . $HOME/.bashrc; /opt/hadoop/sbin/start-all.sh
+@reboot . $HOME/.bashrc; nohup hiveserver2 &
+@reboot . $HOME/.bashrc; $AZKABAN_HOME/bin/start-solo.sh

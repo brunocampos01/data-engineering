@@ -1,0 +1,19 @@
+nodes:
+- name: oracle-ar-update-capa
+  type: command
+  config:
+    command: sqoop job --exec oracle-ar-update-capa
+
+- name: oracle-ar-update-lancamentos
+  type: command
+  config:
+    command: sqoop job --exec oracle-ar-update-lancamentos
+  dependsOn:
+    - oracle-ar-update-capa
+
+- name: oracle-ar-update-recebimentos
+  type: command
+  config:
+    command: sqoop job --exec oracle-ar-update-recebimentos
+  dependsOn:
+    - oracle-ar-update-capa

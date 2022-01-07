@@ -1,0 +1,59 @@
+{
+  "payment": {
+    "name": "payment",
+    "max_registry_by_file": "10000000",
+    "doc_type": "table",
+    "executor_cores": "8",
+    "executor_memory": "4g",
+    "executor_instances": "4",
+    "driver_memory": "2g",
+    "hdfs_data_schema": {
+      "db_comment": "oracle: usr_table_name",
+      "raw": {
+        "table_comment": "oracle: table_name_payment",
+        "cols": [
+          {
+            "name": "col_a",
+            "type": "bigint",
+            "comment": "oracle: col_a"
+          },
+          {
+            "name": "col_b",
+            "type": "string",
+            "comment": "oracle: col_b"
+          },
+          {
+            "name": "col_c",
+            "type": "string",
+            "comment": "oracle: col_c"
+          },
+          {
+            "name": "col_d",
+            "type": "string",
+            "comment": "oracle: COL_D"
+          },
+          {
+            "name": "col_f",
+            "type": "string",
+            "comment": "oracle: col_F"
+          },
+          {
+            "name": "col_g",
+            "type": "bigint",
+            "comment": "oracle: col_G"
+          }
+        ]
+      }
+    },
+    "source": {
+      "oracle_conn": "oracle_inst",
+      "db_name": "db_name_payment",
+      "table_name": "table_name_payment",
+      "cols": {
+        "pk": "pk_col",
+        "control_var": "control_var_col",
+        "dt_ref": "dt_ref_col"
+      }
+    }
+  }
+}

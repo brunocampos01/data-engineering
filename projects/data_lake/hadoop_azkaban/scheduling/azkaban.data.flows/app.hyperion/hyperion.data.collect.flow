@@ -1,0 +1,33 @@
+nodes:
+- name: hyperion-metadados
+  type: command
+  config:
+    command: sqoop job --exec hyperion-update-metadados
+
+- name: hyperion-financas
+  type: command
+  config:
+    command: sqoop job --exec hyperion-update-financas
+  dependsOn:
+    - hyperion-metadados
+
+- name: hyperion-rh
+  type: command
+  config:
+    command: sqoop job --exec hyperion-update-rh
+  dependsOn:
+    - hyperion-metadados
+
+- name: hyperion-financas-staging
+  type: command
+  config:
+    command: hive -f /opt/datalake/elt/transform/hive.data.standardize/hyperion.load.financas.hql
+  dependsOn:
+    - hyperion-financas
+
+- name: hyperion-rh-staging
+  type: command
+  config:
+    command: hive -f /opt/datalake/elt/transform/hive.data.standardize/hyperion.load.rh.hql
+  dependsOn:
+    - hyperion-rh

@@ -1,0 +1,22 @@
+nodes:
+- name: hierarquias_de_conta-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.docs.update.overwrite.py Controladoria "Documentos/60-PowerBI/Novos BIs/Bases Excel" "Hierarquias de Conta.xlsx" "Hierarquias de Conta" hierarquias_de_conta hierarquias_de_conta.csv
+
+- name: ajustes_manuais-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.docs.update.overwrite.py Controladoria "Documentos/60-PowerBI/Novos BIs/Bases Excel" "Hyperion - Ajustes Manuais teste.xlsx" "Hyperion - Ajustes Manuais" ajustes_manuais ajustes_manuais.csv
+
+- name: apportionment-sharepoint-controladoria-data-collect
+  type: command
+  config:
+    command: python /opt/datalake/elt/ingestion/spark.data.extraction/app.sharepoint/sharepoint.docs.update.overwrite.py Controladoria "Documentos/60-PowerBI/Novos BIs/Bases Excel" "Rateio.xlsx" "Rateio" rateio rateio.csv
+
+- name: apportionment-sharepoint-staging
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/raw -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.standardize/sharepoint.load.apportionment.hql
+  dependsOn:
+    - apportionment-sharepoint-controladoria-data-collect

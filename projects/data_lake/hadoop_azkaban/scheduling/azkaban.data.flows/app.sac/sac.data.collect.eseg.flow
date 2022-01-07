@@ -1,0 +1,5 @@
+nodes:
+- name: sac-update-usuario
+  type: command
+  config:
+    command: sqoop job --exec sac-update-usuario

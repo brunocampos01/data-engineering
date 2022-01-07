@@ -1,0 +1,33 @@
+nodes:
+- name: headcount-dim-business-structure
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/sla -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/headcount/dim.business_structure.hql
+
+- name: headcount-dim-handle
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/sla -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/headcount/dim.handle.hql
+  dependsOn:
+    - headcount-dim-business-structure
+
+- name: headcount-dim-position
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/sla -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/headcount/dim.position.hql
+  dependsOn:
+    - headcount-dim-handle
+
+- name: headcount-dim-version
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/sla -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/headcount/dim.version.hql
+  dependsOn:
+    - headcount-dim-position
+
+- name: headcount-fact-headcount
+  type: command
+  config:
+    command: beeline -u jdbc:hive2://edgenode01:10000/sla -n hive -w /etc/datalake/hive.password --fastConnect=true ---showNestedErrs=true --verbose -f /opt/datalake/elt/transform/hive.data.sync/headcount/fact.headcount.hql
+  dependsOn:
+    - headcount-dim-version

@@ -1,0 +1,40 @@
+version: '3.3'
+
+networks:
+  internal_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.6.0.0/16
+
+services:
+  redis:
+    image: redis:6.0.8
+    container_name: redis
+    hostname: redis
+    restart: always
+    volumes:
+      - ./cfg/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - 7001:7001 # host:container
+    command: redis-server /usr/local/etc/redis/redis.conf --port 7001
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      internal_network:
+        ipv4_address: 10.6.0.10
+
+  redis_ui:
+    image: rediscommander/redis-commander:latest
+    container_name: redis_ui
+    hostname: redis_ui
+    restart: always
+    environment:
+        - REDIS_HOSTS=cache:redis:7001
+    depends_on:
+      - redis
+    ports:
+      - 8082:8081
+    networks:
+      internal_network:
+        ipv4_address: 10.6.0.11

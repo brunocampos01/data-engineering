@@ -1,0 +1,12 @@
+nodes:
+- name: entrevistasdesligamento-colaborador
+  type: command
+  config:
+    command: spark-submit /opt/datalake/elt/ingestion/spark.data.extraction/app.googlesheets.entrevistasdesligamento/sheets.colaborador.update.overwrite.py 'Pesquisa de desligamento do colaborador (respostas)' desligamentocolaborador.json
+
+- name: entrevistasdesligamento-lider
+  type: command
+  config:
+    command: spark-submit /opt/datalake/elt/ingestion/spark.data.extraction/app.googlesheets.entrevistasdesligamento/sheets.lider.update.overwrite.py 'Formulario - Requisicao de desligamento - Lider - v2 (respostas)' desligamentolider.json
+  dependsOn:
+    - entrevistasdesligamento-colaborador

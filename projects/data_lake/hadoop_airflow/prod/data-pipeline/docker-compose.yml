@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  broker:
+    image: redis:6.0.8
+    container_name: airflow_broker
+    hostname: airflow_broker
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6379:6379 # host:container
+    networks:
+      internal_network:
+        ipv4_address: 10.5.0.5
+
+  backend_db_master:
+    image: 'postgres:13'
+    container_name: airflow_db
+    hostname: airflow_db
+    restart: always
+    environment:
+      - POSTGRES_DB=airflow
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_PORT=5432
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=airflow
+      - POSTGRESQL_REPLICATION_PASSWORD=airflow
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - airflow_metadata:/var/lib/postgresql/data
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=5000"
+      - "-c"
+      - "shared_buffers=6GB"
+      - "-c"
+      - "effective_cache_size=24GB"
+      - "-c"
+      - "maintenance_work_mem=1536MB"
+      - "-c"
+      - "checkpoint_completion_target=0.8"
+      - "-c"
+      - "wal_buffers=16MB"
+      - "-c"
+      - "default_statistics_target=100"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "effective_io_concurrency=300"
+      - "-c"
+      - "work_mem=314kB"
+      - "-c"
+      - "min_wal_size=1GB"
+      - "-c"
+      - "max_wal_size=4GB"
+      - "-c"
+      - "max_worker_processes=32"
+      - "-c"
+      - "max_parallel_workers_per_gather=4"
+    ports:
+      - 5432:5432 # host:container
+    networks:
+      internal_network:
+        ipv4_address: 10.5.0.6
+
+  backend_db_follwer:
+    image: 'postgres:13'
+    ports:
+      - '5432'
+    depends_on:
+      - backend_db_master
+    environment:
+      - POSTGRES_DB=airflow
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_PORT=5432
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_REPLICATION_USER=airflow
+      - POSTGRESQL_REPLICATION_PASSWORD=airflow
+
+networks:
+  internal_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.5.0.0/16
+
+volumes:
+  airflow_metadata: # save at /var/lib/docker/volumes
