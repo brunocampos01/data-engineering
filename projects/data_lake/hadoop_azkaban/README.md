@@ -1,4 +1,4 @@
-> This is a example of data lake using Apache Hadoop tecnologies
+> This is an example of data lake using Apache Hadoop technologies in on-premises environment
 
 # **XPTO Company Data Lake**
 In large organizations, such as XPTO Company, large volumes of data are generated every day, both in relation to the end customers inherent in the business, as well as those resulting from corporate processes, such as: billing, hiring and termination, satisfaction surveys, career etc. Due to the need to improve management processes as a whole in relation to data-driven decision-making, the organization started to consume corporate data in a decentralized and uncontrolled manner, resulting in inconsistency of information, difficulty in accessing data, lack of feasibility for statistical analysis of different data sources, redundancy of work in isolated initiatives by different teams and units for the same purpose, absence of information holders, low efficiency of solutions (local and non-scalable), among others.
