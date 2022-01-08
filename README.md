@@ -46,7 +46,7 @@ There are code examples and abstracts I've written, for the other topics I've ad
 - Binary Search
 - Trees
 - Graphs
-- [Principals problems](https://www.engineeringwithutsav.com/coding-roadmap)
+- [Relevant problems](https://www.engineeringwithutsav.com/coding-roadmap)
 
 
 ### Algorithms
