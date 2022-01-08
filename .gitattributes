@@ -131,9 +131,6 @@
 *.3         linguist-documentation
 *.1         linguist-documentation
 
-# Apply override to all files in the directory
-# special-vendored-path/* linguist-vendored
-
 ###############################################################################
 # export-ignore: don't download this files from github
 ###############################################################################

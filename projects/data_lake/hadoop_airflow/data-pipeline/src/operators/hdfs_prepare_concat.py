@@ -33,10 +33,8 @@ class HdfsPrepareConcat(BaseHook):
 
         if context['agg_by'] is 'month':
             self.log.info(f'\n{template}\nCreating folder YEAR/MONTH/01 each month\n{template}')
-            list_path_to_mv = hdfs \
-                .remove_path_first_day(list_path)
+            list_path_to_mv = hdfs.remove_path_first_day(list_path)
 
             self.log.info(f'list_path_to_mv = {list_path_to_mv}')
             self.log.info(f'\n{template}\nMoving files to first day each month\n{template}')
-            hdfs \
-                .mv_files_to_first_day(list_path_to_mv)
+            hdfs.mv_files_to_first_day(list_path_to_mv)
