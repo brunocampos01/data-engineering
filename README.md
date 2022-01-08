@@ -89,19 +89,19 @@ TODO
   - How choose database?
 
 ### **Relational Database**
-- Example Python connection:
-  - MySQL
-  - Postgres
-  - Oracle
+Python examples connections, disconnection, execution query:
+- [MySQL](storage/database-cookbook/relational/mysql)
+- [Postgres](storage/database-cookbook/relational/postgres)
+- [SQLServer](storage/database-cookbook/relational/sqlserver)
+- [Oracle](storage/database-cookbook/relational/oracle)
+- [DB2](storage/database-cookbook/relational/db2)
 
 ### **Non-relational Database**
-- Example Python connection:
-- Redis
-- Apache HBase
-- ElasticSearch
-<!-- - Apache Druid
-- MongoDB
-- InfluxDB -->
+Python examples connections, disconnection, execution query:
+- [DynamoDB](storage/database-cookbook/no_sql/dynamodb)
+- [ElasticSearch](storage/database-cookbook/no_sql/elasticSearch)
+- [Apache Hive](storage/database-cookbook/no_sql/hive)
+- [Redis](storage/database-cookbook/no_sql/redis)
 
 ### **Data Warehouse**
 - Apache Hive
