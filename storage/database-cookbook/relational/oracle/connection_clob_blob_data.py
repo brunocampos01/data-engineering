@@ -1,3 +1,6 @@
+# From these functions it is possible to connect to a table and get data in clob or blob using directly the lib cx_Oracle
+# Another way is to use the Apache Spark
+
 import cx_Oracle
 
 # https://cx-oracle.readthedocs.io/en/latest/user_guide/sql_execution.html#outputtypehandlers
