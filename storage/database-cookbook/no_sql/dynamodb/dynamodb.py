@@ -27,14 +27,16 @@ def main():
     connection(region_name='region_name', 
                endpoint_url='http://endpoint_url',
                table_name='table')
-    insert_db(str("prod.luigi.etl_metrics"),
-              str(self.task_id),
-              self.task_name,
-              self.env,
-              str(self.date_to_run),
-              str(self.start_time),
-              str(self.end_time),
-              str(self.execution_time)) 
+    insert_db(
+        str("prod.luigi.etl_metrics"),
+        str(self.task_id),
+        self.task_name,
+        self.env,
+        str(self.date_to_run),
+        str(self.start_time),
+        str(self.end_time),
+        str(self.execution_time)
+    ) 
 
 
 if __name__ = '__main__':
