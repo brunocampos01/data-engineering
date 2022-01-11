@@ -57,11 +57,11 @@ A list of programming tutorials in which aspiring software developers learn how 
 
 ### Data Structure
 - The Basics (Fundamentals)
-- Linked Lists
-- Hash tables
-- Stacks
-- Queues
-- String manipulation and formatting
+- **Linked Lists**
+- **Hash tables**
+- **Stacks**
+- **Queues**
+- **String manipulation and formatting**
 - Binary Search
 - Trees
 - Graphs
