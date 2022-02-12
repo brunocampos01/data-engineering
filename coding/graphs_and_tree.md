@@ -6,8 +6,8 @@
   - List
   - Matrices
 - Common Operations in Graphs: traversal
-- Depth first search
-- Beadth first search
+  - Depth first search
+  - Beadth first search
 
 ### Space and Time Complexity
 ```
