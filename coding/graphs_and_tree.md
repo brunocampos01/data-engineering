@@ -1,14 +1,24 @@
 # Graphs
-- A graph is a data structure composed of a collection of nodes(vertices) and edges(arrows).
+- A graph is a data structure composed of a collection of nodes(vertices) and edges(arrows, pointers).
 - Graphs are a non-linear data structure (as opposed to a linked list, stack, queue).
 - A graph might consist of multiple isolated subgraphs. If, there is a path between every pair of vertices it is called a "connected graph".
 - There are two ways to represent graph:
   - List
   - Matrices
+- Common Operations in Graphs: traversal
+- Depth first search
+- Beadth first search
+
+### Space and Time Complexity
+```
+Space -> O(V + E)
+Time -> O(V + E)
+```
 
 ### Total Edges of Graph
 <img src="https://latex.codecogs.com/svg.image?\frac{n(n&space;-1)}{2}" title="\frac{n(n -1)}{2}" />
 n = nodes
+
 
 ### Types of graphs
 - Directed graphs (DAG)
