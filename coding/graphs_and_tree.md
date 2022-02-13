@@ -36,3 +36,13 @@ n = nodes
 
 
 ## Graph Traversal
+```
+queue = []
+list_visited_vertices = []
+list_current = None
+```
+
+### Tradeoffs Breadth-first Search X Depth-first Search
+- DFS is a bit simpler to implement because use recursion
+- BFS can useful to find the shortest path, whereas DFS may traverse one node very deeply.
+
