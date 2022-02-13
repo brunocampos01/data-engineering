@@ -5,6 +5,9 @@
 - There are two ways to represent graph:
   - List
   - Matrices
+    - quando for um grafo pequeno, poucos edges, é a melhor escolha
+    - acesso direto na memória
+    - BAD: espaço em memória
 - Common Operations in Graphs: traversal
   - Depth first search
   - Beadth first search
@@ -12,7 +15,7 @@
 ### Space and Time Complexity
 ```
 Space -> O(V + E)
-Time -> O(V + E)
+Time  -> O(V + E)
 ```
 
 ### Total Edges of Graph
@@ -31,3 +34,5 @@ n = nodes
  
 ![image](https://user-images.githubusercontent.com/12896018/153716427-bb4a88e8-1711-49c1-9d48-404e9b5a9160.png)
 
+
+## Graph Traversal
