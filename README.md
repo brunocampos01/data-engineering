@@ -1,4 +1,7 @@
 # **Becoming an Expert in Data**
+![License](https://img.shields.io/badge/Code%20License-MIT-blue.svg)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fbrunocampos01%2Fbecoming-an-expert-data&count_bg=%233D81C8&title_bg=%23555555&icon=&icon_color=blue&title=Views&edge_flat=false)](https://hits.seeyoufarm.com)
+
 The data area can have different paths, some closer to operational issues and some closer to business rules. Below, I summarize topics what are the fundamental knowledge to become an expert in data area.
 <br/>
 There are code examples and abstracts I've written, for the other topics I've added interesting links.
