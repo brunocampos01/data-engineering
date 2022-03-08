@@ -75,6 +75,8 @@ TODO
 
 ### Paradigms Programming
 - Object oriented
+  - Abstract Class
+  - Abstract Method
 - Functional
 
 ### Design Patterns
