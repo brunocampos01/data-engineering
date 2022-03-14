@@ -1,4 +1,10 @@
 # documentation: https://cx-oracle.readthedocs.io/en/latest/index.html
+# Set environment variables as:
+#     ORACLE_HOME=<PATH_TO_INSTANTCLIENT>
+#     PATH=$ORACLE_HOME:$PATH
+#     LD_LIBRARY_PATH=<PATH_TO_INSTANTCLIENT>:$LD_LIBRARY_PATH
+
+
 import os
 import sys
 
