@@ -20,3 +20,15 @@ This works, but it’s really slow. For 3 items, you have to calculate 8 possibl
 item you add, the number of sets you have to calculate doubles! This algorithm takes O(2^n) time, which is very, very slow.
 
 
+---
+
+Graphs -> menor caminho
+<br/>
+Diskja -> menor caminho com pesos
+
+
+Greddy Algorithms   -> otimização de intervalos
+<br/>
+Dynamic Programming -> otimização de intervalos com pesos
+
+---
