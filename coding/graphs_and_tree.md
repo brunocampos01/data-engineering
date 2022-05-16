@@ -46,3 +46,18 @@ list_current = None
 - DFS is a bit simpler to implement because use recursion
 - BFS can useful to find the shortest path, whereas DFS may traverse one node very deeply.
 
+---
+
+# Binary Search Tree
+
+### Most Important Questions
+- Validation
+- Traversal
+- Find Value
+
+
+
+
+
+
+---
