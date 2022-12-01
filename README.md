@@ -1,4 +1,4 @@
-# **Becoming an Expert in Data**
+# **Data Paths**
 ![License](https://img.shields.io/badge/Code%20License-MIT-blue.svg)
 
 The data area can have different paths, some closer to operational issues and some closer to business rules. Below, I summarize topics what are the fundamental knowledge to become an expert in data area.
