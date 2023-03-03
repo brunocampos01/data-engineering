@@ -1,0 +1,26 @@
+<fruits>
+    <fruit name="apple">
+        <color>red</color>
+        <taste>sweet</taste>
+        <nutrition>
+            <vitamin>A</vitamin>
+            <vitamin>C</vitamin>
+        </nutrition>
+    </fruit>
+    <fruit name="banana">
+        <color>yellow</color>
+        <taste>sweet</taste>
+        <nutrition>
+            <vitamin>B6</vitamin>
+            <vitamin>C</vitamin>
+            <fiber>3g</fiber>
+        </nutrition>
+    </fruit>
+    <fruit name="orange">
+        <color>orange</color>
+        <taste>sour</taste>
+        <nutrition>
+            <vitamin>C</vitamin>
+        </nutrition>
+    </fruit>
+</fruits>
