@@ -1,0 +1,117 @@
+{
+  "PurchaseOrders": [
+    {
+      "PurchaseOrderNo": 1,
+      "Address": [
+        {
+          "Type": "Shipping",
+          "Name": "Ellen Adams",
+          "Street": "123 Maple Street",
+          "City": "Mill Valley",
+          "State": "CA",
+          "Zip": 10999,
+          "Country": "USA"
+        },
+        {
+          "Type": "Billing",
+          "Name": "Tai Yee",
+          "Street": "8 Oak Avenue",
+          "City": "Old Town",
+          "State": "PA",
+          "Zip": 95819,
+          "Country": "USA"
+        }
+      ],
+      "DeliveryNotes": "Please leave packages in shed by driveway.",
+      "Items": {
+        "Item": [
+          {
+            "PartNumber": "872-AA",
+            "ProductName": "Lawnmower",
+            "Quantity": 1,
+            "USPrice": 148.95,
+            "Comment": "Confirm this is electric"
+          },
+          {
+            "PartNumber": "926-AA",
+            "ProductName": "Baby Monitor",
+            "Quantity": 2,
+            "USPrice": 39.98,
+            "ShipDate": "1999-05-21"
+          }
+        ]
+      }
+    },
+    {
+      "PurchaseOrderNo": 2,
+      "Address": [
+        {
+          "Type": "Shipping",
+          "Name": "Cristian Osorio",
+          "Street": "456 Main Street",
+          "City": "Buffalo",
+          "State": "NY",
+          "Zip": 98112,
+          "Country": "USA"
+        },
+        {
+          "Type": "Billing",
+          "Name": "Cristian Osorio",
+          "Street": "456 Main Street",
+          "City": "Buffalo",
+          "State": "NY",
+          "Zip": 98112,
+          "Country": "USA"
+        }
+      ],
+      "DeliveryNotes": "Please notify me before shipping.",
+      "Items": {
+        "Item": {
+          "PartNumber": "456-NM",
+          "ProductName": "Power Supply",
+          "Quantity": 1,
+          "USPrice": 45.99
+        }
+      }
+    },
+    {
+      "PurchaseOrderNo": 3,
+      "Address": [
+        {
+          "Type": "Shipping",
+          "Name": "Jessica Arnold",
+          "Street": "4055 Madison Ave",
+          "City": "Seattle",
+          "State": "WA",
+          "Zip": 98112,
+          "Country": "USA"
+        },
+        {
+          "Type": "Billing",
+          "Name": "Jessica Arnold",
+          "Street": "4055 Madison Ave",
+          "City": "Buffalo",
+          "State": "NY",
+          "Zip": 98112,
+          "Country": "USA"
+        }
+      ],
+      "Items": {
+        "Item": [
+          {
+            "PartNumber": "898-AZ",
+            "ProductName": "Computer Keyboard",
+            "Quantity": 1,
+            "USPrice": 29.99
+          },
+          {
+            "PartNumber": "898-AM",
+            "ProductName": "Wireless Mouse",
+            "Quantity": 1,
+            "USPrice": 14.99
+          }
+        ]
+      }
+    }
+  ]
+}
