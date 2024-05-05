@@ -49,6 +49,9 @@ Python examples connections, disconnection, execution query:
 ### Data Warehouses
 - [Data Catalog in Databricks (Unity Catalog)](projects/data_catalog_databricks/data_catalog)
 
+### Data QA
+- [Data Quality Assurance using Great Expectations](projects/data_qa)
+
 ---
 
 <br/>
