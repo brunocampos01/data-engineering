@@ -38,15 +38,15 @@ Python examples connections, disconnection, execution query:
 [//]: # (- Apache Airflow: generating multiples DAG)
 [//]: # (- Apache Airflow: generating multiples tasks in DAG)
 
-### **Exploratory Data Analysis (EDA)**
+### Exploratory Data Analysis (EDA)
 - [The Spending of Brazilians Senators](projects/eda/data-analysis-of-spending-by-brazilian-senators)
 - [Finding Interesting Business Metrics](projects/eda/finding-interesting-business-metrics)
 
-### **Data lakes**
+### Data Lakes
 - [Apache Hadoop (YARN, Hive, HDFS), Tez, Spark, Sqoop and Azkaban](projects/data_lake/hadoop_azkaban)
 - [Apache Hadoop (YARN, Hive, HDFS), Impala, Spark, Oracle database, Redis, and Airflow](projects/data_lake/hadoop_airflow)
 
-## Data Warehouses
+### Data Warehouses
 - [Data Catalog in Databricks (Unity Catalog)](projects/data_catalog_databricks/data_catalog)
 
 ---
