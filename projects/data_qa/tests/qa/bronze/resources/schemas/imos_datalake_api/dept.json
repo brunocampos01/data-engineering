@@ -1,0 +1,19 @@
+{
+    "_sqlid": "StringType",
+    "deptNo": "IntegerType",
+    "deptName": "StringType",
+    "entry_date": "TimestampType",
+    "last_update": "TimestampType",
+    "update_times": "IntegerType",
+    "blank0": "StringType",
+    "lastuserid": "StringType",
+    "etl_corrupted_record": "StringType",
+    "etl_file_path": "StringType",
+    "etl_file_name": "StringType",
+    "etl_created_datetime": "TimestampType",
+    "etl_created_job_id": "LongType",
+    "etl_created_process_id": "LongType",
+    "etl_deleted_flag": "BooleanType",
+    "etl_src_pkeys_hash_key": "StringType",
+    "etl_data_collection_datetime": "TimestampType"
+}

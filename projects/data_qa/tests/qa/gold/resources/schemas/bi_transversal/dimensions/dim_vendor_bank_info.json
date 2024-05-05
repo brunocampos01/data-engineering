@@ -1,0 +1,21 @@
+{
+    "sk": "LongType",
+    "party_id": "LongType",
+    "party_sk": "LongType",
+    "ext_bank_account_id": "LongType",
+    "bank_account_name": "StringType",
+    "iban": "StringType",
+    "bank_account_num": "StringType",
+    "bank_account_currency_code": "StringType",
+    "bank_branch_name": "StringType",
+    "eft_swift_code": "StringType",
+    "etl_created_datetime": "TimestampType",
+    "etl_created_job_id": "LongType",
+    "etl_created_job_run_id": "LongType",
+    "etl_updated_datetime": "TimestampType",
+    "etl_updated_job_id": "LongType",
+    "etl_updated_job_run_id": "LongType",
+    "etl_rec_version_start_date": "TimestampType",
+    "etl_rec_version_end_date": "TimestampType",
+    "etl_rec_version_current_flag": "IntegerType"
+}

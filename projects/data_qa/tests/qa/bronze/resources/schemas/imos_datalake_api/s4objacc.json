@@ -1,0 +1,16 @@
+{
+    "_sqlid": "StringType",
+    "userNo": "IntegerType",
+    "objId": "StringType",
+    "objType": "StringType",
+    "flags": "IntegerType",
+    "etl_corrupted_record": "StringType",
+    "etl_file_path": "StringType",
+    "etl_file_name": "StringType",
+    "etl_created_datetime": "TimestampType",
+    "etl_created_job_id": "LongType",
+    "etl_created_process_id": "LongType",
+    "etl_deleted_flag": "BooleanType",
+    "etl_src_pkeys_hash_key": "StringType",
+    "etl_data_collection_datetime": "TimestampType"
+}

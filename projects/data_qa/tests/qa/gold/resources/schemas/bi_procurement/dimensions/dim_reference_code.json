@@ -1,0 +1,17 @@
+{
+  "sk": "LongType",
+  "subject_name": "StringType",
+  "name": "StringType",
+  "value": "StringType",
+  "value_desc_en": "StringType",
+  "value_desc_fr": "StringType",
+  "etl_created_datetime": "TimestampType",
+  "etl_created_job_id": "LongType",
+  "etl_created_job_run_id": "LongType",
+  "etl_updated_datetime": "TimestampType",
+  "etl_updated_job_id": "LongType",
+  "etl_updated_job_run_id": "LongType",
+  "etl_rec_version_start_date": "TimestampType",
+  "etl_rec_version_end_date": "TimestampType",
+  "etl_rec_version_current_flag": "IntegerType"
+}

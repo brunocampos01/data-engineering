@@ -1,0 +1,19 @@
+{
+    "CstmrPmtStsRpt_GrpHdr_CreDtTm": "TimestampType",
+    "CstmrPmtStsRpt_GrpHdr_MsgId": "StringType",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_GrpSts": "StringType",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_OrgnlCtrlSum": "DecimalType(18,2)",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_OrgnlMsgId": "StringType",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_OrgnlMsgNmId": "StringType",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_OrgnlNbOfTxs": "StringType",
+    "CstmrPmtStsRpt_GrpHdr_InitgPty_Id_OrgId_BICOrBEI": "StringType",
+    "etl_file_path": "StringType",
+    "etl_file_name": "StringType",
+    "etl_created_datetime": "TimestampType",
+    "etl_created_job_id": "LongType",
+    "etl_created_process_id": "LongType",
+    "etl_data_collection_datetime": "TimestampType",
+    "etl_src_pkeys_hash_key": "StringType",
+    "etl_corrupted_record": "StringType",
+    "etl_deleted_flag": "BooleanType"
+}

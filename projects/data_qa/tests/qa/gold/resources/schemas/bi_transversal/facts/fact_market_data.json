@@ -1,0 +1,14 @@
+{
+  "market_data_sk": "LongType",
+  "publication_date_sk": "LongType",
+  "value": "DecimalType(19,6)",
+  "etl_created_datetime": "TimestampType",
+  "etl_created_job_id": "LongType",
+  "etl_created_job_run_id": "LongType",
+  "etl_updated_datetime": "TimestampType",
+  "etl_updated_job_id": "LongType",
+  "etl_updated_job_run_id": "LongType",
+  "etl_rec_version_start_date": "TimestampType",
+  "etl_rec_version_end_date": "TimestampType",
+  "etl_rec_version_current_flag": "IntegerType"
+}

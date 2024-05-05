@@ -1,0 +1,18 @@
+{
+    "_sqlid": "StringType",
+    "vtype": "StringType",
+    "vdesc": "StringType",
+    "blank0": "StringType",
+    "lastuserid": "StringType",
+    "lastupdate": "TimestampType",
+    "src_syst_effective_from": "TimestampType",
+    "src_syst_effective_to": "TimestampType",
+    "etl_processing_job_id": "LongType",
+    "etl_processing_job_run_id": "LongType",
+    "etl_processing_datetime": "TimestampType",
+    "etl_src_pkeys_hash_key": "StringType",
+    "etl_none_compliant_pattern": "ArrayType(StringType())",
+    "etl_file_path": "StringType",
+    "etl_file_name": "StringType",
+    "etl_created_datetime": "TimestampType"
+}

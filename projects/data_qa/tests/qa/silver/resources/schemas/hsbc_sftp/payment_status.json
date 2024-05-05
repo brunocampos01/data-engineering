@@ -1,0 +1,20 @@
+{
+    "CstmrPmtStsRpt_GrpHdr_CreDtTm": "TimestampType",
+    "CstmrPmtStsRpt_GrpHdr_MsgId": "StringType",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_GrpSts": "StringType",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_OrgnlCtrlSum": "DecimalType(18,2)",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_OrgnlMsgId": "StringType",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_OrgnlMsgNmId": "StringType",
+    "CstmrPmtStsRpt_OrgnlGrpInfAndSts_OrgnlNbOfTxs": "StringType",
+    "CstmrPmtStsRpt_GrpHdr_InitgPty_Id_OrgId_BICOrBEI": "StringType",
+    "etl_file_path": "StringType",
+    "etl_file_name": "StringType",
+    "etl_none_compliant_pattern": "ArrayType(StringType())",
+    "etl_created_datetime": "TimestampType",
+    "etl_src_pkeys_hash_key": "StringType",
+    "src_syst_effective_from": "TimestampType",
+    "src_syst_effective_to": "TimestampType",
+    "etl_processing_job_id": "LongType",
+    "etl_processing_job_run_id": "LongType",
+    "etl_processing_datetime": "TimestampType"
+}
