@@ -46,7 +46,8 @@ Python examples connections, disconnection, execution query:
 - [Apache Hadoop (YARN, Hive, HDFS), Tez, Spark, Sqoop and Azkaban](projects/data_lake/hadoop_azkaban)
 - [Apache Hadoop (YARN, Hive, HDFS), Impala, Spark, Oracle database, Redis, and Airflow](projects/data_lake/hadoop_airflow)
 
-<br/>
+## Data Warehouses
+- [Data Catalog in Databricks (Unity Catalog)](projects/data_catalog_databricks/data_catalog)
 
 ---
 
