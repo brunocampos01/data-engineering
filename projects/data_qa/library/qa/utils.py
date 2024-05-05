@@ -1,34 +1,4 @@
-"""
-### Module - Utils for QA Library
 
-#### Functions:
-    * get_business_cols: Removes Surrogate keys and ETL columns for speficif test: `expect_same_content_rows`
-    * parser_list_cols_to_str: Parse list's elements into a single string
-    * generate_information_schema_query: Generate a query for fetching properties from the information schema based on the table_type.
-    * check_if_checksum_are_equal: Check if checksums are equal for a list of dimension tables.
-    * generate_checksum_col: Generate checksum column for a dimension table.
-    * get_and_prepare_data_dim: Gets PK from dimension tables and prepare the data for further processing to check referential integrity. This function retrieves distinct data from dimension tables based on the specified columns received in input.
-    * get_and_prepare_data_for_referential_integraty_test: Prepares DataFrame with `DimensionPK` & `FactSK` and distinct values
-    * get_sk_fact_names_and_pk_dim_names: Prepares DataFrame with constraints `DimensionPK` & `FactSK`
-    * df_to_dict: Converts DataFrame rows to a dict
-    * get_cols_with_data_precision: Gets a list of column names and their corresponding data precision (scale).
-    * check_if_data_precision_is_equal: Checks if the data precision of DecimalType columns in two df schemas are equal.
-    * find_df_diff: Finds the differences between two DataFrames and return them.
-    * get_col_not_be_null: Gets not nullable columns from DataFrame
-    * check_if_dim_is_not_empty: Checks if dimension table is not empty
-    * check_if_two_df_contain_same_schema: Checks if two df have the same schema based on a list of common columns.
-    * check_if_two_df_contain_diff_content_rows: Checks if two DataFrames contain different content rows
-    * check_if_two_df_contain_diff_content_rows_count: Checks if two DataFrames contain different content rows count
-    * check_if_two_df_contain_same_count: Checks if two DataFrames contain same count
-    * check_if_two_df_contain_same_count_per_column: Counts total rows per column in two DataFrames and compare them.
-    * check_if_two_df_contain_same_unique_count_per_column: Checks if two DataFrames have the same unique count per column
-    * check_if_two_df_contain_same_null_count_per_column: Checks if two df have the same null count per column.
-    * lowercase_field_names_in_struct_type: Converts the field names in a StructType to lowercase.
-    * remove_struct_field_in_struct_type: Removes specific fields from a StructType schema.
-    * get_data_type_mapping: Get a dict mapping data type strings to their corresponding PySpark data types.
-    * get_diff_cols_between_df: Calculates the column differences between two DataFrames (df1 and df2).
-    * initialize_and_prepare_delta: Initializes a df and prepare: lower, order, and strip columns
-"""
 import json
 import ast
 import os
@@ -48,7 +18,7 @@ from pyspark.sql import (
     functions as F,
 )
 from pyspark.sql.functions import (
-    col, 
+    col,
     sha2,
     concat_ws,
     lit,
@@ -94,14 +64,15 @@ class LogTag(Enum):
     COLLATION_NAME = 'COLLATION_NAME'
     DEFAULT_VALUES = 'DEFAULT_VALUES'
 
+
 def check_if_two_tuple_are_equal(tuple_expected: Tuple, tuple_observed: Tuple) -> Tuple[bool, str]:
     """
     Checks if two dataframes (described by their schemas) contain the same precision or scale for their columns.
-    
+
     Args:
         tuple_expected (Tuple): The expected Tuple col name and precision or scale.
         tuple_observed (Tuple): The observed Tuple col name and precision or scale.
-    
+
     Returns:
         Tuple[bool, str]: A tuple containing a boolean indicating if the schemas match in precision or scale, and a string message detailing the outcome.
     """
@@ -109,6 +80,7 @@ def check_if_two_tuple_are_equal(tuple_expected: Tuple, tuple_observed: Tuple) -
         return True, f'{tuple_expected[1]}'
     else:
         return False, 'They are not equal! EXPECTED: {tuple_expected[1]} | OBSERVED: {tuple_observed[1]}'
+
 
 def check_if_table_data_format_is_correct(spark: SparkSession, path_uc_table: str) -> Tuple[bool, str]:
     """
@@ -128,6 +100,7 @@ def check_if_table_data_format_is_correct(spark: SparkSession, path_uc_table: st
     else:
         return False, 'The data format for this table is wrong! ' \
                       f'EXPECTED: DELTA | OBSERVED: {data_format_table_silver_observed}'
+
 
 def check_if_table_type_is_correct(spark: SparkSession, path_uc_table: str) -> Tuple[bool, str]:
     """
@@ -149,6 +122,7 @@ def check_if_table_type_is_correct(spark: SparkSession, path_uc_table: str) -> T
         return False, 'The table type is wrong! ' \
                       f'EXPECTED: EXTERNAL | OBSERVED: {type_table_observed}'
 
+
 def check_if_data_path_is_correct(spark: SparkSession, path_uc_table: str, azure_folder: str) -> Tuple[bool, str]:
     """
     Check if the data path is correct.
@@ -161,7 +135,7 @@ def check_if_data_path_is_correct(spark: SparkSession, path_uc_table: str, azure
         .filter(col('data_type').like('abfss%')) \
         .select('data_type') \
         .collect()[0][0]
-    
+
     # great expectations output
     if azure_folder in path_observed:
         return True, f'The data path in Azure is located correctly at {path_observed}'
@@ -169,10 +143,12 @@ def check_if_data_path_is_correct(spark: SparkSession, path_uc_table: str, azure
         return False, 'The data path in Azure is not correct! ' \
                       f'EXPECTED: inside the {azure_folder}/ folder | OBSERVED: {path_observed}'
 
+
 def get_common_cols(df_expected: DataFrame, df_observed: DataFrame) -> List[str]:
     expected_cols = set(df_expected.columns)
     observed_cols = set(df_observed.columns)
     return list(expected_cols.intersection(observed_cols))
+
 
 def get_file_from_widget(dbutils: DBUtils, path_with_file: str, is_json: bool = None):
     """
@@ -189,6 +165,7 @@ def get_file_from_widget(dbutils: DBUtils, path_with_file: str, is_json: bool = 
     else:
         return open(file_path).read()
 
+
 def get_list_from_widget(dbutils: DBUtils, input_string: str) -> List[str]:
     """
     Function to process a comma-separated string by stripping whitespaces and converting to lowercase.
@@ -204,6 +181,7 @@ def get_list_from_widget(dbutils: DBUtils, input_string: str) -> List[str]:
         return [x.strip().lower() for x in str_list.split(",")]
     except:
         return []
+
 
 def get_dict_from_widget(dbutils: DBUtils, input_string: str) -> Dict:
     """
@@ -222,39 +200,38 @@ def get_dict_from_widget(dbutils: DBUtils, input_string: str) -> Dict:
         return None
 
 
-
-
-
-def get_business_cols(df: DataFrame, list_deny_cols: list) -> DataFrame:
+def get_business_cols(df: DataFrame, list_deny_cols: List) -> DataFrame:
     """
     ### Removes Surrogate keys and ETL columns for speficif test: `expect_same_content_rows`
-    
+
     #### Args:
         * df (DataFrame): Input DataFrame
         * list_deny_cols (list): cols that we need to exclude from tests
-    
+
     #### Returns:
         * DataFrame: DataFrame after removing SK keys
     """
-    filtered_cols = [c 
-                     for c in df.columns 
+    filtered_cols = [c
+                     for c in df.columns
                      if not c.startswith('ETL_') and not c.endswith('_SK') and c not in list_deny_cols]
-    
+
     return df.select(*filtered_cols)
 
-def parser_list_cols_to_str(list_cols: list) -> str:
+
+def parser_list_cols_to_str(list_cols: List) -> str:
     """
     ### Parse list's elements into a single string
 
     #### Args:
         * list_cols (list): list of columns. Ex: `['FACCT_ACCTD_DR_AMOUNT', 'FACCT_REGION_NET_AMOUNT']`
-    
+
     #### Returns:
         * str: Ex: `'FACCT_ACCTD_DR_AMOUNT', 'FACCT_REGION_NET_AMOUNT'`
     """
     output_str = ', '.join(list_cols)
     # Add single quotes around each element
     return ', '.join(f"`{item}`" for item in list_cols)
+
 
 def generate_information_schema_query(table_name: str, schema_name: str, catalog_name: str) -> str:
     """
@@ -286,11 +263,12 @@ def generate_information_schema_query(table_name: str, schema_name: str, catalog
             TABLE_NAME = '{table_name}'
         """
 
+
 def check_if_checksum_are_equal(spark: SparkSession,
                                 table_name_dim: str,
                                 schema_name: str,
                                 catalog_name: str,
-                                list_dim_tables_name: list) -> tuple[bool, str]:
+                                list_dim_tables_name: List) -> tuple[bool, str]:
     """
     ### Check if checksums are equal for a list of dimension tables.
 
@@ -311,7 +289,7 @@ def check_if_checksum_are_equal(spark: SparkSession,
         # else:
         #     schema_name = schema_name
         #     table_name_dim = table_name
-        
+
         # if schema_name == 'stg':
         #     logger.warning(f"Skipping the {schema_name}.{table_name_dim} table for checksum")
         #     continue
@@ -343,13 +321,14 @@ def check_if_checksum_are_equal(spark: SparkSession,
         return True, f'The measures was tested with corresponding dims business key column(s) for each involved dimensions. ' \
                      f'Checked for these dimesions table: {list_dim_tables_name}'
 
+
 def generate_checksum_col(
     spark: SparkSession,
     table_name_dim: str,
     schema_name: str,
     catalog_name: str,
     env_name: str,
-    list_deny_cols: list = [],
+    list_deny_cols: List = [],
 ) -> DataFrame:
     """
     ### Generate checksum column for a dimension table.
@@ -369,7 +348,7 @@ def generate_checksum_col(
         loader = AzureSQL()
     else:
         loader = SQLServerDWSql()
-    
+
     if '.' in table_name_dim:
         schema_name, table_name = table_name_dim.split('.', 1)
     else:
@@ -384,26 +363,32 @@ def generate_checksum_col(
         .load()
     )
     # Get the list of columns to keep
-    cols_to_keep = [c for c in df_dim.columns 
-                        if not c.startswith('ETL_') 
-                        and not c.endswith('_SK')
-                        and not c.endswith("DATE")
-                        and not c.endswith("DT")
-                        and c not in list_deny_cols]
+    cols_to_keep = [c for c in df_dim.columns
+                    if not c.startswith('ETL_')
+                    and not c.endswith('_SK')
+                    and not c.endswith("DATE")
+                    and not c.endswith("DT")
+                    and c not in list_deny_cols]
     # remove unnecessary cols and order
     if len(cols_to_keep) > 0:
         df_dim = df_dim.select(*cols_to_keep).orderBy(*cols_to_keep)
     else:
         df_dim = df_dim.select(*cols_to_keep)
-    
+
     # Concatenate the selected columns into a single string
-    concatenated_col = concat_ws("", *[col(c) 
+    concatenated_col = concat_ws("", *[col(c)
                                        for c in cols_to_keep])
     # Calculate the checksum using SHA-256
     return df_dim \
         .withColumn("CHECK_SUM", sha2(concatenated_col, 256))
 
-def get_and_prepare_data_dim(spark: SparkSession, dict_cols: Dict[str, str], catalog_name: str, schema_name: str) -> Dict[str, list]:
+
+def get_and_prepare_data_dim(
+    spark: SparkSession,
+    dict_cols: Dict[str, str],
+    catalog_name: str,
+    schema_name: str,
+) -> Dict[str, List]:
     """
     ### Gets PK from dimension tables and prepare the data for further processing to check referential integrity. This function retrieves distinct data from dimension tables based on the specified columns received in input.
 
@@ -440,9 +425,12 @@ def get_and_prepare_data_dim(spark: SparkSession, dict_cols: Dict[str, str], cat
 
     return dict_cols_names
 
-def get_and_prepare_data_for_referential_integraty_test(spark: SparkSession, 
-                                                        dict_cols_names: dict, 
-                                                        df_constraints: DataFrame) -> DataFrame:
+
+def get_and_prepare_data_for_referential_integraty_test(
+    spark: SparkSession,
+    dict_cols_names: Dict,
+    df_constraints: DataFrame,
+) -> DataFrame:
     """
     ### Prepares DataFrame with `DimensionPK` & `FactSK` and distinct values
 
@@ -450,7 +438,7 @@ def get_and_prepare_data_for_referential_integraty_test(spark: SparkSession,
         * spark (SparkSession): The Spark session.
         * dict_cols_names (dict): dictionary with column names
         * df_constraints (DataFrame): DataFrame with constraints
-        
+
     #### Returns:
         * DataFrame:
         +---------------+--------------------+--------------------+
@@ -467,13 +455,14 @@ def get_and_prepare_data_for_referential_integraty_test(spark: SparkSession,
         for v in values
     ], schema_df)
     df = df_constraints.join(df_values, on='dim_pk', how='inner')
-    
+
     return df.groupBy("fact_sk", "dim_pk").agg(F.collect_list('dim_values').alias('dim_values'))
 
-def get_sk_fact_names_and_pk_dim_names(spark: SparkSession, 
-                                       table_name: str, 
-                                       catalog_name: str, 
-                                       list_dim_cols_name: list) -> DataFrame:
+
+def get_sk_fact_names_and_pk_dim_names(spark: SparkSession,
+                                       table_name: str,
+                                       catalog_name: str,
+                                       list_dim_cols_name: List) -> DataFrame:
     """
     ### Prepares DataFrame with constraints `DimensionPK` & `FactSK`
 
@@ -482,7 +471,7 @@ def get_sk_fact_names_and_pk_dim_names(spark: SparkSession,
         * table_name (str): The name of the Azure SQL Fact table
         * catalog_name (str): The name of the Azure SQL catalog/database. e.g.: `csldw`
         * list_dim_cols_name (list): list of Dimension column names
-        
+
     #### Returns:
         * DataFrame: DataFrame with constraints
     """
@@ -522,7 +511,8 @@ def get_sk_fact_names_and_pk_dim_names(spark: SparkSession,
         .load()
     )
 
-def df_to_dict(df: DataFrame, key_column: list, value_column: list) -> dict:
+
+def df_to_dict(df: DataFrame, key_column: List, value_column: List) -> Dict:
     """
     ### Converts DataFrame rows to a dict
 
@@ -530,13 +520,14 @@ def df_to_dict(df: DataFrame, key_column: list, value_column: list) -> dict:
         * df (DataFrame): DataFrame to be converted into dict
         * key_column (list): list of columns
         * value_column (list): list of columns
-        
+
     #### Returns:
         * dict: dictionary with DataFrame values
     """
     row_list = df.select(key_column, value_column).collect()
-    
+
     return {row[key_column]: row[value_column] for row in row_list}
+
 
 def get_cols_with_data_precision(schema: StructType) -> List[Tuple[str, int]]:
     """
@@ -555,6 +546,7 @@ def get_cols_with_data_precision(schema: StructType) -> List[Tuple[str, int]]:
         if isinstance(field.dataType, DecimalType) and field.dataType.hasPrecisionInfo
     ])
 
+
 def get_cols_with_data_scale(schema: StructType) -> List[Tuple[str, int]]:
     """
     ### Gets a list of column names and their corresponding data precision (scale). This function looks for columns with a DecimalType dataType and returns a list of tuples
@@ -572,7 +564,13 @@ def get_cols_with_data_scale(schema: StructType) -> List[Tuple[str, int]]:
         if isinstance(field.dataType, DecimalType) and field.dataType.hasPrecisionInfo
     ])
 
-def check_if_two_df_are_not_empty(spark: SparkSession, df_expected: DataFrame, path_uc_observed: str, path_uc_expected: str) -> Tuple[bool, str]:
+
+def check_if_two_df_are_not_empty(
+    spark: SparkSession,
+    df_expected: DataFrame,
+    path_uc_observed: str,
+    path_uc_expected: str,
+) -> Tuple[bool, str]:
     """
     Check if two DataFrames are not empty.
     #### Args:
@@ -582,7 +580,7 @@ def check_if_two_df_are_not_empty(spark: SparkSession, df_expected: DataFrame, p
     """
     total_observed = spark.sql(f'SELECT COUNT(*) FROM {path_uc_observed}').collect()[0][0]
     total_expected = df_expected.count()
-    
+
     # great expectations output
     if total_observed != 0 and total_expected != 0:
         return True, f'Both tables are not empty.'
@@ -592,6 +590,7 @@ def check_if_two_df_are_not_empty(spark: SparkSession, df_expected: DataFrame, p
         else:
             empty_table = path_uc_expected
         return False, f'{empty_table} is empty! Check the Unity Catalog and delta tables.'
+
 
 def check_if_two_df_have_same_schema(schema_expected: StructType, schema_observed: StructType) -> Tuple[bool, str]:
     """
@@ -607,17 +606,20 @@ def check_if_two_df_have_same_schema(schema_expected: StructType, schema_observe
     list_observed = sorted([(field.name, field.dataType) for field in schema_observed.fields])
     diff_expected_observed = set(list_expected) - set(list_observed)
     diff_observed_expected = set(list_observed) - set(list_expected)
-    
+
     # great expectations output
     if list_expected == list_observed:
         return True, 'The expected schema and schema_json from file are equal.'
     else:
         return False, f'''The schemas are not equal! Check the schema_json declared in file. schema_expected - schema_observed = {diff_expected_observed} __ | __ schema_observed - schema_expected = {diff_observed_expected}'''
 
-def check_if_data_precision_is_equal(schema_df_source: StructType,
-                                    df_source_name: str,
-                                    schema_df_target: StructType,
-                                    df_target_name: str) -> tuple[bool, str]:
+
+def check_if_data_precision_is_equal(
+    schema_df_source: StructType,
+    df_source_name: str,
+    schema_df_target: StructType,
+    df_target_name: str,
+) -> tuple[bool, str]:
     """
     ### Checks if the data precision of DecimalType columns in two df schemas are equal.
 
@@ -644,6 +646,7 @@ def check_if_data_precision_is_equal(schema_df_source: StructType,
         )
         return False, error_msg
 
+
 def find_df_diff(df_source: DataFrame, df_target: DataFrame) -> Tuple[DataFrame, DataFrame]:
     """
     ### Finds the differences between two DataFrames and return them.
@@ -657,13 +660,14 @@ def find_df_diff(df_source: DataFrame, df_target: DataFrame) -> Tuple[DataFrame,
     """
     df_diff_source_target = df_source.exceptAll(df_target)
     df_diff_target_source = df_target.exceptAll(df_source)
-    
+
     return df_diff_source_target, df_diff_target_source
 
-def get_col_not_be_null(df_properties: DataFrame) -> list:
+
+def get_col_not_be_null(df_properties: DataFrame) -> List:
     """
     ### Gets not nullable columns from DataFrame
-    
+
     #### Args:
         * df_properties (DataFrame): DataFrame with AzureSQL table properties
 
@@ -671,14 +675,15 @@ def get_col_not_be_null(df_properties: DataFrame) -> list:
         * list: list with column names not nullable
     """
     df_properties = df_properties.select('COLUMN_NAME', 'IS_NULLABLE').filter(col('IS_NULLABLE') == 'NO')
-    
-    return [row['COLUMN_NAME'] 
+
+    return [row['COLUMN_NAME']
             for row in df_properties.select('COLUMN_NAME').collect()]
+
 
 def check_if_dim_is_not_empty(df: DataFrame, df_name: str, df_default_values: DataFrame) -> tuple[bool, str]:
     """
     ### Checks if dimension table is not empty
-    
+
     #### Args:
         * df (DataFrame): DataFrame with AzureSQL dimension table
         * df_name (str): AzureSQL dimension table name
@@ -698,10 +703,11 @@ def check_if_dim_is_not_empty(df: DataFrame, df_name: str, df_default_values: Da
         msg = f"Business rows without found! There are only defaults values in {df_name}."
         return False, msg
 
+
 def check_if_two_df_contain_same_schema(df_expected: DataFrame, df_observed: DataFrame) -> None:
     """
     ### Checks if two df have the same schema based on a list of common columns.
-    
+
     #### Args:
         * df_expected (DataFrame): expected DataFrame
         * df_observed (DataFrame): observed DataFrame
@@ -710,6 +716,7 @@ def check_if_two_df_contain_same_schema(df_expected: DataFrame, df_observed: Dat
         logger.info(f"schema: [OK]")
     else:
         logger.error(f"schema: [FAILED] Expected: {df_expected.schema} | Observed: {df_observed.schema}")
+
 
 def check_if_two_df_contain_diff_content_rows(df_expected: DataFrame, df_observed: DataFrame) -> None:
     """
@@ -730,10 +737,11 @@ def check_if_two_df_contain_diff_content_rows(df_expected: DataFrame, df_observe
                      f' Showing the rows only exists in df_expected:\n {df_diff_tgt_src.display()}' # fmt: off # noqa
                      f'|  Showing the rows only exists in df_observed:\n {df_diff_src_tgt.display()}\n') # fmt: off # noqa
 
+
 def check_if_two_df_contain_diff_content_rows_count(df_expected: DataFrame, df_observed: DataFrame) -> None:
     """
     ### Checks if two DataFrames contain different content rows count
-    
+
     #### Args:
         * df_expected (DataFrame): expected DataFrame
         * df_observed (DataFrame): observed DataFrame
@@ -752,10 +760,11 @@ def check_if_two_df_contain_diff_content_rows_count(df_expected: DataFrame, df_o
                      f' | '
                      f'Checked for these cols: {df_expected.columns}')
 
+
 def check_if_two_df_contain_same_count(df_expected: DataFrame, df_observed: DataFrame) -> None:
     """
     ### Checks if two DataFrames contain same count
-    
+
     #### Args:
         * df_expected (DataFrame): expected DataFrame
         * df_observed (DataFrame): observed DataFrame
@@ -770,10 +779,15 @@ def check_if_two_df_contain_same_count(df_expected: DataFrame, df_observed: Data
                f' df_expected = {count_df_expected} '
                f'|  df_observed = {count_df_observed}')
 
-def check_if_two_df_contain_same_count_per_column(df_expected: DataFrame, df_observed: DataFrame, common_cols: list) -> None:
+
+def check_if_two_df_contain_same_count_per_column(
+    df_expected: DataFrame,
+    df_observed: DataFrame,
+    common_cols: List,
+) -> None:
     """
     ### Counts total rows per column in two DataFrames and compare them.
-    
+
     #### Args:
         * df_source (DataFrame): The source of truth, df_expected
         * df_target (DataFrame): The second DataFrame.
@@ -791,12 +805,13 @@ def check_if_two_df_contain_same_count_per_column(df_expected: DataFrame, df_obs
                         f"Expected: {total_rows_col_df1}"
                         f" | Observed: {total_rows_col_df2}")
 
-def check_if_two_df_contain_same_unique_count_per_column(df_expected: DataFrame, 
-                                                         df_observed: DataFrame, 
-                                                         common_cols: list) -> None:
+
+def check_if_two_df_contain_same_unique_count_per_column(df_expected: DataFrame,
+                                                         df_observed: DataFrame,
+                                                         common_cols: List) -> None:
     """
     ### Checks if two DataFrames have the same unique count per column. This function compares the number of unique values in each column of the provided df
-    
+
     #### Args:
         * df_expected (DataFrame): The DataFrame representing the expected data.
         * df_observed (DataFrame): The DataFrame representing the observed data.
@@ -812,12 +827,13 @@ def check_if_two_df_contain_same_unique_count_per_column(df_expected: DataFrame,
             logger.error(f"unique_count_per_column: [FAILED] Column '{c}' has diff unique counts:"
                         f" Expected: {expected_count} | Observed: {observed_count}")
 
-def check_if_two_df_contain_same_null_count_per_column(df_expected: DataFrame, 
-                                                       df_observed: DataFrame, 
-                                                       common_cols: list) -> None:
+
+def check_if_two_df_contain_same_null_count_per_column(df_expected: DataFrame,
+                                                       df_observed: DataFrame,
+                                                       common_cols: List) -> None:
     """
     ### Checks if two df have the same null count per column.
-    
+
     #### Args:
         * df_expected (DataFrame): The expected DataFrame for comparison.
         * df_observed (DataFrame): The observed DataFrame for comparison.
@@ -833,14 +849,15 @@ def check_if_two_df_contain_same_null_count_per_column(df_expected: DataFrame,
             logger.error(f"null_count_per_column: [FAILED] Column '{c}' has diff null counts: "
                         f"Expected: {expected_null_count} | Observed: {observed_null_count}")
 
+
 def get_diff_cols_between_df(df_left: DataFrame, df_right: DataFrame) -> Tuple[List[str], List[str]]:
     """
     ### Calculates the column differences between two DataFrames (df1 and df2).
-    
+
     #### Args:
         * df_left (DataFrame): DataFrame
         * df_right (DataFrame): DataFrame
-    
+
     #### Returns:
         * List[str]: list of columns that exist only in df1.
         * List[str]: list of columns that exist only in df2.
@@ -851,13 +868,16 @@ def get_diff_cols_between_df(df_left: DataFrame, df_right: DataFrame) -> Tuple[L
     return list(cols_df1.difference(cols_df2)), list(cols_df2.difference(cols_df1))
 
 
-
 def initialize_and_prepare_delta(
-    spark: SparkSession, list_drop_cols: list = [], path_delta: str = None, query: str = None, catalog_azure_name: str = None
+    spark: SparkSession,
+    list_drop_cols: List = [],
+    path_delta: str = None,
+    query: str = None,
+    catalog_azure_name: str = None,
 ) -> DataFrame:
     """
     ### Initializes a df and prepare: lower, order, and strip columns
-    
+
     #### Args:
         * spark (SparkSession): used for reading the Delta table.
         * path_delta (str): The path to the Delta table. e.g.: `<catalog>.<schema>.<table>`

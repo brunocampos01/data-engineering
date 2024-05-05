@@ -15,16 +15,15 @@ class AzureADSL:
     Initialize the AzureADSL class to manage Azure ADLS connections.
     Retrieves necessary configuration details from environment variables and secrets.
     """
-
     def __init__(self):
         dbutils = get_ipython().user_ns["dbutils"]
         scope = os.environ["KVScope"]
-        
+
         storage_account = dbutils.secrets.get(scope, "ADLS-storage-account")
         self.account_url = f"https://{storage_account}.blob.core.windows.net"
         self.tenantid = dbutils.secrets.get(scope, "tenantid")
-        self.client_id = dbutils.secrets.get(scope, "ADLS-magellanadls-app-id")
-        self.client_secret = dbutils.secrets.get(scope, "ADLS-magellanadls-app")
+        self.client_id = dbutils.secrets.get(scope, "ADLS-adls-app-id")
+        self.client_secret = dbutils.secrets.get(scope, "ADLS-adls-app")
 
     def _get_access_token(self) -> ClientSecretCredential:
         """Returns the access token to connect to Azure ADLS"""
@@ -35,7 +34,7 @@ class AzureADSL:
         )
 
     def _create_conn(self):
-        """Return an obj that allows to manipulate Azure Storage service resources and blob containers"""
+        """Return an obj that allows to manipulate Azure service resources and blob containers"""
         try:
             return BlobServiceClient(self.account_url, self._get_access_token())
         except Exception as e:
@@ -52,13 +51,13 @@ class AzureADSL:
             step_layers: The step and layers information.
                 e.g.: staging_to_onpremises
             schema_target_name: The target schema name.
-                e.g.: csldw
+                e.g.:dw
             table_target_name: The target table name.
                 e.g.: dim_account
 
         Returns:
             str: The generated ADLS path.
-                e.g.: staging_to_onpremises/csldw/dim_account/dim_account_20230728171730.html
+                e.g.: staging_to_onpremises/dw/dim_account/dim_account_2023....html
         """
         curr_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
         return f"{step_layers}" \
@@ -77,7 +76,7 @@ class AzureADSL:
         Args:
             html_result_gx: The HTML content of the report.
             adsl_path: The ADLS path to save the report.
-                e.g.: staging_to_onpremises/csldw/dim_account/dim_account_20230728171730.html
+                e.g.: staging_to_onpremises/dw/dim_account/dim_account_202....html
             container_name: The name of the ADLS container.
                 e.g: quality-assurance
         """
