@@ -8,7 +8,6 @@ class CatalogManager:
     """
     Manages table in catalog, like Hive or Unity Catalog
     """
-
     @staticmethod
     def add_unmanaged_table(spark: SparkSession, table_name: str, delta_location: str) -> None:
         """Create a new unmanaged table in catalog if it not exists
@@ -26,10 +25,10 @@ class CatalogManager:
         """
         Get the storage location of a table from its properties.
         Args:
-            delta_table (DeltaTable):
+            delta_table (DeltaTable): todo
 
         Returns:
-            (str). The location path in the storage
+            (str) The location path in the storage
         """
         location = delta_table.detail().head()['location']
         return location
@@ -51,10 +50,6 @@ class CatalogManager:
     @staticmethod
     def unity_catalog_is_enabled(spark: SparkSession) -> bool:
         """
-
-        Args:
-            spark (SparkSession):
-
         Returns:
             (bool). Indicating if unity catalog is available for the cluster.
         """
