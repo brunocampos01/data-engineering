@@ -1,8 +1,8 @@
 # QA Testing Silver to Gold
 ## How to Create an Orchestrator
 1. Create orchestrator notebook for each domain, e.g. `tests/qa/gold/orchestrator_<domain>_dim`
-2. Create sql query based on the Azure Magellan or on-premisesfile at `tests/qa/gold/resources/schemas/<domain>/dimensions/<table_name>.sql`. Analyze if in the query is necessary to do some alias in columns.
-3. Create json schema file based on the Azure Magellan or on-premises at `tests/qa/gold/resources/schemas/<domain>/dimensions/<table_name>.json`
+2. Create sql query based on the Azure _____ file at `tests/qa/gold/resources/schemas/<domain>/dimensions/<table_name>.sql`. Analyze if in the query is necessary to do some alias in columns.
+3. Create json schema file based on the Azure _____ at `tests/qa/gold/resources/schemas/<domain>/dimensions/<table_name>.json`
 3. Open the notebook that you created and prepare the parameters.
 
 ### Example Orchestrator's Parameters
@@ -16,7 +16,7 @@ execution_parameters = {
     "table_type": "dim",
     "col_prefix": "country_",
     "query_path": "resources/sql/bi_transversal/dimensions/dim_country.sql",
-    "datatypes_definition_file": 'resources/schemas/bi_transversal/dim_country.json',
+    "datatypes_definition_file": 'resources/schemas/________/dim_country.json',
 }
 ```
 
@@ -99,8 +99,8 @@ This log is show in orchestrators notebooks.
         +---------------+--------------------+--------------------+
         |         dim_pk|             fact_sk|          dim_values|
         +---------------+--------------------+--------------------+
-        |ACCT_PROJECT_SK|FACCT_ACCT_PROJEC...|[31, 85, 65, 53, ...|
-        |    DIVISION_SK|FACCT_COMPANY_REG...|[-1, 1, 6, 3, 5, ...|
+        |ACCT_PROJECT_SK|_________________...|[31, 85, 65, 53, ...|
+        |    DIVISION_SK|_________________...|[-1, 1, 6, 3, 5, ...|
         ...
         +---------------+--------------------+--------------------+
   ```
@@ -117,7 +117,6 @@ This log is show in orchestrators notebooks.
 - **Expectation's name**: `expect_same_content_rows`
 - **Type of tables that this test is executed**: fact
 - **The requires of this test**: *"So...other than the Readme file to make sure to mention that you guys are truly covering the SQL datatypes comparisons checks, we have noticed that the measures have to be tested *with corresponding dimensions business key column(s), for each involved dimensions* Ex.: with Account_Code for Dim_Account and not Account_SK.If you have a or some doubts about any business column(s) for a specific DIMension, we would have to check and confirm first together the one(s) that we have the most unique / distinct ( most of the time none NuLL ) values which is not a surrogate_key : as Account_Code."*
-
 
 ### Expect content row match
 - **What this test do?** Check if the row content are equal (just business columns)
