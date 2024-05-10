@@ -19,15 +19,15 @@ def add_custom_result_to_validation(
 
     validation.results.append(result)
 
-    current_evaluated_expectations = validation["statistics"]["evaluated_expectations"]
-    current_successful_expectations = validation["statistics"]["successful_expectations"]
-    current_unsuccessful_expectations = validation["statistics"]["unsuccessful_expectations"]
+    current_evaluated_expec = validation["statistics"]["evaluated_expectations"]
+    current_successful_exp = validation["statistics"]["successful_expectations"]
+    current_unsuccessful_exp = validation["statistics"]["unsuccessful_expectations"]
 
-    validation["statistics"]["evaluated_expectations"] = current_evaluated_expectations + 1
+    validation["statistics"]["evaluated_expectations"] = current_evaluated_expec + 1
     if result.success:
-        validation["statistics"]["successful_expectations"] = current_successful_expectations + 1
+        validation["statistics"]["successful_expectations"] = current_successful_exp + 1
     else:
-        validation["statistics"]["unsuccessful_expectations"] = current_unsuccessful_expectations + 1
+        validation["statistics"]["unsuccessful_expectations"] = current_unsuccessful_exp + 1
 
     success_percent = (
         float(validation["statistics"]["successful_expectations"])
