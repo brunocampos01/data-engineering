@@ -15,7 +15,7 @@ execution_parameters = {
     "table_gold_name": "dim_country",
     "table_type": "dim",
     "col_prefix": "country_",
-    "query_path": "resources/sql/bi_transversal/dimensions/dim_country.sql",
+    "query_path": "resources/sql/________/dimensions/dim_country.sql",
     "datatypes_definition_file": 'resources/schemas/________/dim_country.json',
 }
 ```
