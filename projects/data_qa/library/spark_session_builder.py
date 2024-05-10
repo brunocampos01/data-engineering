@@ -9,10 +9,9 @@ class SparkSessionBuilder:
     @staticmethod
     def get_session() -> SparkSession:
         """
-        To get the reference of the existing spark session in databricks
+        To get the reference of the existing spark session in Databricks
         """
-        spark = SparkSession.builder.getOrCreate()
-        return spark
+        return SparkSession.builder.getOrCreate()
 
     @staticmethod
     def get_test_session() -> SparkSession:
@@ -47,6 +46,4 @@ class SparkSessionBuilder:
             .config("spark.shuffle.spill.compress", "false") \
             .enableHiveSupport()
 
-        spark = configure_spark_with_delta_pip(builder).getOrCreate()
-        return spark
-
+        return configure_spark_with_delta_pip(builder).getOrCreate()
