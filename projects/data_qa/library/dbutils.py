@@ -13,5 +13,4 @@ def get_dbutils():
         spark = SparkSession.builder.getOrCreate()
         return DBUtils(spark)
     else:
-        dbu = ipython.user_ns["dbutils"]
-        return dbu
+        return ipython.user_ns["dbutils"]
