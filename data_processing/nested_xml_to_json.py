@@ -1,3 +1,4 @@
+from typing import Dict
 import json
 import sys
 import xml.etree.ElementTree as ET
@@ -12,7 +13,7 @@ def load_xml(path_json: str) -> str:
     return open(path_json, 'r').read()
 
 
-def xml_to_dict(element) -> dict:
+def xml_to_dict(element) -> Dict:
     # Base case: element has no children
     if not element:
         return element.text
