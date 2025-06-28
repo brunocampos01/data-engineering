@@ -17,7 +17,8 @@ from pyspark.sql import (
     DataFrame, 
     SparkSession,
 )
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col, regexp_replace
+from pyspark.sql.types import TimestampType
 
 from library.qa.custom_data_tests.common_tests import CommonQA as custom_qa
 from library.qa.utils import LogTag
@@ -26,6 +27,24 @@ from library.qa.utils import initialize_and_prepare_delta
 
 
 class GoldQA:
+    def __mapping_col_azure_to_uc(dict_rename_cols: Dict, df_expected_info_schema: DataFrame) -> DataFrame:
+        """
+        Maps column names from Azure to Unity Catalog based on dict_rename_cols receveid as intial parameter.
+        
+        Args:
+            df_expected_info_schema (DataFrame): The DataFrame with information_schema data.
+            dict_rename_cols (Dict): The dictionary containing the mapping between Azure and Unity Catalog.
+                e.g.: {'vessel': 'ship',
+                       'division': 'region',
+                       'interval_lenght_uom': 'interval_length_uom'}
+        Returns:
+            DataFrame
+        """
+        for key, value in dict_rename_cols.items():
+            df_expected_info_schema = df_expected_info_schema.withColumn('column_name', regexp_replace('column_name', key, value))
+        
+        return df_expected_info_schema
+
     @staticmethod
     def __calculate_execution_time(spark: SparkSession, path_table: str, system: str) -> float:
         """Calculates the execution time of a Spark SQL query.
@@ -75,6 +94,56 @@ class GoldQA:
         return True, f'The queries were executed in both systems with a {diff_percent}% variance. Azure = {elapsed_expected} msecs  UC = {elapsed_observed} msecs'
 
     @staticmethod
+    def check_if_col_have_equal_not_null_constraint(
+        df_observed_info_schema: DataFrame, 
+        df_expected_info_schema: DataFrame, 
+        col_name: str,
+        dict_rename_cols: Dict,
+    ) -> Tuple[bool, str]:
+        """
+        Checks if two cols have the same not null constraint
+
+        Args:
+            df_observed_info_schema (DataFrame): The observed DataFrame with information_schema data.
+            df_expected_info_schema (DataFrame): The expected DataFrame with information_schema data.
+            col_name (str): Name of the column to check constraint.
+
+        Returns:
+            Tuple[bool, str]: A tuple containing a boolean indicating whether the two DataFrames have the same default values
+            and a message describing the comparison result.
+        """
+        constraint_observed = df_observed_info_schema \
+            .select('column_name', 'is_nullable') \
+            .filter(col('column_name') == col_name) \
+            .first()['is_nullable']
+
+        df_expected_info_schema = GoldQA.__mapping_col_azure_to_uc(dict_rename_cols, df_expected_info_schema)
+
+        try:
+            constraint_expected_original = df_expected_info_schema \
+                .select('column_name', 'is_nullable') \
+                .filter(col('column_name') == col_name) \
+                .first()
+            if constraint_expected_original is not None:
+                constraint_expected = constraint_expected_original['is_nullable']
+            else:
+                # df_expected_info_schema_updated = GoldQA.__mapping_col_azure_to_uc(dict_rename_cols, df_expected_info_schema)
+                constraint_expected_mapped = df_expected_info_schema \
+                    .select('column_name', 'is_nullable') \
+                    .filter(col('column_name') == col_name) \
+                    .first()
+                constraint_expected = constraint_expected_mapped['is_nullable']
+
+        except TypeError as e:
+            raise Exception(f'Col {col_name} not found in the info_schema EXPECTED (sqlserver). Add this mapping (sqlserver: uc) in the dict_rename_cols parameter. Showing information_schema (sqlserver): {df_expected_info_schema.display()}')
+
+        # great expectations output
+        if constraint_observed == constraint_expected:
+            return True, f'Matched, in both the constraint is_nullable is {constraint_expected}'
+        else:
+            return False, f'Mismatch NOT NULL constraint. Read is_nullable column from information_schema. EXPECTED: {constraint_expected} | OBSERVED: {constraint_observed}'
+
+    @staticmethod
     def check_if_table_have_same_default_values(df_observed: DataFrame, df_expected: DataFrame, list_pk: List[str]) -> Tuple[bool, str]:
         """
         Checks if two DataFrames have the same default values based on the specified primary keys.
@@ -121,7 +190,7 @@ class GoldQA:
             +---+-------------------+-------------------+
             | -1|2024-03-11 12:02:00|2024-03-11 12:02:00|
             +---+-------------------+-------------------+
-        To resolve this, It was filtered if current column is timestamp and than filtered is a technical value.
+        To resolve this, It was filtered if current col is timestamp and than removed technical values (-1, -2, -3)
         
         Args:
             df_expected (DataFrame): The expected DataFrame.
@@ -132,12 +201,17 @@ class GoldQA:
 
         Returns:
             bool: True if the rows in the selected column contain the same content, False otherwise.
+        
+        Notes:
+            dw_commercial.dim_voyage_itineraries_hist has 0 as technical value.
+            test_gold.dw_commercial.fact_voyage_days_port has col PK as timestamp. It was necessary to check the datatype for all PK.
         """
         if c in list_timestamp_cols:
             for pk in list_pk:
-                # remove technical values, as -1, -2
-                df_expected = df_expected.filter(col(pk) > 0)
-                df_observed = df_observed.filter(col(pk) > 0)
+                if not isinstance(df_expected.schema[pk].dataType, TimestampType):
+                    # remove technical values, as 0, -1, -2
+                    df_expected = df_expected.filter(col(pk) >= 0)
+                    df_observed = df_observed.filter(col(pk) >= 0)
 
             return custom_qa.check_if_two_df_contain_the_same_rows(
                     df_expected=df_expected.select(c),
@@ -181,7 +255,7 @@ class GoldQA:
             return True, f'total_expected and total_observed = {total_expected}'
         else:
             return False, f'Mismatch in row counts. ' \
-                        f'Expected = {total_expected} observed = {total_observed}'
+                        f'Expected = {total_expected} observed = {total_observed}. Executed a count distinct with these cols: {list_cols}'
 
     @staticmethod
     def check_if_tables_have_correct_owner(spark: SparkSession, owner_expected: str, path_table: str) -> Tuple[bool, str]:
@@ -211,7 +285,6 @@ class GoldQA:
     
     @staticmethod
     def check_if_col_have_same_count_distinct(
-        list_pk_cols: List[str],
         col_name: str, 
         df_expected: DataFrame, 
         df_observed: DataFrame, 
@@ -219,10 +292,9 @@ class GoldQA:
         path_table_expected: str,
     ) -> Tuple[bool, str]:
         """
-        Checks if the count of rows by col in the expected df matches the count of rows in the bronze df.
+        Checks if the count of rows by col in the expected df matches the count of rows in the observed df.
 
         #### Args:
-            - list_pk_cols (List): The list of primary key columns.
             - col_name (str): the name of the column. This column exists in both dataframes.
             - df_expected (DataFrame): The expected df whose count is compared.
             - df_observed (DataFrame): The observed df whose count is compared.
@@ -232,23 +304,18 @@ class GoldQA:
         #### Returns:
             - Tuple[bool, str]: A tuple containing a boolean indicating if the counts match and a message.
         """
-        if col_name.endswith('_sk'):
-            list_cols = [col_name]
-        else:
-            list_cols = list_pk_cols + [col_name]
-
         total_observed_col = df_observed \
-            .select(*list_cols) \
+            .select(col_name) \
             .distinct() \
             .count()
         total_expected_col = df_expected \
-            .select(*list_cols) \
+            .select(col_name) \
             .distinct() \
             .count()
 
         # great expectations output
         if total_observed_col == total_expected_col:
-            return True, f'total_expected and total_observed = {total_expected_col}. Used this list of cols: {list_cols}'
+            return True, f'total_expected and total_observed = {total_expected_col}'
         else:
             if total_observed_col == 0 and total_expected_col != 0:
                 return False, f'Col is empty in {path_table_observed} but not in {path_table_expected} = {total_expected_col}!'
@@ -264,18 +331,21 @@ class GoldQA:
         path_table_observed: str, 
         col_name: str, 
         constr_type: str,
+        list_pk_cols: List[str],
     ) -> Tuple[bool, str]:
         """
-        Check if a column has a specified constraint.
+        Check if a column has a specified constraint. The source of truth is list_expected_constraints, 
+        So, It is necessary to check if a constraint (col_name) exists in list_observed_constraints.
+        Every tables in gold must have pk constraint, but fk needs to confirm all cols that end with _sk. It is not possible filter fk constraints that exists in sqlserver or uc and based the on only this because there are some cases that both sides not contains the fk.
 
         Args:
             list_expected_constraints (List[str]): List of expected constraints.
-                e.g.: ['conv_from_currency_sk', 'conv_to_currency_sk']
+                e.g.: ['to_currency_sk', 'from_currency_sk']
             list_observed_constraints (List[str]): List containing observed constraints.
                 e.g.: ['to_currency_sk', 'from_currency_sk']
             path_table_expected (str): Path of the table with expected constraints.
             path_table_observed (str): Path of the table with observed constraints.
-            col_name (str): Name of the column to check constraints for. It is from the list_pk_cols or list_fk_cols.
+            col_name (str): Name of the column to check constraints for. It is from the list_pk_cols or list_sk_cols.
                 This information was taken from expected df
             constr_type (str): Type of constraint to check. e.g.: fk or pk
 
@@ -283,18 +353,18 @@ class GoldQA:
             Tuple[bool, str]: A tuple containing a boolean indicating if the column has the constraint,
             and a message indicating the result of the check.
         """
-        have_constraint = False
-        for col_name_with_const in list_observed_constraints:
-            if col_name_with_const in col_name: # example: 'from_currency_sk' in 'conv_from_currency_sk'
-                have_constraint = True
-
         # great expectations output
-        if len(list_expected_constraints) == 0: # if not found in azure
+        if col_name in list_observed_constraints and col_name not in list_expected_constraints: # if exists in uc but not in azure
             return True, f'WARNING: Not found the {constr_type} in {path_table_expected}. In {path_table_observed} was found {constr_type} for this col: {col_name}'
-        elif have_constraint:
-            return True, f'The gold layer and azure magellan have {constr_type} constraint in {col_name} column'
+        elif col_name in list_observed_constraints:
+            return True, f'The uc and azure have same {constr_type} constraint in {col_name}.'
         else:
-            return False, f'''{constr_type} constraint not found! EXPECTED: {list_expected_constraints} | OBSERVED: {list_observed_constraints}'''
+            if col_name in list_expected_constraints: # if constr exists in az but not in uc
+                return False, f'''{constr_type} constraint not found associated with {col_name}! list EXPECTED contraints: {list_expected_constraints} | list OBSERVED constraints: {list_observed_constraints}'''
+            elif col_name in list_pk_cols: # if not exists in both side, but it is a pk
+                return True, f'Not found the {constr_type} contraint in SQLServer and UC for {col_name} col. This col is just a pk.'
+            else: # if not exists in both side
+                return False, f'Not found the {constr_type} contraint in SQLServer and UC for {col_name} col.'
 
     @staticmethod
     def check_if_column_have_same_total_nulls(df_expected: DataFrame, df_observed: DataFrame, col_name: str) -> Tuple[bool, str]:
@@ -352,7 +422,7 @@ class GoldQA:
                 return True, f'All elements in col: {col_name} exists in both side.'
             else:
                 diff = set_fk - set_pk
-                return False, f'Some elements in col: {col_name} are missing. (set_fk - set_pk): {diff}.'
+                return False, f'Some elements in col: {col_name} are missing. (distinct fk - distinct pk): {diff}.'
         else:
             return False, f'A foreign key constraint was not found in the {path_gold_table} associated with {col_name}.'
 
@@ -375,7 +445,6 @@ class GoldQA:
         FROM {env}_data_catalog.gold_data_catalog.dim_tables 
         WHERE table_id = '{path_gold_table}'
         """
-
         # great expectations output
         if spark.sql(query).take(1):
             return True, f'Found the table_id = {path_gold_table} in Data Catalog dim_tables.'

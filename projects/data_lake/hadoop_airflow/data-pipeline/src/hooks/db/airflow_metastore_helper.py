@@ -1,32 +1,30 @@
 import logging
 from pprint import pprint
-from typing import Optional
+from typing import optional, Dict
 
 import airflow
 from airflow import models
 from airflow import settings
-from airflow.models import Connection
-from airflow.models import Variable
-from airflow.providers.postgres.hooks.postgres import PostgresHook
+from airflow.models import connection
+from airflow.models import variable
+from airflow.providers.postgres.hooks.postgres import postgreshook
+from hooks.db.redis_helper import redishelper
 
-from hooks.db.redis_helper import RedisHelper
 
-
-class AirflowMetaStoreHelper(PostgresHook):
-
+class airflowmetastorehelper(postgreshook):
     def __init__(
         self,
-        airflow_conn: Optional[str] = None,
-        airflow_conn_type: Optional[str] = None,
-        airflow_host: Optional[str] = None,
-        airflow_port: Optional[str] = None,
-        airflow_login: Optional[str] = None,
-        airflow_passwd: Optional[str] = None,
-        extra: Optional[str] = None,
+        airflow_conn: optional[str] = none,
+        airflow_conn_type: optional[str] = none,
+        airflow_host: optional[str] = none,
+        airflow_port: optional[str] = none,
+        airflow_login: optional[str] = none,
+        airflow_passwd: optional[str] = none,
+        extra: optional[str] = none,
         *args,
         **kwargs
     ):
-        super(AirflowMetaStoreHelper, self).__init__(*args, **kwargs)
+        super(airflowmetastorehelper, self).__init__(*args, **kwargs)
         self.airflow_conn = airflow_conn
         self.airflow_conn_type = airflow_conn_type
         self.airflow_host = airflow_host
@@ -37,94 +35,48 @@ class AirflowMetaStoreHelper(PostgresHook):
 
     def execute_statement(self, statement: str) -> list:
         try:
-            return PostgresHook(self.airflow_conn).get_records(statement)
+            return postgreshook(self.airflow_conn).get_records(statement)
         except Exception as err:
-            self.log.error(f"Failed execute query: {err}\nquery: {statement}")
+            self.log.error(f"failed execute query: {err}\nquery: {statement}")
             raise
 
-    def check_if_contains_data_in_oracle(self, **context: dict) -> [str, dict]:
-        count_id = int(Variable.get(f'{context["current_dag_name"]}_total_row_id'))
-        self.log.info(f'\nActual control var: {context["control_var"]}\n'
-                      f'Last last_control_var: {context["last_control_var"]}')
+    def check_if_contains_data_in_oracle(self, **context: Dict) -> Dict:
+        count_id = int(variable.get(f'{context["current_dag_name"]}_total_row_id'))
+        self.log.info(f'\nactual control var: {context["control_var"]}\n'
+                      f'last last_control_var: {context["last_control_var"]}')
 
         if count_id > 0:
-            self.log.warning(f"{count_id} rows are not in HDFS.")
+            self.log.warning(f"{count_id} rows are not in hdfs.")
             return context['true_case']
         else:
-            self.log.info(f"{count_id} rows. Updated HDFS.")
+            self.log.info(f"{count_id} rows. updated hdfs.")
             return context['false_case']
 
-    def check_if_contains_inconsistency(self, **context: dict) -> [str, dict]:
-        self.log.info(f'Check if contains inconsistency between Oracle and HDFS ...')
+    def check_if_contains_inconsistency(self, **context: Dict) -> [str, Dict]:
+        self.log.info(f'check if contains inconsistency between oracle and hdfs ...')
         var_name = f'{context["dag_name"]}_{context["last_control_var"]}_{context["layer"]}_inconsistency'
-        sql = f"SELECT key FROM public.variable WHERE key like '{var_name}%'"
+        sql = f"select key from public.variable where key like '{var_name}%'"
         list_records = self.execute_statement(sql)
         self.log.info(list_records)
 
         if len(list_records) == 0:
             return context['false_case']
 
-        self.log.warning(f"Inconsistency dates: {list_records[0][0]}")
+        self.log.warning(f"inconsistency dates: {list_records[0][0]}")
         return context['true_case']
 
-    def create_conn(self,
-                    conn_type: str,
-                    host: str,
-                    port: int,
-                    login: str,
-                    passwd: str,
-                    describe: str,
-                    extra: Optional[str] = None) -> [airflow.models.connection.Connection, None]:
-        conn_id = self.airflow_conn.lower()
-        try:
-            conn = Connection(conn_id=conn_id,
-                              conn_type=conn_type,
-                              host=host,
-                              login=login,
-                              password=passwd,
-                              port=port,
-                              description=describe,
-                              extra=extra)
-
-            session = settings.Session
-            conn_name = session \
-                .query(Connection) \
-                .filter(Connection.conn_id == conn.conn_id) \
-                .first()
-
-            if str(conn_name) == str(conn.conn_id):
-                logging.warning(f"Connection {conn.conn_id} already exists")
-                return None
-
-            session.add(conn)
-            session.commit()
-            logging.info(f'Connection {conn.conn_id} is created')
-            return conn
-
-        except Exception as err:
-            self.log.exception(err)
-            self.log.error(f'Check parameters:\n'
-                           f'{conn_type}\n'
-                           f'{host}\n'
-                           f'{login}\n'
-                           f'{passwd}\n'
-                           f'{port}\n'
-                           f'{extra}')
-            raise
-
-    # TODO: dag_helper
     @staticmethod
     def set_granularity(list_all_dates: list, agg_by: str) -> 'generator':
-        """Change airflow variable: list_all_dates
+        """change airflow variable: list_all_dates
 
-        Parameters
+        parameters
         ----------
         agg_by :
             granularity, e.g: day, month
         list_all_dates :
             list contains all data processed by doc, e.g: mdfe_list_all_dates
 
-        Examples
+        examples
         --------
             input: ['01-12-2000', '02-01-2000', '02-01-2000', ...]
             output (agg_by=month): ['01-12-2000', '01-01-2000', ...]
@@ -133,76 +85,124 @@ class AirflowMetaStoreHelper(PostgresHook):
             return set((f'01-{date[3:]}' for date in list_all_dates))
         return [dt for dt in list_all_dates]
 
-    def generate_list_inconsistency(self, dag_name: str, last_control_var: str, layer: str) -> list:
+    # todo: dag_helper
+    def create_conn(
+        self,
+        conn_type: str,
+        host: str,
+        port: int,
+        login: str,
+        passwd: str,
+        describe: str,
+        extra: optional[str] = None,
+    ) -> [airflow.models.connection.connection, None]:
+        conn_id = self.airflow_conn.lower()
+        try:
+            conn = connection(conn_id=conn_id,
+                              conn_type=conn_type,
+                              host=host,
+                              login=login,
+                              password=passwd,
+                              port=port,
+                              description=describe,
+                              extra=extra)
+
+            session = settings.session
+            conn_name = session \
+                .query(connection) \
+                .filter(connection.conn_id == conn.conn_id) \
+                .first()
+
+            if str(conn_name) == str(conn.conn_id):
+                logging.warning(f"connection {conn.conn_id} already exists")
+                return None
+
+            session.add(conn)
+            session.commit()
+            logging.info(f'connection {conn.conn_id} is created')
+            return conn
+
+        except Exception as err:
+            self.log.exception(err)
+            self.log.error(f'check parameters:\n'
+                           f'{conn_type}\n'
+                           f'{host}\n'
+                           f'{login}\n'
+                           f'{passwd}\n'
+                           f'{port}\n'
+                           f'{extra}')
+            raise
+
+    def generate_list_inconsistency(self, dag_name: str, last_control_var: str, layer: str) -> List:
         """
         :return:
-            Return a variable list generated by task compare_hdfs_and_oracle
+            return a variable list generated by task compare_hdfs_and_oracle
             ex: [doc_name_111111111111117_data_inconsistency_01-01-2000,
                  doc_name_111111111111117_data_inconsistency_01-02-2000, ...]
         """
         var_name = f'{dag_name}_{last_control_var}_{layer}_inconsistency'
-        tuple_var = self.execute_statement(f"SELECT key "
-                                           f"FROM public.variable "
-                                           f"WHERE key like '{var_name}%'")
-        return [Variable.get(x[0]) for x in tuple_var]
+        tuple_var = self.execute_statement(f"select key "
+                                           f"from public.variable "
+                                           f"where key like '{var_name}%'")
+        return [variable.get(x[0]) for x in tuple_var]
 
     def delete_airflow_var(self, dag_name: str, last_control_var: str) -> None:
-        tuple_var = self.execute_statement(f"SELECT id, key "
-                                           f"FROM public.variable "
-                                           f"WHERE key like '{dag_name + '_' + last_control_var}%'")
+        tuple_var = self.execute_statement(f"select id, key "
+                                           f"from public.variable "
+                                           f"where key like '{dag_name + '_' + last_control_var}%'")
         list_values = (x[0] for x in tuple_var)
 
         for var in list_values:
-            PostgresHook(self.airflow_conn) \
-                .run(sql=f"DELETE FROM public.variable WHERE id='{var}'",
+            postgreshook(self.airflow_conn) \
+                .run(sql=f"delete from public.variable where id='{var}'",
                      autocommit=True)
-            self.log.warning(f'Delete variable: {var}')
+            self.log.warning(f'delete variable: {var}')
 
     def delete_pattern_var(self, list_pattern_name_var: str) -> None:
         for var in eval(list_pattern_name_var):
-            PostgresHook(self.airflow_conn) \
-                .run(sql=f"DELETE FROM public.variable WHERE key like '{var}%'",
+            postgreshook(self.airflow_conn) \
+                .run(sql=f"delete from public.variable where key like '{var}%'",
                      autocommit=True)
-            self.log.warning(f'Delete variable pattern: {var}')
+            self.log.warning(f'delete variable pattern: {var}')
 
-    # TODO: dag_helper
-    def get_dag_name(self, **context: dict) -> None:
-        self.log.info(f'Appending current dag in list_dags ...')
+    # todo: dag_helper
+    def get_dag_name(self, **context: Dict) -> None:
+        self.log.info(f'appending current dag in list_dags ...')
         context['list_dags'].append(context['current_dag_name'])
         list_dags = sorted(list(set(context['list_dags'])))
 
-        Variable.set(key=context['name_list_dags'], value=list_dags)
-        self.log.info(f'List dags = {list_dags}')
+        variable.set(key=context['name_list_dags'], value=list_dags)
+        self.log.info(f'list dags = {list_dags}')
 
     def update_control_var(self, **context) -> None:
-        self.log.info(f'Actual control_var_name: {context["control_var"]}\n'
-                      f'Last last_control_var: {context["last_control_var"]}\n'
+        self.log.info(f'actual control_var_name: {context["control_var"]}\n'
+                      f'last last_control_var: {context["last_control_var"]}\n'
                       f'list_current_dates:{context["list_current_dates"]}\n'
                       f'list_all_dates:{context["list_all_dates"]}\n'
                       f'list_dags:{context["list_dags"]}\n'
                       f'total_pg: {context["total_pg"]}')
 
-        list_records = RedisHelper(context['redis_conn_id']) \
+        list_records = redishelper(context['redis_conn_id']) \
             .get_list_redis(context['redis_key'])
         list_id = [x[1] for x in list_records]
         max_value = f"{max(list_id):015d}"  # 000.000.000.000.000
 
-        Variable.set(key=f'{context["dag_name"]}_control_var', value=max_value)
-        Variable.set(key=f'{context["dag_name"]}_last_control_var', value=context["control_var"])
+        variable.set(key=f'{context["dag_name"]}_control_var', value=max_value)
+        variable.set(key=f'{context["dag_name"]}_last_control_var', value=context["control_var"])
 
-        self.log.info(f'Updated Airflow variable:\n'
+        self.log.info(f'updated airflow variable:\n'
                       f'last_control_var to: {context["control_var"]}\n'
                       f'control_var to: {max_value}')
 
-    def generate_dict_params(self, **context: dict) -> None:
-        """Used next_dag"""
+    def generate_dict_params(self, **context: Dict) -> None:
+        """used next_dag"""
         list_total_partitions = [
-            int(Variable.get(f'{context["current_dag_name"]}_total_pg_{date}'))
+            int(variable.get(f'{context["current_dag_name"]}_total_pg_{date}'))
             for date in context["list_current_dates"]
         ]
 
         list_total_rows = [
-            int(Variable.get(f'{context["current_dag_name"]}_total_rows_{date}'))
+            int(variable.get(f'{context["current_dag_name"]}_total_rows_{date}'))
             for date in context["list_current_dates"]
         ]
 
@@ -217,6 +217,6 @@ class AirflowMetaStoreHelper(PostgresHook):
             }
             dict_params_by_date[date] = d
 
-        Variable.set(key=f'{context["dag_name"]}_dict_params_by_date', value=dict_params_by_date)
+        variable.set(key=f'{context["dag_name"]}_dict_params_by_date', value=dict_params_by_date)
         self.log.info(f'dict_params_by_date:')
         pprint(dict_params_by_date)

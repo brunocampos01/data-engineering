@@ -17,7 +17,7 @@ results = []
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_currency.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_currency",
     "table_type": "dim",
@@ -35,7 +35,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_parties.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_parties",
     "table_type": "dim",
@@ -53,7 +53,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_party_sites.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_party_sites",
     "table_type": "dim",
@@ -71,7 +71,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_vendor.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_vendor",
     "table_type": "dim",
@@ -89,7 +89,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_segment_value.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_segment_value",
     "table_type": "dim",
@@ -107,7 +107,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_vendor_bank_info.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_vendor_bank_info",
     "table_type": "dim",
@@ -125,7 +125,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_vendor_sites.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_vendor_sites",
     "table_type": "dim",
@@ -143,7 +143,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_market_data.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_market_data",
     "table_type": "dim",
@@ -161,7 +161,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_market_data_type.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_market_data_type",
     "table_type": "dim",
@@ -179,7 +179,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/dimensions/dim_unit_of_measure.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_unit_of_measure",
     "table_type": "dim",

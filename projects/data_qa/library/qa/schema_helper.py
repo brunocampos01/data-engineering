@@ -31,45 +31,6 @@ class SchemaHelper:
     A helper class for managing dataframe schema in QA tests
     """
     @staticmethod
-    def set_correct_datatype(df_expected: DataFrame, dict_schema_expected: Dict) -> DataFrame:
-        """
-        When the sqlsever is float, spark return double. 
-        To resolve, the data is cast to dataType defined in dict_schema_expected.
-
-        #### Args:
-            df_expected (DataFrame): The expected DataFrame. e.g.: 
-                SQLServer: doubleType
-                +-------------+
-                |amt_cancelled|
-                +-------------+
-                |          1.1|
-                |        39.73|
-            df_observed (DataFrame): The observed DataFrame.
-                Unity Catalog: floatType
-                +------------------+
-                |     amt_cancelled|
-                +------------------+
-                | 1.100000023841858|
-                | 39.72999954223633|
-        
-        ### Returns:
-            (DataFrame): dataframe with the the same datatype defined in dict_schema_expected json.
-                +------------------+
-                |     amt_cancelled|
-                +------------------+
-                | 1.100000023841858|
-                | 39.72999954223633|
-        """
-        float_cols = [key for key, value in dict_schema_expected.items()
-                       if value == 'FloatType' and not key.startswith('etl_')]
-
-        for c in df_expected.columns:
-            if c in float_cols:
-                df_expected = df_expected.withColumn(c, col(c).cast(FloatType()))
-
-        return df_expected
-
-    @staticmethod
     def lowercase_field_names_in_struct_type(struct_type: StructType) -> StructType:
         """
         ### Converts the field names in a StructType to lowercase.
@@ -149,6 +110,8 @@ class SchemaHelper:
             "DecimalType(16,2)": DecimalType(16,2),
             "DecimalType(16,0)": DecimalType(16,0),
             "DecimalType(12,6)": DecimalType(12,6),
+            "DecimalType(5,2)": DecimalType(5,2),
+            "DecimalType(15,2)": DecimalType(15,2),
             "DecimalType(10,2)": DecimalType(10,2),
             "DecimalType(10,0)": DecimalType(10,0),
             "DecimalType(8,2)": DecimalType(8,2),
@@ -158,6 +121,16 @@ class SchemaHelper:
             "DecimalType(31,2)": DecimalType(31,2),
             "DecimalType(33,4)": DecimalType(33,4),
             "DecimalType(21,2)": DecimalType(21,2),
+            "DecimalType(12,8)": DecimalType(12,8),
+            "DecimalType(10,4)": DecimalType(10,4),
+            "DecimalType(15,10)": DecimalType(15,10),
+            "DecimalType(19,10)": DecimalType(19,10),
+            "DecimalType(19,6)": DecimalType(19,6),
+            "DecimalType(9,6)": DecimalType(9,6),
+            "DecimalType(5,0)": DecimalType(5,0),
+            "DecimalType(6,1)": DecimalType(6,1),
+            "DecimalType(11,2)": DecimalType(11,2),
+            "DecimalType(14,2)": DecimalType(14,2),
             "StringType": StringType(),
             "IntegerType": IntegerType(),
             "TimestampType": TimestampType(),

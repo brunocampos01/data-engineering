@@ -176,8 +176,8 @@ logger.info(f'Total in UC tables = {df_uc_tables.count()}')
 
 # COMMAND ----------
 
-# NOTES: 
-# In views is not possible to add comments, because of this, we save the a df to keep all view rows to make sure that all data will keep.
+# NOTES:
+# In views is not possible to add comments, because of this, we save the df to keep all view rows to make sure that all data will keep.
 if layer_name == 'bronze':
     df_tables_only_views = df_origin_tables.filter(df_origin_tables['obj_type'] == 'VIEW')
     writer_delta_table_views.execute(
@@ -250,7 +250,7 @@ logger.info(f'Total fields = {df_uc_fields.count()}')
 
 # COMMAND ----------
 
-# NOTES: 
+# NOTES:
 # In views is not possible to add comments, because of this, we save the a df to keep all view rows to make sure that all data will keep.
 if layer_name == 'bronze':
     df_fields_only_views = df_origin_fields.filter(df_origin_fields['obj_type'] == 'VIEW')

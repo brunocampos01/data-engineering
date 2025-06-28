@@ -18,7 +18,7 @@ results = []
 
 # DBTITLE 1,DIM_PARTIES orchestrator - Execution part
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_contact_shipsure",
     "schema_gold_name": "dw_procurement",
@@ -40,7 +40,7 @@ print(results[-1])
 # COMMAND ----------
 
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_department_shipsure",
     "schema_gold_name": "dw_procurement",
@@ -62,7 +62,7 @@ print(results[-1])
 # COMMAND ----------
 
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_job_class_shipsure",
     "schema_gold_name": "dw_procurement",
@@ -84,7 +84,7 @@ print(results[-1])
 # COMMAND ----------
 
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_procurement_item_type",
     "schema_gold_name": "dw_procurement",
@@ -106,7 +106,7 @@ print(results[-1])
 # COMMAND ----------
 
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_reference_code",
     "schema_gold_name": "dw_procurement",
@@ -128,7 +128,7 @@ print(results[-1])
 # COMMAND ----------
 
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_vessel_component",
     "schema_gold_name": "dw_procurement",
@@ -150,7 +150,7 @@ print(results[-1])
 # COMMAND ----------
 
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_vessel_part",
     "schema_gold_name": "dw_procurement",
@@ -173,7 +173,7 @@ print(results[-1])
 
 # DBTITLE 1,Execute the notebook, passing parameters as reference for the Dimension DIM_Country
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_vessel_shipsure",
     "schema_gold_name": "dw_procurement",
@@ -195,7 +195,7 @@ print(results[-1])
 # COMMAND ----------
 
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_work_order_type",
     "schema_gold_name": "dw_procurement",
@@ -217,7 +217,7 @@ print(results[-1])
 # COMMAND ----------
 
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_job_class_shipsure",
     "schema_gold_name": "dw_procurement",
@@ -239,7 +239,7 @@ print(results[-1])
 # COMMAND ----------
 
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_rescheduled_reason",
     "schema_gold_name": "dw_procurement",

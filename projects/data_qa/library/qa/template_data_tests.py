@@ -5,32 +5,28 @@
     * TemplateDataTest: Template Method Design Partner
 """
 import os
+import warnings
 from abc import abstractmethod
 from typing import Dict
 
 from great_expectations.core import ExpectationSuiteValidationResult
 from great_expectations.render import DefaultJinjaPageView
 from great_expectations.render.renderer import ValidationResultsPageRenderer
+
 from pyspark.dbutils import DBUtils
 from pyspark.sql import DataFrame
 
 from library.database.azure_adls import AzureADSL
 from library.logger_provider import LoggerProvider
 from library.qa.great_expectations_helper import GreatExpectationsHelper
-from library.qa.utils import (
-    check_if_two_df_contain_same_schema,
-    check_if_two_df_contain_same_null_count_per_column,
-    check_if_two_df_contain_same_unique_count_per_column,
-    check_if_two_df_contain_same_count_per_column,
-    check_if_two_df_contain_same_count,
-    check_if_two_df_contain_diff_content_rows_count,
-    check_if_two_df_contain_diff_content_rows,
-    get_common_cols,
-)
+
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 class TemplateDataTest:
     """
-    ### Template Method Design Partner
+    ### Template method as design pattern
     ### Base class representing a skeleton of algorithm for data tests.
     ### Subclasses should implement the abstract methods to define their specific data testing.
     """
@@ -51,7 +47,6 @@ class TemplateDataTest:
 
         #### Example:
             * data_tester = BronzeToSilverTestData(params, ...)
-
             * data_tester.log_execution_parameters()
             * data_tester.validate_parameters()
 
@@ -77,7 +72,6 @@ class TemplateDataTest:
 
     @abstractmethod
     def get_and_prepare_data(self, kwargs: Dict = None) -> DataFrame:
-        # Implement data retrieval specific for layer
         pass
 
     @abstractmethod
@@ -114,27 +108,6 @@ class TemplateDataTest:
     ) -> Dict:
         # Implement data tests
         pass
-
-    def generate_data_analysis(self, df_expected: DataFrame, df_observed: DataFrame) -> None:
-        """
-        ### Generate data analysis based on the comparison between two df.
-        ### This function performs various validations and comparisons between two df
-
-        #### Args:
-            * df_expected (DataFrame): expected DataFrame
-            * df_observed (DataFrame): observed DataFrame
-        """
-        list_common_cols = get_common_cols(df_expected, df_observed)
-        self.logger.info(f'list_common_cols: {list_common_cols}')
-
-        # validations
-        check_if_two_df_contain_same_schema(df_expected, df_observed)
-        check_if_two_df_contain_same_count(df_expected, df_observed)
-        check_if_two_df_contain_same_count_per_column(df_expected, df_observed, list_common_cols)
-        check_if_two_df_contain_same_unique_count_per_column(df_expected, df_observed, list_common_cols)
-        check_if_two_df_contain_same_null_count_per_column(df_expected, df_observed, list_common_cols)
-        check_if_two_df_contain_diff_content_rows_count(df_expected, df_observed)
-        check_if_two_df_contain_diff_content_rows(df_expected, df_observed)
 
     @staticmethod
     def generate_results_html(validation_results: ExpectationSuiteValidationResult) -> str:

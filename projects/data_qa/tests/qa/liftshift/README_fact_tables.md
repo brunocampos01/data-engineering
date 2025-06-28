@@ -12,7 +12,7 @@ _To better visualization of this document, click here(azure devops)_
 ```python
 execution_parameters = {
     "query_path": "sql/finance/fact/fact_accounting_transactions.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_accounting_transactions",
     "table_type": "fact",
@@ -41,7 +41,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/finance/fact/fact_accounting_transactions.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_accounting_transactions",
     "table_type": "fact",
@@ -51,14 +51,14 @@ execution_parameters = {
 ```
 
 NOTES:
-- `query_path`: 
+- `query_path`:
   - this file must contains a valid query without semicollon and with breakline in the last row.
   - the query must contains in SELECT every fact column used in JOINS. Example:
   ```
   SELECT
   ...
-  FROM CSLDW.dw.FACT_ACCOUNTING_TRANSACTIONS FACAT
-    INNER JOIN CSLDW.dw.DIM_ACCOUNT DAC                  ON DAC.ACCOUNT_SK = FACAT.FACCT_ACCOUNT_SK
+  FROM XPTODW.dw.FACT_ACCOUNTING_TRANSACTIONS FACAT
+    INNER JOIN XPTODW.dw.DIM_ACCOUNT DAC                  ON DAC.ACCOUNT_SK = FACAT.FACCT_ACCOUNT_SK
  ...
   ```
     - In this case, `FACCT_ACCOUNT_SK` must to declare in SELECT statement
@@ -66,8 +66,8 @@ NOTES:
       SELECT
         FACAT.FACCT_ACCOUNT_SK,
         ...
-        FROM CSLDW.dw.FACT_ACCOUNTING_TRANSACTIONS FACAT
-         INNER JOIN CSLDW.dw.DIM_ACCOUNT DAC                  ON DAC.ACCOUNT_SK = FACAT.FACCT_ACCOUNT_SK
+        FROM XPTODW.dw.FACT_ACCOUNTING_TRANSACTIONS FACAT
+         INNER JOIN XPTODW.dw.DIM_ACCOUNT DAC                  ON DAC.ACCOUNT_SK = FACAT.FACCT_ACCOUNT_SK
       ...
       ```
 - `table_type`: fact or dim
@@ -135,7 +135,7 @@ This log is show in orchestrators notebooks.
 - [Documentation of expectation](https://greatexpectations.io/expectations/expect_column_unique_value_count_to_be_between?filterType=Backend%20support&gotoPage=undefined&showFilters=true&viewType=Completeness&subFilterValues=spark)
 - **Type of tables that this test is executed**: fact and dim
 - **Columns**: `list_business_cols`
-- **NOTES**: 
+- **NOTES**:
   - Great Expectations doesn't have a specific expectations to do this (08/2023). We use `expect_column_unique_value_count_to_be_between` and do a workaround to perform the test.
 
 ### Expect exists referential integrity between fact and dim
@@ -144,7 +144,7 @@ This log is show in orchestrators notebooks.
 - [Documentation of expectation](https://greatexpectations.io/expectations/expect_column_values_to_be_in_set?filterType=Backend%20support&gotoPage=undefined&showFilters=true&viewType=Completeness&subFilterValues=spark)
 - **Type of tables that this test is executed**: fact
 - **Columns**: `list_fact_sk`, `list_dim_pk` and `lists_dim_values`
-- **NOTES**: 
+- **NOTES**:
   - The test is executed by checking the referential integrity of the fact table.
   - To perform this test is necessary to validate that constraints (Surrogate Keys) exists.
   - It is requires a map between names of fact SK and dim PK. Example:
@@ -191,7 +191,7 @@ This log is show in orchestrators notebooks.
 - **Expectation's name**: `expect_column_same_character_maximum_length`
 - **Type of tables that this test is executed**: fact and dim
 - **Output msg example**: `The same_character_maximum_length match in both environments. Verified for these cols: ['FACCT_ACCTD_CR_AMOUNT', 'FACCT_ACCTD_DR_AMOUNT']`
-- **NOTES**: 
+- **NOTES**:
   - This validation is only executed if the row at INFORMATION_SCHEMA is not null
   - If every columns doesn't have this property, the test will send: `This property is empty for all columns. Test skipped.`
 
@@ -200,7 +200,7 @@ This log is show in orchestrators notebooks.
 - **Expectation's name**: `expect_column_same_precision`
 - **Type of tables that this test is executed**: fact and dim
 - **Output msg example**: `All columns have matching numeric precisions. Verified for these cols: ['FACCT_ACCTD_CR_AMOUNT', 'FACCT_ACCTD_DR_AMOUNT']`
-- **NOTES**: 
+- **NOTES**:
   - This validation is only executed if the row at INFORMATION_SCHEMA is not null
   - If every columns doesn't have this property, the test will send: `This property is empty for all columns. Test skipped.`
 
@@ -209,7 +209,7 @@ This log is show in orchestrators notebooks.
 - **Expectation's name**: `expect_column_same_scale`
 - **Type of tables that this test is executed**: fact and dim
 - **Output msg example**: `All columns have matching numeric scales. Verified for these cols: ['FACCT_ACCTD_CR_AMOUNT', 'FACCT_ACCTD_DR_AMOUNT']`
-- **NOTES**: 
+- **NOTES**:
   - This validation is only executed if the row at INFORMATION_SCHEMA is not null
   - If every columns doesn't have this property, the test will send: `This property is empty for all columns. Test skipped.`
 
@@ -218,7 +218,7 @@ This log is show in orchestrators notebooks.
 - **Expectation's name**: `expect_column_same_datetime_precision`
 - **Type of tables that this test is executed**: fact and dim
 - **Output msg example**: `All columns have matching datetime precision. Verified for these cols: ['FACCT_ACCTD_CR_AMOUNT', 'FACCT_ACCTD_DR_AMOUNT']`
-- **NOTES**: 
+- **NOTES**:
   - This validation is only executed if the row at INFORMATION_SCHEMA is not null
   - If every columns doesn't have this property, the test will send: `This property is empty for all columns. Test skipped.`
 
@@ -227,7 +227,7 @@ This log is show in orchestrators notebooks.
 - **Expectation's name**: `expect_column_same_encoding`
 - **Type of tables that this test is executed**: fact and dim
 - **Output msg example**: `All columns have matching encodings. Verified for these cols: ['FACCT_ACCTD_CR_AMOUNT', 'FACCT_ACCTD_DR_AMOUNT']`
-- **NOTES**: 
+- **NOTES**:
   - This validation is only executed if the row at INFORMATION_SCHEMA is not null
   - If every columns doesn't have this property, the test will send: `This property is empty for all columns. Test skipped.`
 

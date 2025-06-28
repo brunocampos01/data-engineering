@@ -18,7 +18,7 @@ results = []
 
 # DBTITLE 1,Execute the notebook, passing parameters as reference for the Dimension DIM_Country
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_country",
     "schema_gold_name": "dw_conformed",
@@ -41,7 +41,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_PARTIES orchestrator - Execution part
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_parties",
     "schema_gold_name": "dw_conformed",
@@ -64,7 +64,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_PARTY_SITES Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_party_sites",
     "schema_gold_name": "dw_conformed",
@@ -87,7 +87,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_VENDOR Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_vendor",
     "schema_gold_name": "dw_conformed",
@@ -110,7 +110,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_VENDOR_SITES Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_vendor_sites",
     "schema_gold_name": "dw_conformed",
@@ -133,7 +133,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_VENDOR_BANK Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_vendor_bank_info",
     "schema_gold_name": "dw_conformed",
@@ -156,7 +156,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_SEGMENT_VALUE Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_segment_value",
     "schema_gold_name": "dw_finance",
@@ -179,7 +179,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_PILLAR orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_pillar",
     "schema_gold_name": "dw_conformed",
@@ -202,7 +202,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_UNIT_OF_MEASURE Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_unit_of_measure",
     "schema_gold_name": "dw_market_data",
@@ -225,7 +225,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_DATA_SOURCE Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_data_source",
     "schema_gold_name": "dw_conformed",
@@ -248,7 +248,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_CURRENCY_CONVERSION_MAPPING Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_currency_conversion_mapping_bak",
     "schema_gold_name": "dw_market_data",
@@ -271,7 +271,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_TIME Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_time",
     "schema_gold_name": "dw_conformed",
@@ -294,7 +294,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_CURRENCY Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_currency",
     "schema_gold_name": "dw_market_data",
@@ -317,7 +317,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_MARKET_DATA Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_market_data",
     "schema_gold_name": "dw_market_data",
@@ -340,7 +340,7 @@ print(results[-1])
 
 # DBTITLE 1,DIM_MARKET_DATA_TYPE Orchestrator - Execution parameters
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "dim_market_data_type",
     "schema_gold_name": "dw_market_data",

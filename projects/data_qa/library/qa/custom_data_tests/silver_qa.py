@@ -23,32 +23,209 @@ from library.datacleaner.defaults import Defaults as col_silver
 from library.great_expectations.util import add_custom_result_to_validation
 from library.qa.utils import initialize_and_prepare_delta
 
+
 class SilverQA:
     @staticmethod
-    def check_if_table_have_same_count_distinct(
-        list_pk: List[str], 
-        df_expected: DataFrame, 
-        df_observed: DataFrame,
+    def __analyze_duplicates_and_counts_src_syst_effective_to_col(
+        spark: SparkSession, 
+        catalog_expected: str, 
+        schema_expected: str, 
+        table_expected: str,
+        show_data: bool = False,
+    ) -> DataFrame:
+        """
+        ### Args:
+            spark (SparkSession): The SparkSession object.
+            catalog_expected (str): The silver catalog
+            schema_expected (str): The silver database
+            table_expected (str): The silver table
+
+        ### Return:
+            DataFrame. e.g.:
+            +------------------------------------------------------------------+---+
+            |TypeQty                                                           |Qty|
+            +------------------------------------------------------------------+---+
+            |Silver rows with src_syst_effective_to Not Null                   |82 |
+            |Silver rows with src_syst_effective_to *set as NULL* and have each, a previously matching primary key(s) entered pair|19 |
+            |Silver rows with src_syst_effective_to but without a previous pair|63 |
+            |Bronze rows not moved to silver by deleted flag True.             |63 |
+            +------------------------------------------------------------------+---+
+        """
+        # SQL query to get primary key columns
+        sql_query_pk = f"""
+            SELECT CONCAT_WS(', ', collect_list(ccu.column_name),'etl_src_pkeys_hash_key') AS primary_key_columns
+            FROM system.information_schema.constraint_column_usage ccu
+            JOIN system.information_schema.table_constraints tc
+                ON ccu.constraint_name = tc.constraint_name
+                AND ccu.table_name = tc.table_name
+                AND ccu.table_schema = tc.table_schema
+                AND ccu.table_catalog = tc.table_catalog
+            WHERE tc.constraint_type = 'PRIMARY KEY' 
+                AND ccu.table_catalog = '{catalog_expected}'
+                AND ccu.table_schema = '{schema_expected}'
+                AND ccu.table_name = '{table_expected}'
+        """
+        results_pk = spark.sql(sql_query_pk).collect()
+
+        pkcols = ""
+        for row in results_pk:
+            # Get primary key column names
+            pkcols = row["primary_key_columns"]
+
+            if len(pkcols) > 0:
+                sql_query = f"""
+                select
+                    {pkcols}, {table_expected}.src_syst_effective_from, {table_expected}.src_syst_effective_to
+                    from {catalog_expected}.{schema_expected}.{table_expected}
+                    where ({pkcols}) in (
+                        select {pkcols}
+                        from
+                        (select {pkcols}, count({pkcols})
+                         from {catalog_expected}.{schema_expected}.{table_expected}
+                         group by {pkcols}
+                         having count({pkcols}) > 1) subqry1
+                        ) 
+                """
+                # Execute SQL query to get duples rows
+                results_values = spark.sql(sql_query)
+
+                if show_data:
+                    results_values.display()
+
+                # SQL query to count rows
+                sql_query_count = f"""
+                Select QueryOrder, TypeQty, Qty From (
+                select 
+                    '01' as QueryOrder, 'Silver rows with src_syst_effective_to Not Null' as TypeQty, count(DISTINCT {pkcols}) as Qty
+                    from {catalog_expected}.{schema_expected}.{table_expected}
+                    where {table_expected}.src_syst_effective_to is not null
+                UNION
+                select 
+                    '02' as QueryOrder, 'Silver rows with src_syst_effective_to *set as NULL* and have each, a previously matching primary key(s) entered pair' as TypeQty, count(DISTINCT {pkcols}) as Qty
+                    from ({sql_query})
+                UNION
+                select
+                    '03' as QueryOrder, 'Silver rows with src_syst_effective_to but without a previous pair' as TypeQty, count(DISTINCT {pkcols}) as Qty
+                    from {catalog_expected}.{schema_expected}.{table_expected} 
+                    where {table_expected}.src_syst_effective_to is not null
+                    and ({pkcols}) not in (
+                        select {pkcols}
+                        from
+                        (select {pkcols}, count(*)
+                            from {catalog_expected}.{schema_expected}.{table_expected}
+                            group by {pkcols}
+                            having count(*) > 1) subqry1
+                    ) 
+                UNION
+                select 
+                    '04' as QueryOrder, 'Bronze rows not moved to silver by deleted flag True' as TypeQty, count(DISTINCT {pkcols}) as Qty
+                    from test_bronze.{schema_expected}.{table_expected}
+                    where where ({pkcols}) in (
+                    select
+                    {pkcols}
+                    from {catalog_expected}.{schema_expected}.{table_expected}
+                    where ({pkcols}) not in (
+                select
+                    {pkcols}
+                    from {catalog_expected}.{schema_expected}.{table_expected}
+                    where ({pkcols}) in (
+                        select {pkcols}
+                        from
+                        (select {pkcols}, count(*)
+                            from {catalog_expected}.{schema_expected}.{table_expected}
+                            group by {pkcols}
+                            having count(*) > 1) subqry1
+                    ) )
+                    and {table_expected}.src_syst_effective_to IS NOT NULL
+                )
+                and etl_deleted_flag = TRUE
+                ) Order by QueryOrder
+            """
+                # Execute SQL query to count rows
+                return spark.sql(sql_query_count)
+            else:
+                return None
+
+    @staticmethod
+    def check_if_col_src_syst_effective_to_is_correct(
+        spark: SparkSession, 
+        catalog_expected: str, 
+        schema_expected: str,
+        table_expected: str,
     ) -> Tuple[bool, str]:
-        """
-        Checks if the count of rows in the expected df matches the count of rows in the bronze df.
+        try:
+            df = SilverQA.__analyze_duplicates_and_counts_src_syst_effective_to_col(
+                spark=spark,
+                catalog_expected=catalog_expected, 
+                schema_expected=schema_expected, 
+                table_expected=table_expected,
+                show_data=True,
+            )
+            list_without_previous_and_previous = df \
+                .filter(col("TypeQty").isin(
+                    "Silver rows with src_syst_effective_to but without a previous pair", 
+                    "Silver rows with src_syst_effective_to *set as NULL* and have each, a previously matching primary key(s) entered pair")) \
+                .select("Qty") \
+                .collect()
 
-        #### Args:
-            - list_pk (List): The list of primary key columns.
-            - df_expected (DataFrame): The expected df whose count is compared.
-            - df_observed (DataFrame): The observed df whose count is compared (bronze).
+            list_without_previous_and_previous = [x.Qty for x in list_without_previous_and_previous]
+            sum_without_previous_and_previous = sum(list_without_previous_and_previous)
 
-        #### Returns:
-            - Tuple[bool, str]: A tuple containing a boolean indicating if the counts match and a message.
-        """
-        total_observed = df_observed.select(*list_pk).distinct().count()
-        total_expected = df_expected.select(*list_pk).distinct().count()
+            total_src_syst_effective_to_not_null = df \
+                .filter(col("TypeQty").isin("Silver rows with src_syst_effective_to Not Null")) \
+                .select("Qty") \
+                .collect()[0][0]
+            
+            df.display()
 
-        # great expectations output
-        if total_observed == total_expected:
-            return True, f'total_expected and total_observed = {total_expected}'
-        else:
-            return False, f'Mismatch in row counts. EXPECTED = {total_expected} | OBSERVED = {total_observed}'
+
+            # great expectations output
+            if sum_without_previous_and_previous == total_src_syst_effective_to_not_null:
+                return True, f'The sum in (Silver rows with src_syst_effective_to but without a previous pair) + (Silver rows with src_syst_effective_to *set as NULL* and have each, a previously matching primary key(s) entered pair") is equal (Silver rows with src_syst_effective_to Not Null)| {list_without_previous_and_previous} == {sum_without_previous_and_previous}'
+            else:
+                return False, f'Mismatch sum. EXPECTED (Silver rows with src_syst_effective_to Not Null) = {total_src_syst_effective_to_not_null} | OBSERVED = (Silver rows with src_syst_effective_to but without a previous pair) + (Silver rows with src_syst_effective_to *set as NULL* and have each, a previously matching primary key(s) entered pair") | {list_without_previous_and_previous}'
+
+        except:
+            return True, "No primary key found in the table."
+
+    @staticmethod
+    def check_if_col_src_syst_effective_to_is_equal(
+        spark: SparkSession, 
+        catalog_expected: str, 
+        schema_expected: str,
+        table_expected: str,
+    ) -> Tuple[bool, str]:
+        try:
+            df = SilverQA.__analyze_duplicates_and_counts_src_syst_effective_to_col(
+                spark=spark,
+                catalog_expected=catalog_expected, 
+                schema_expected=schema_expected, 
+                table_expected=table_expected,
+            )
+            row_3 = df \
+                .filter(col("TypeQty").isin("Silver rows with src_syst_effective_to but without a previous pair")) \
+                .select("Qty") \
+                .collect()[0][0]
+            row_4 = df \
+                .filter(col("TypeQty").isin("Bronze rows not moved to silver by deleted flag True")) \
+                .select("Qty") \
+                .collect()[0][0]
+            
+            # Condition for not evaluating src_syst_effective_to
+            skipped_tables = ['voypnl', 'voypnlbnkr', 'voypnldet', 'voypnldrill', 'voypnlitin']
+
+            if not (schema_expected == 'imos_datalake' and table_expected in skipped_tables):
+
+                # great expectations output
+                if row_3 == row_4:
+                    return True, f'The (Silver rows with src_syst_effective_to but without a previous pair) {row_3} == {row_4} (Bronze rows not moved to silver by deleted flag True)'
+                else:
+                    return False, f'Mismatch rows. The (Silver rows with src_syst_effective_to but without a previous pair) {row_3} != {row_4} (Bronze rows not moved to silver by deleted flag True)'
+            else:
+                return True, "Not evaluated for deletion conditions in bronze table."
+            
+        except:
+            return True, "No primary key found in the table."
 
     @staticmethod
     def check_if_col_have_same_count_distinct(

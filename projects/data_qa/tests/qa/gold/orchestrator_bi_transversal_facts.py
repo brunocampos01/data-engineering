@@ -18,7 +18,7 @@ results = []
 
 # DBTITLE 1,FACT_CURRENCY_CONVERSION orchestrator - Execution part
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "fact_currency_conversion",
     "schema_gold_name": "dw_market_data",
@@ -41,7 +41,7 @@ print(results[-1])
 
 # DBTITLE 1,FACT_MARKET_DATA orchestrator - Execution part
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "fact_market_data",
     "schema_gold_name": "dw_market_data",

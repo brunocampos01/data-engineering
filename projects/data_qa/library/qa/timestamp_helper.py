@@ -59,9 +59,9 @@ class TimestampHelper:
         #### Returns:
             * DataFrame: DataFrame with added timestamp components columns.
         """
-        return df.withColumn("year", year(col_name)) \
-                .withColumn("month", month(col_name)) \
-                .withColumn("day", dayofmonth(col_name)) \
+        return df.withColumn("__year", year(col_name)) \
+                .withColumn("__month", month(col_name)) \
+                .withColumn("__day", dayofmonth(col_name)) \
                 .withColumn("hour", hour(col_name)) \
                 .withColumn("minute", minute(col_name)) \
                 .withColumn("second", second(col_name)) \
@@ -112,7 +112,7 @@ class TimestampHelper:
             DataFrame: DataFrame with formatted columns and truncated timestamp column.
         """
         return df.withColumn('formatted_rounded_double_sec_millisec',
-                            concat(col("year"), lit("-"), col("month"), lit("-"), col("day"), lit("T"),
+                            concat(col("__year"), lit("-"), col("__month"), lit("-"), col("__day"), lit("T"),
                                    col("updated_hour"), lit(":"), col("updated_minute"), lit(":"),
                                    col("updated_sec"), lit("+0000"))) \
                 .withColumn(timestamp_col, date_trunc('minute', col("formatted_rounded_double_sec_millisec")))
@@ -128,7 +128,7 @@ class TimestampHelper:
         Returns:
         - DataFrame: A new DataFrame with specified columns dropped.
         """
-        list_cols_to_drop = ['year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond', 'sec_millisec',
+        list_cols_to_drop = ['__year', '__month', '__day', 'hour', 'minute', 'second', 'millisecond', 'sec_millisec',
                             'double_sec_millisec', 'rounded_double_sec_millisec', 'formatted_rounded_double_sec_millisec',
                             'updated_hour', 'updated_minute', 'updated_sec', 'pre_updated_minute']
         return df.drop(*list_cols_to_drop)

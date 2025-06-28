@@ -17,7 +17,7 @@ results = []
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_account_shipsure.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_account_shipsure",
     "table_type": "dim",
@@ -35,7 +35,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_contact_shipsure.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_contact_shipsure",
     "table_type": "dim",
@@ -53,7 +53,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_department_shipsure.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_department_shipsure",
     "table_type": "dim",
@@ -71,7 +71,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_job_class_shipsure.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_job_class_shipsure",
     "table_type": "dim",
@@ -89,7 +89,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_maintenance_job.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_maintenance_job",
     "table_type": "dim",
@@ -108,7 +108,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_procurement_item_type.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_procurement_item_type",
     "table_type": "dim",
@@ -126,7 +126,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_procurement_status.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_procurement_status",
     "table_type": "dim",
@@ -138,13 +138,13 @@ print(results[-1])
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ### Run Tests for `DIM_REFERENCE_CODE` (Datawarehouse - CSL)
+# MAGIC ### Run Tests for `DIM_REFERENCE_CODE` (Datawarehouse - XPTO)
 
 # COMMAND ----------
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_reference_code.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_reference_code",
     "table_type": "dim",
@@ -162,7 +162,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_rescheduled_reason.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_rescheduled_reason",
     "table_type": "dim",
@@ -180,7 +180,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_vessel_component.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_vessel_component",
     "table_type": "dim",
@@ -198,7 +198,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_vessel_invoice_header.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_vessel_invoice_header",
     "table_type": "dim",
@@ -216,7 +216,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_vessel_part.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_vessel_part",
     "table_type": "dim",
@@ -234,7 +234,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_vessel_po_header.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_vessel_po_header",
     "table_type": "dim",
@@ -252,7 +252,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_vessel_shipsure.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_vessel_shipsure",
     "table_type": "dim",
@@ -270,7 +270,7 @@ print(results[-1])
 
 execution_parameters = {
     "query_path": "sql/procurement/dimensions/dim_work_order_type.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_work_order_type",
     "table_type": "dim",

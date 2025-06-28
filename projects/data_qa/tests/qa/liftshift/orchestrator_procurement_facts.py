@@ -29,7 +29,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_enqr_suppl_cumul_snapshot.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_enqr_suppl_cumul_snapshot",
     "table_type": "fact",
@@ -64,7 +64,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_enquiry_lines.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_enquiry_lines",
     "table_type": "fact",
@@ -90,7 +90,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_invoice_comparator.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_invoice_comparator",
     "table_type": "fact",
@@ -123,7 +123,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_invoice_lines.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_invoice_lines",
     "table_type": "fact",
@@ -156,7 +156,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_po_lines_agg.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_po_lines_agg",
     "table_type": "fact",
@@ -189,7 +189,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_po_lines.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_po_lines",
     "table_type": "fact",
@@ -222,7 +222,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_procurement_agg.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_procurement_agg",
     "table_type": "fact",
@@ -253,7 +253,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_procurement_cumul_snapshot.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_procurement_cumul_snapshot",
     "table_type": "fact",
@@ -283,12 +283,12 @@ dict_dims_relationalships = {
     "DIM_CONTACT_SHIPSURE": "CONTACT_SS_SK",
     "DIM_PROCUREMENT_ITEM_TYPE": "PROC_ITEM_TYPE_SK",
     "DIM_ACCOUNT_SHIPSURE": "ACCOUNT_SS_SK",
-    "DIM_PROCUREMENT_STATUS": "PROC_STATUS_SK",  
+    "DIM_PROCUREMENT_STATUS": "PROC_STATUS_SK",
 }
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_requisition_lines.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_requisition_lines",
     "table_type": "fact",
@@ -318,7 +318,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_work_order_due_agg_snapshot.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_work_order_due_agg_snapshot",
     "table_type": "fact",
@@ -349,7 +349,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/procurement/facts/fact_vessel_work_order.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_vessel_work_order",
     "table_type": "fact",

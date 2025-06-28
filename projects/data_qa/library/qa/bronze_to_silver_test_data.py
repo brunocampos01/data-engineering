@@ -48,6 +48,8 @@ from delta.tables import DeltaTable
 from library.qa.template_data_tests import TemplateDataTest
 from library.qa.schema_helper import SchemaHelper
 from library.qa.custom_data_tests.silver_qa import SilverQA as silver_test
+from library.qa.custom_data_tests.common_tests import CommonQA as custom_qa
+
 from library.qa.utils import (
     initialize_and_prepare_delta,
     get_diff_cols_between_df,
@@ -56,11 +58,6 @@ from library.qa.utils import (
     check_if_two_tuple_are_equal,
     find_df_diff,
     parser_list_cols_to_str,
-    check_if_two_df_are_not_empty,
-    check_if_two_df_have_same_schema,
-    check_if_data_path_is_correct,
-    check_if_table_type_is_correct,
-    check_if_table_data_format_is_correct,
 )
 
 
@@ -86,6 +83,7 @@ class BronzeToSilverTestData(TemplateDataTest):
         list_email_columns: List[str] = None,
         list_skipped_cleansing_rules: List[str] = None,
         list_exception_corrupted_records: List[str] = None,
+        list_skip_cols_not_null: List[str] = None,
     ):
         """
         ### Initialize Class
@@ -119,6 +117,7 @@ class BronzeToSilverTestData(TemplateDataTest):
         self.list_email_columns = list_email_columns
         self.list_skipped_cleansing_rules = list_skipped_cleansing_rules
         self.list_exception_corrupted_records = list_exception_corrupted_records
+        self.list_skip_cols_not_null = list_skip_cols_not_null # e.g.: in concur.expense the Primary_Ledger col can be null
 
     @staticmethod
     def __get_list_silver_cols() -> List[str]:
@@ -231,6 +230,7 @@ class BronzeToSilverTestData(TemplateDataTest):
         self.logger.info(f'list_order_by_cols:   {self.list_order_by_cols}')
         self.logger.info(f'list_phone_columns:   {self.list_phone_columns}')
         self.logger.info(f'list_email_columns:   {self.list_email_columns}')
+        self.logger.info(f'list_skip_cols_not_null: {self.list_skip_cols_not_null}')
         self.logger.info(f'list_skipped_cleansing_rules: {self.list_skipped_cleansing_rules}')
         self.logger.info(f'list_exception_corrupted_records: {self.list_exception_corrupted_records}')
 
@@ -245,13 +245,11 @@ class BronzeToSilverTestData(TemplateDataTest):
 
         # if list_exception_corrupted_records > 0, then the list_pk_cols > 0
         if len(self.list_exception_corrupted_records) > 0 and len(self.list_pk_cols) == 0:
-            raise ValueError(f"""The list_pk_cols must have one column at least because you are using 
-                             {self.list_exception_corrupted_records}. Consider analyzing to use 'etl_hash_key_pk' as a viable option.""")
+            raise ValueError(f"""The list_pk_cols must have one column at least because you are using {self.list_exception_corrupted_records}. Consider analyzing to use 'etl_hash_key_pk' as a viable option.""")
 
         # warning msg about list_pks
         if len(self.list_pk_cols) == 0:
-            self.logger.warning(f"""Are you sure that {self.path_uc_silver_table} 
-                                does not contain PKs? Consider analyzing to use etl_hash_key_pk as a viable option.""")
+            self.logger.warning(f"""Are you sure that {self.path_uc_silver_table} does not contain PKs? Consider analyzing to use etl_hash_key_pk as a viable option.""")
 
     def execute_bronze_to_silver(self, df_observed: DataFrame, df_expected: DataFrame) -> DataFrame:
         """
@@ -281,7 +279,8 @@ class BronzeToSilverTestData(TemplateDataTest):
             cleansed_df = cleansed_df \
                 .withColumns(tracking_columns_expr)\
                 .drop(col_bronze.data_collection_datetime) \
-                .drop(col_landing.etl_metadata_struct_name)
+                .drop(col_landing.etl_metadata_struct_name) \
+                .drop(col_bronze.deleted_flag_column)
             cleansed_df = cleansed_df.sort(col(col_silver.src_syst_effective_from).asc())
             
             if len(self.list_pk_cols) > 0:
@@ -360,13 +359,13 @@ class BronzeToSilverTestData(TemplateDataTest):
         list_cols_scale_expected = kwargs["list_cols_scale_expected"]
         list_cols_scale_observed = kwargs["list_cols_scale_observed"]
 
-        table_are_not_empty = check_if_two_df_are_not_empty(self.spark, df_expected, self.path_uc_bronze_table, self.path_uc_silver_table)
-        have_same_schema = check_if_two_df_have_same_schema(schema_expected, schema_observed)
-        is_correct_storage_location = check_if_data_path_is_correct(self.spark, self.path_uc_silver_table, 'cleansed_sources')
-        is_correct_table_type = check_if_table_type_is_correct(self.spark, self.path_uc_silver_table)
-        is_correct_data_format = check_if_table_data_format_is_correct(self.spark, self.path_uc_silver_table)
+        table_are_not_empty = custom_qa.check_if_two_df_are_not_empty(self.spark, df_expected, self.path_uc_bronze_table, self.path_uc_silver_table)
+        have_same_schema = custom_qa.check_if_two_df_have_same_schema(schema_expected, schema_observed)
+        is_correct_storage_location = custom_qa.check_if_data_path_is_correct(self.spark, self.path_uc_silver_table, 'cleansed_sources')
+        is_correct_table_type = custom_qa.check_if_table_type_is_correct(self.spark, self.path_uc_silver_table)
+        is_correct_data_format = custom_qa.check_if_table_data_format_is_correct(self.spark, self.path_uc_silver_table)
         have_same_owner = silver_test.check_if_tables_have_same_owner(self.spark, self.path_uc_bronze_table, self.path_uc_silver_table)
-        have_same_count_distinct = silver_test.check_if_table_have_same_count_distinct(self.__get_list_pk_cols(df_expected), df_expected, df_observed)
+        have_same_count_distinct = custom_qa.check_if_table_have_same_count_distinct(self.__get_list_pk_cols(df_expected), df_expected, df_observed)
         have_not_corrupt_rows_bronze = silver_test.check_if_have_not_corrupt_rows_bronze(
             spark=self.spark, 
             path_observed=self.path_uc_bronze_table, 
@@ -384,6 +383,18 @@ class BronzeToSilverTestData(TemplateDataTest):
             df_observed=df_observed,
             list_email_columns=self.list_email_columns,
             list_phone_columns=self.list_phone_columns,
+        )
+        have_same_total_rows_src_syst_effective_to = silver_test.check_if_col_src_syst_effective_to_is_correct(
+            spark=self.spark,
+            catalog_expected=self.catalog_silver, 
+            schema_expected=self.schema_silver_name,
+            table_expected=self.table_silver_name,
+        )
+        is_equal_src_syst_effective_to_col = silver_test.check_if_col_src_syst_effective_to_is_equal(
+            spark=self.spark,
+            catalog_expected=self.catalog_silver, 
+            schema_expected=self.schema_silver_name,
+            table_expected=self.table_silver_name,
         )
         dict_col_have_same_count_distinct = {
             c: silver_test.check_if_col_have_same_count_distinct(
@@ -419,6 +430,8 @@ class BronzeToSilverTestData(TemplateDataTest):
             "validation_rules_not_issues": validation_rules_not_issues,
             "have_not_corrupt_rows_bronze": have_not_corrupt_rows_bronze,
             "have_valid_flag_bronze": have_valid_flag_bronze,
+            "have_same_total_rows_src_syst_effective_to": have_same_total_rows_src_syst_effective_to,
+            "is_equal_src_syst_effective_to_col": is_equal_src_syst_effective_to_col,
         }
 
     def execute_great_expectations(
@@ -448,36 +461,33 @@ class BronzeToSilverTestData(TemplateDataTest):
 
         # not_null
         # execute for PKs and silver cols
-        self.logger.info("Executing: expect_column_values_to_not_be_null")
         for c in self.__get_list_cols_must_not_be_null(df_expected):
-            exp = ExpectationConfiguration(
-                expectation_type="expect_column_values_to_not_be_null",
-                kwargs={
-                    'column': c,
-                },
-            )
-            expectations.add_expectation(exp)
+            if c not in self.list_skip_cols_not_null:
+                self.logger.info(f"Executing: expect_column_values_to_not_be_null: {c}")
+                exp = ExpectationConfiguration(
+                    expectation_type="expect_column_values_to_not_be_null",
+                    kwargs={'column': c},
+                )
+                expectations.add_expectation(exp)
 
         # column_to_exist
-        self.logger.info("Executing: expect_column_to_exist")
         for c in self.__get_list_cols_must_exists(df_expected):
+            self.logger.info(f"Executing: expect_column_to_exist: {c}")
             exp = ExpectationConfiguration(
                 expectation_type="expect_column_to_exist",
-                kwargs={
-                    'column': c,
-                },
+                kwargs={'column': c},
             )
             expectations.add_expectation(exp)
 
         # type
-        self.logger.info("Executing: expect_column_values_to_be_of_type")
         list_col_names_target = [f.name.lower() for f in schema_expected]
         list_col_types_target = [str(type(f.dataType).__name__) for f in schema_expected]
-        for col_name, col_type in zip(list_col_names_target, list_col_types_target):
+        for c, col_type in zip(list_col_names_target, list_col_types_target):
+            self.logger.info(f"Executing: expect_column_values_to_be_of_type: {c}")
             exp = ExpectationConfiguration(
                 expectation_type="expect_column_values_to_be_of_type",
                 kwargs={
-                    'column': col_name,
+                    'column': c,
                     'type_': col_type,
                 },
             )
@@ -529,10 +539,10 @@ class BronzeToSilverTestData(TemplateDataTest):
                 add_custom_result_to_validation(exp, validation_results)
 
         # count distinct by col
-        self.logger.info("Executing: expect_column_have_same_count_distinct")
         dict_col_have_same_count_distinct = dict_result_custom_tests["dict_col_have_same_count_distinct"]
         list_business_cols = self.__get_list_business_cols(df_expected)
         for c in list_business_cols:
+            self.logger.info(f"Executing: expect_column_have_same_count_distinct: {c}")
             exp = ExpectationValidationResult(
                 success=(dict_col_have_same_count_distinct[c][0] is True),
                 expectation_config=ExpectationConfiguration(
@@ -696,6 +706,36 @@ class BronzeToSilverTestData(TemplateDataTest):
         )
         add_custom_result_to_validation(exp, validation_results)
 
+        # total rows for src_syst_effective_to
+        self.logger.info("Executing: expect_have_same_total_rows_src_syst_effective_to")
+        tuple_results = dict_result_custom_tests["have_same_total_rows_src_syst_effective_to"]
+        exp = ExpectationValidationResult(
+            success=(tuple_results[0] is True),
+            expectation_config=ExpectationConfiguration(
+                expectation_type="expect_have_same_total_rows_src_syst_effective_to",
+                kwargs={
+                    "result": tuple_results[0],
+                    "msg": tuple_results[1]
+                },
+            ),
+        )
+        add_custom_result_to_validation(exp, validation_results)
+
+        # equal src_syst_effective_to
+        self.logger.info("Executing: expect_equal_src_syst_effective_to_col")
+        tuple_results = dict_result_custom_tests["is_equal_src_syst_effective_to_col"]
+        exp = ExpectationValidationResult(
+            success=(tuple_results[0] is True),
+            expectation_config=ExpectationConfiguration(
+                expectation_type="expect_equal_src_syst_effective_to_col",
+                kwargs={
+                    "result": tuple_results[0],
+                    "msg": tuple_results[1]
+                },
+            ),
+        )
+        add_custom_result_to_validation(exp, validation_results)
+
         return validation_results
 
     def execute_data_tests(
@@ -738,5 +778,5 @@ class BronzeToSilverTestData(TemplateDataTest):
             kwargs=kwargs,
         )
         self.logger.info("========== finished running the data tests ==========")
-        
+
         return validation_results

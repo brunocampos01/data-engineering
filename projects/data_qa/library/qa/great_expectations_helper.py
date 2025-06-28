@@ -28,6 +28,27 @@ class GreatExpectationsHelper:
         return dict_filtered_results
 
     @staticmethod
+    def get_results_from_expectation_type(validation_results: Dict, expectation_type: str) -> Dict:
+        """
+        ### Get the validation_results and return a filtered dict
+
+        #### Args:
+            * expectation_type (str): e.g.: expect_same_content_rows
+            * validation_results (Dict): The result of the data validation.
+
+        #### Returns:
+            * List: splited results, example: [('date_of_death', True), ('pillar_name', True), ...]
+        """
+        list_success_and_column = []
+        for i in validation_results["results"]:
+            if expectation_type == i["expectation_config"]["expectation_type"]:
+                success = i["success"]
+                column = i["expectation_config"]["kwargs"].get("column")
+                list_success_and_column.append((expectation_type, column, success))
+
+        return list_success_and_column
+
+    @staticmethod
     def set_correct_status_gx_results(validation_results: Dict) -> Dict:
         """
         ### Analyze if the some data test not passed and then update the ge result

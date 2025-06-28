@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %md 
+# MAGIC %md
 # MAGIC # Orchestrator for BI Transversal: Facts
 
 # COMMAND ----------
@@ -23,7 +23,7 @@ dict_dims_relationalships = {
 }
 execution_parameters = {
     "query_path": "sql/bi_transversal/facts/fact_market_data.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_market_data",
     "table_type": "fact",
@@ -48,7 +48,7 @@ dict_dims_relationalships = {
 
 execution_parameters = {
     "query_path": "sql/bi_transversal/facts/fact_currency_conversion.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "fact_currency_conversion",
     "table_type": "fact",

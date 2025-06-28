@@ -18,7 +18,7 @@ results = []
 
 # DBTITLE 1,FACT_SHIP_INVOICE_LINES orchestrator - Execution part
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "fact_vessel_invoice_lines",
     "schema_gold_name": "dw_procurement",
@@ -41,7 +41,7 @@ print(results[-1])
 
 # DBTITLE 1,FACT_SHIP_PO_LINES orchestrator - Execution part
 execution_parameters = {
-    "catalog_azure_name": "csldw",
+    "catalog_azure_name": "XPTOdw",
     "schema_azure_name": "dw",
     "table_azure_name": "fact_vessel_po_lines",
     "schema_gold_name": "dw_procurement",

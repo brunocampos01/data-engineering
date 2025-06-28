@@ -9,7 +9,7 @@
 ```python
 execution_parameters = {
     "query_path": "sql/dimensions/bi_financial/dim_ledger.sql",
-    "catalog_name": "csldw",
+    "catalog_name": "XPTOdw",
     "schema_name": "dw",
     "table_name": "dim_ledger",
     "table_type": "dim",

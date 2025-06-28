@@ -71,7 +71,7 @@ dbutils.widgets.removeAll()
 # dim
 # -------
 dbutils.widgets.text("query_path", "sql/procurement/dimensions/dim_maintenance_job.sql")
-dbutils.widgets.text("catalog_name", "csldw")
+dbutils.widgets.text("catalog_name", "XPTOdw")
 dbutils.widgets.text("schema_name", "dw")
 dbutils.widgets.text("table_name", "dim_maintenance_job")
 dbutils.widgets.text("table_type", "dim")
@@ -81,7 +81,7 @@ dbutils.widgets.text("list_deny_cols", "['MAINT_JOB_CANCEL_DATE']")
 # fact without constraints
 # -------
 # dbutils.widgets.text("query_path", "sql/finance/facts/fact_fixed_asset_continuity.sql")
-# dbutils.widgets.text("catalog_name", "csldw")
+# dbutils.widgets.text("catalog_name", "XPTOdw")
 # dbutils.widgets.text("schema_name", "dw")
 # dbutils.widgets.text("table_name", "fact_fixed_asset_continuity")
 # dbutils.widgets.text("table_type", "fact")
@@ -91,7 +91,7 @@ dbutils.widgets.text("list_deny_cols", "['MAINT_JOB_CANCEL_DATE']")
 # fact with constraints
 # -------
 # dbutils.widgets.text("query_path", "sql/finance/facts/fact_fixed_asset_continuity.sql")
-# dbutils.widgets.text("catalog_name", "csldw")
+# dbutils.widgets.text("catalog_name", "XPTOdw")
 # dbutils.widgets.text("schema_name", "dw")
 # dbutils.widgets.text("table_name", "fact_fixed_asset_continuity")
 # dbutils.widgets.text("table_type", "fact")
@@ -235,7 +235,7 @@ logger.info(f'Cols that was truncated the milisec and sync the datetime: {list_a
 # COMMAND ----------
 
 # Used in test: referential integraty (expect_column_values_to_be_in_set)
-# only execute on azure 
+# only execute on azure
 if table_type == 'fact' and dict_dims_relationalships is not None:
 
     # TODO -> func
@@ -423,7 +423,7 @@ def execute_data_expectations(
     # complementary expectations
     # --------------------------
     # if fact orchestration, these tests only test fact columns
-    
+
     # fact with FK
     if table_type == 'fact' and dict_dims_relationalships is not None:
         have_corresponding_dims = dict_result_custom_tests["have_corresponding_dims"]
@@ -569,7 +569,7 @@ display(HTML(html_result_gx))
 # (
 #     df_diff_source_target,
 #     df_diff_target_source
-# ) = find_df_diff(df_source=df_onpremises_business_cols, 
+# ) = find_df_diff(df_source=df_onpremises_business_cols,
 #                  df_target=df_azure_business_cols)
 
 # list_cols_order_by = df_diff_source_target.columns
