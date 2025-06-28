@@ -3,13 +3,10 @@
 
 ## Project's Scope
 The scope of this project consists of building processes to populate the metadata mapped in the data documentation project into the data lake (descriptions, tags, properties and characteristics of the fields).
-Based on the metadata ingested to the data lake, generate visual representations of the data lake that can be explored by management, business and IT teams though Power BI dashboards.
+Based on the metadata ingested to the data lake, generate visual representations of the data lake that can be explored by management, business and IT teams though Power BI dashboards. [1]
 
 ## Project's Goal
-Populate all data gathered in the data documentation project to the Unity Catalog. Generate a Dashboard to give visibility.
-
-![Ilustration](docs/images/catalog_db.png)
-![Ilustration](docs/images/catalog_table_column.png)
+Populate all data gathered in the data documentation project to the Unity Catalog. Generate a Dashboard to give visibility of the data to CSL company. [1]
 
 
 ## Requirements
@@ -49,7 +46,19 @@ Star schema for fact_fields:
 
 ![Ilustration](docs/images/fact_fields_diagram.png)
 
-## Workflow
-![Ilustration](docs/images/workflow.png)
+
+
+<!--
+### Job: `update_data_catalog`
+In this notebook TODO
+
+### Job: `generate_bronze_catalog`
+In this notebook TODO
+
+### Job: `generate_silver_catalog`
+In this notebook TODO
+
+### Job: `generate_gold_catalog`
+In this notebook it is generated the dimensions and fact tables. -->
 
 ---

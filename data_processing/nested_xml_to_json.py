@@ -1,8 +1,7 @@
-from typing import Dict
 import json
-import sys
-import xml.etree.ElementTree as ET
 import os
+import xml.etree.ElementTree as ET
+from typing import Dict
 
 here = os.path.abspath(os.path.dirname(__file__))
 path_origin = ''.join(here + '/fruits.xml')

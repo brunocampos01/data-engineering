@@ -103,11 +103,6 @@ base_path_queries = ''.join(os.getcwd() + '/../' + 'src/loader/queries/')
 
 # COMMAND ----------
 
-# scheduler
-# abfss://landing@magellanadlsdev.dfs.core.windows.net/data_catalog/
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC ## Generate Catalog: Layers
 
@@ -189,6 +184,7 @@ if layer_name == 'bronze':
         df=df_tables_only_views,
         data_format='delta',
         table_name='tables_only_views',
+        folder_name='data_catalog_processed',
     )
 
 # COMMAND ----------
@@ -262,6 +258,7 @@ if layer_name == 'bronze':
         df=df_fields_only_views,
         data_format='delta',
         table_name='fields_only_views',
+        folder_name='data_catalog_processed',
     )
 
 # COMMAND ----------

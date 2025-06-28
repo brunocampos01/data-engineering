@@ -128,6 +128,9 @@ class Updater(BaseDataCatalog):
         list_tag_statements = get_list_statements(df_tables, 'tag_statement')
         self.logger.info(f'Total tag statements to add = {len(list_tag_statements)}')
         self.writer_uc.execute_statements(list_tag_statements, 'tag_statement')
+        
+        # It is not allow add comments in views
+        df_tables = df_tables.filter(col("obj_type") == "TABLE")
 
         list_description_statement = get_list_statements(df_tables, 'description_statement')
         self.logger.info(f'Total description statements to add = {len(list_description_statement)}')
@@ -154,7 +157,7 @@ class Updater(BaseDataCatalog):
             self.writer_uc.execute_statements(list_tag_statements, 'tag_statement')
 
         elif type_metadata == 'descriptions':
-            # It is not allow add comments in views, because of this it is necessary to filter
+            # It is not allow add comments in views
             df_field = df_field.filter(col('obj_type') == 'TABLE')
 
             list_description_statements = get_list_statements(df_field, 'description_statement')

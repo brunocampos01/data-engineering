@@ -53,7 +53,6 @@ class GoldDimTransformer(AddDWCols):
 
         # report ---
         df_new_rows = df_right.select('table_id').subtract(df_left.select('table_id'))
-        # self.logger.info(f'Total news rows added in df_tables = {df_new_rows.count()}')
         self.logger.info(f'Showing ID of the new rows:')
         df_new_rows.display()
         # report ---
@@ -84,10 +83,7 @@ class GoldDimTransformer(AddDWCols):
         list_tags_names = [tag_name for tag_name in list_tags_names
                            if tag_name not in list_tags_not_dim]
         for tag in list_tags_names:
-            df_dim = self.execute(
-                df_origin=df.select(tag),
-                table_name=tag,
-            )
+            df_dim = self.execute(df_origin=df.select(tag), table_name=tag)
             dict_df_dim_tags[tag] = df_dim
             writer_delta_table.execute(
                 df=df_dim,

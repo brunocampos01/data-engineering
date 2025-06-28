@@ -32,7 +32,7 @@ class DeltaTableWriter(BaseDataCatalog):
             .save(f'{self.delta_path}/{delta_table_name}')
 
     def _save_excel_to_azure_blob(
-        self, adls_conn: BlobServiceClient, container_name: str, file_name: str,
+        self, adls_conn: BlobServiceClient, container_name: str, folder_name: str, file_name: str,
     ) -> None:
         """
         Uploads an Excel file to an Azure Blob Storage container.
@@ -42,8 +42,9 @@ class DeltaTableWriter(BaseDataCatalog):
             file_name (str): The name of the Excel file to load.
                 e.g.: DataCatalog.xlsx
             container_name: e.g.: bronze, silver, gold
+            folder_name: e.g.: data_catalog_processed
         """
-        adls_file_path = f'data_catalog_processed/{file_name}'.replace('/tmp/', '')
+        adls_file_path = f'{folder_name}/{file_name}'.replace('/tmp/', '')
         blob_client = adls_conn.get_blob_client(container_name, adls_file_path)
 
         try:
@@ -62,6 +63,7 @@ class DeltaTableWriter(BaseDataCatalog):
         self,
         list_df: List,
         adls_conn: BlobServiceClient,
+        folder_name: str,
         file_name: str,
         list_sheet_tab: List,
     ) -> None:
@@ -75,7 +77,7 @@ class DeltaTableWriter(BaseDataCatalog):
                 e.g.: silver
             file_name (str): Name of the Excel file to be saved.
                 e.g.: DataCatalog.xlsx
-            folder (str): Folder in the Azure Blob Storage container.
+            adls_conn (str): Folder in the Azure Blob Storage container.
                 e.g.: data_catalog
             list_sheet_tab (list): List of sheet names for the DataFrames.
                 e.g.: ['Sources', 'Tables', 'Fields']
@@ -97,6 +99,7 @@ class DeltaTableWriter(BaseDataCatalog):
         self._save_excel_to_azure_blob(
             adls_conn=adls_conn,
             container_name=self.container_name,
+            folder_name=folder_name,
             file_name=excel_file_path,
         )
 
@@ -108,7 +111,7 @@ class DeltaTableWriter(BaseDataCatalog):
             blob_client = adls_conn.get_blob_client(self.container_name, adls_file_path)
             blob_client.delete_blob()
         except Exception as e:
-            self.logger.error(f'It was not possible to clean the folder: {folder_name}. \{e}')
+            self.logger.error(f'It was not possible to clean the: {self.container_name}/{adls_file_path}. \n{e}')
         else:
             self.logger.info(f"The file {file_name} in {self.container_name} have been deleted.")
 
@@ -116,6 +119,7 @@ class DeltaTableWriter(BaseDataCatalog):
         self,
         data_format: str,
         table_name: str,
+        folder_name: str = None,
         df: DataFrame = None,
         list_df: List[DataFrame] = None,
     ) -> None:
@@ -126,6 +130,7 @@ class DeltaTableWriter(BaseDataCatalog):
             self.__save_table_excel(
                 list_df=list_df,
                 adls_conn=self.get_azure_conn(),
+                folder_name=folder_name,
                 file_name='DataCatalog.xlsx',
                 list_sheet_tab=['Data Stewards', 'Layers', 'Sources', 'Tables', 'Fields'],
             )

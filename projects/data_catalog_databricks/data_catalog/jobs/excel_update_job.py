@@ -130,7 +130,8 @@ df_fields.display()
 writer_delta_table.execute(
     list_df=[df_data_stewards, df_layers, df_sources, df_tables, df_fields],
     data_format='excel',
-    table_name=f'fact_sources',
+    table_name='fact_sources',
+    folder_name='data_catalog_processed',
 )
 
 # COMMAND ----------
@@ -141,6 +142,14 @@ writer_delta_table.execute(
 # COMMAND ----------
 
 writer_delta_table.execute_cleaning('data_catalog', 'DataCatalog.xlsx')
+
+# warning: if workflow running in file_arrival mode, delete the code below
+writer_delta_table.execute(
+    list_df=[df_data_stewards, df_layers, df_sources, df_tables, df_fields],
+    data_format='excel',
+    table_name='fact_sources',
+    folder_name='data_catalog',
+)
 
 # COMMAND ----------
 

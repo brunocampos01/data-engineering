@@ -227,14 +227,10 @@ class GoldFactMeasuresTransformer(AddDWCols):
         )
 
         if fact_name == "source":
-            df_fact = self.__process_sources(
-                df_fact=df_fact, dict_df=dict_df, to_doc_fields=11, to_doc_tables=5
-            )
+            df_fact = self.__process_sources(df_fact=df_fact, dict_df=dict_df, to_doc_fields=11, to_doc_tables=5)
 
         elif fact_name == "table":
-            df_fact = self.__process_tables(
-                df=df_fact, dict_df=dict_df, to_doc_fields=11
-            )
+            df_fact = self.__process_tables(df=df_fact, dict_df=dict_df, to_doc_fields=11)
 
         elif fact_name == "field":
             df_fact = self.__process_fields(df_fact)

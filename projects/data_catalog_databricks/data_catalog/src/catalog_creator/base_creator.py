@@ -119,7 +119,7 @@ class BaseCreator(BaseDataCatalog):
         Returns a dict containing {table_name: primary_key} in a bronze tables.
         """
         return {
-            "sources": ["source", "source_last_updated_at"], 
+            "sources": ["source", "source_last_updated_at"],
             "tables": ["table_id", "table_last_updated_at"],
             "fields": ["field_id", "field_last_updated_at"],
             "layers": "layer",

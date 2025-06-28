@@ -8,6 +8,7 @@ from pyspark.sql.functions import (
     col,
     lit,
     monotonically_increasing_id,
+    row_number,
     when,
     sum,
     count,
@@ -45,10 +46,13 @@ class AddDWCols(DWTransformer):
         Notes:
             + 1 starts the id with 1 instaed of 0
         """
-        df_dim = df_dim.orderBy(dim_name) # used to create alphabetical order
+        window_spec = Window.orderBy(dim_name).rowsBetween(Window.unboundedPreceding, Window.currentRow)
+
         return df_dim \
             .withColumn(f"sk_{dim_name}", 
-                        when(col(dim_name) == '', '').otherwise(monotonically_increasing_id() + 1)) \
+                        when(col(dim_name) == '', '').otherwise(row_number().over(window_spec) - 1)) \
+            .withColumn(f"sk_{dim_name}", 
+                        when(col(f"sk_{dim_name}") == 0, (df_dim.count())).otherwise(col(f"sk_{dim_name}"))) \
             .orderBy(f"sk_{dim_name}")
 
     @staticmethod

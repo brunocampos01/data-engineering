@@ -8,17 +8,20 @@ from pyspark.errors import (
     AnalysisException,
     ParseException,
 )
-from pyspark.sql import DataFrame
+from pyspark.sql import (
+    DataFrame,
+    SparkSession,
+)
 from pyspark.sql.functions import when
 
 from data_catalog.src.base_data_catalog import BaseDataCatalog
 
 
 class MetadataUCWriter(BaseDataCatalog):
-    def __init__(self, spark, layer_name: str):
+    def __init__(self, spark: SparkSession, layer_name: str):
         super().__init__(spark, layer_name)
 
-    def _get_content(self, df: DataFrame, col_name: str) -> Any:
+    def __get_content(self, df: DataFrame, col_name: str) -> Any:
         """
         Args:
             df (DataFrame): The input DataFrame.
@@ -27,16 +30,14 @@ class MetadataUCWriter(BaseDataCatalog):
         """
         result = None
         try:
-            result = df \
-                .select(when(df[col_name].isNotNull(), df[col_name])
-                        .otherwise(None))
+            result = df.select(when(df[col_name].isNotNull(), df[col_name]).otherwise(None))
             return result.first()[0]
 
         except TypeError:
             self.logger.error(f'{col_name} not found in df.')
             return None
 
-    def _set_catalog_metadata(self, catalog_description: str) -> None:
+    def __set_catalog_metadata(self, catalog_description: str) -> None:
         full_layer_name = f'{self.env}_{self.layer_name}'
         if not isinstance(catalog_description, type(None)):
             self.spark.sql(f"""
@@ -44,14 +45,14 @@ class MetadataUCWriter(BaseDataCatalog):
                 IS "{catalog_description}"
             """)
 
-    def execute_set_catalog_metadata(
-        self,
-        df: DataFrame,
-    ) -> None:
-        catalog_description = self._get_content(df, 'layer_description')
-        self._set_catalog_metadata(catalog_description)
+    def execute_set_catalog_metadata(self, df: DataFrame) -> None:
+        catalog_description = self.__get_content(df, 'layer_description')
+        try:
+            self.__set_catalog_metadata(catalog_description)
+        except Exception as e:
+            self.logger.error(f'Error catalog: {e}')
 
-    def _set_db_metadata(
+    def __set_db_metadata(
         self,
         path_db_uc: str,
         db_tags_content: str,
@@ -106,15 +107,18 @@ class MetadataUCWriter(BaseDataCatalog):
         list_db_tags_names: List,
         current_time: str,
     ) -> None:
-        db_description = self._get_content(df, 'source_description')
-        db_tags = self._get_content(df, 'tags_aggregated')
+        db_description = self.__get_content(df, 'source_description')
+        db_tags = self.__get_content(df, 'tags_aggregated')
 
-        self._set_db_metadata(
-            path_db_uc,
-            db_tags,
-            db_description,
-            current_time,
-        )
+        try:
+            self.__set_db_metadata(
+                path_db_uc,
+                db_tags,
+                db_description,
+                current_time,
+            )
+        except Exception as e:
+            self.logger.error(f'Error database: {e}')
 
     def execute_statements(self, list_statements: List[str], col_name: str) -> None:
         total_executed = 0
@@ -132,7 +136,11 @@ class MetadataUCWriter(BaseDataCatalog):
                     print('100 statements executed.')    
                 elif total_executed == 200:
                     print('200 statements executed.') 
-     
+                elif total_executed == 300:
+                    print('300 statements executed.') 
+                elif total_executed == 400:
+                    print('400 statements executed.') 
+
             except (ParseException, AnalysisException) as e:
                 self.logger.error(f'{e}\n')
                 list_not_executed.append(stat)

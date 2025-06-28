@@ -40,12 +40,29 @@ class SilverTransformer(BaseTransformer):
             .filter(df["source"] != 'default')
 
     @staticmethod
+    def __remove_empty_rows(df: DataFrame, col_name: str) -> DataFrame:
+        """
+        When the source col presents a empty value, must to remove.
+
+        Args:
+            col_name (str): the name of the col to analyze if contains empty string ''
+            df (DataFrame): The input DataFrame. e.g.:
+            +----------+--------------------+-----------------------+----------------------+
+            |    source|  source_description|source_created_in_uc_at|source_last_updated_at|
+            +----------+--------------------+-----------------------+----------------------+
+            |          |                    |   2024-02-23 21:41:...|  2024-02-23 21:41:...| -> to remove
+            | bloomberg|                    |   2023-04-10 14:03:...|  2024-05-08 00:07:...|
+        """
+        return df.filter(col(col_name) != '')
+
+    @staticmethod
     def __handle_null_values_source_system_col(df: DataFrame, col_name: str) -> DataFrame:
         """
         If the tables was not mapped yet, the 'tag_table_multiple_data_sources' col can be null.
         To handle this situation this function input the source value.
 
         Args:
+            col_name (str): the name of the col to analyze.
             df (DataFrame): The input DataFrame.
                 Example:
                     ... -------------------------------+
@@ -98,7 +115,7 @@ class SilverTransformer(BaseTransformer):
                     ).otherwise(array())
                 )
         except Exception:
-            self.logger.warn(f'{col_name} not found in UC.')
+            self.logger.warning(f'{col_name} not found in UC.')
 
     @staticmethod
     def _insert_null(df: DataFrame) -> DataFrame:
@@ -293,9 +310,11 @@ class SilverTransformer(BaseTransformer):
         Args:
             df_origin (DataFrame): Input DataFrame to be processed.
 
-        Returns:            Processed DataFrame after dropping specified columns and duplicates.
+        Returns:            
+            Processed DataFrame after dropping specified columns and duplicates.
         """
         df = self.__remove_info_schema_rows(df_origin)
+        df = self.__remove_empty_rows(df, 'source')
         df = self.insert_value_in_null(df, 'source')
         list_cols_to_drop = ['layer', 'layer_raw', 'source_raw']
         self.logger.info(f'Removing the columns: {list_cols_to_drop}')
@@ -314,6 +333,7 @@ class SilverTransformer(BaseTransformer):
         df = self.__get_last_data_version(df_origin, 'table_id', 'table')
         df = self.__handle_null_values_source_system_col(df, 'tag_table_source_system')
         df = self.__remove_info_schema_rows(df)
+        df = self.__remove_empty_rows(df, 'table_id')
         df = self.__parse_str_col_to_list(df,'tag_table_source_system')
         df = self.__add_cols_last_updated_at(df)
         df = self.__add_col_last_data_steward(df)
@@ -329,13 +349,12 @@ class SilverTransformer(BaseTransformer):
             df_origin (DataFrame): Input DataFrame to be processed.
 
         Returns:
-            Processed df after 'data_steward' columns
-            and obtaining the last data version based on 'field_id'.
+            Processed df
         """
-        df = self.__get_last_data_version(df_origin, 'field_id', 'field')
-        df = self.__parse_str_col_to_list(df, 'tag_field_data_usage')
+        df = self.__get_last_data_version(df_origin, 'field_id', 'field')       
         df = self.insert_value_in_null(df, 'field')
-        return self.__remove_info_schema_rows(df)
+        df = self.__remove_info_schema_rows(df)
+        return self.__remove_empty_rows(df, 'field_id')
 
     def __process_sources_tables(self, df: DataFrame) -> DataFrame:
         """
@@ -365,26 +384,29 @@ class SilverTransformer(BaseTransformer):
 
     def __process_fields_data_usage(self, df: DataFrame) -> DataFrame:
         """
-        explode_outer() keep the null values
-        Table used to do a union
+        Use explode() to keep the null values related the fields. 
 
         Args:
             df (DataFrame): Input DataFrame to be processed.
+        
+        Returns:
+            Processed df.
         """
-        df = df \
-            .withColumn('fields_exploded', explode(df['array_tag_field_data_usage'])) \
-            .withColumn('fields_exploded', when(
-                    col('fields_exploded') == '', col('tag_field_data_usage')
-                ).otherwise(col('fields_exploded')))
-      
-        df = df.select(
+        try:
+            df = df \
+                .withColumn('fields_exploded', explode(df['array_tag_field_data_usage'])) \
+                .withColumn('fields_exploded', when(
+                        col('fields_exploded') == '', col('tag_field_data_usage')
+                    ).otherwise(col('fields_exploded')))
+        except Exception:
+            df = df.withColumn('fields_exploded', lit('field').cast('string'))
+
+        return df.select(
             col('field_id'),
             col('fields_exploded').alias('field_data_usage'), 
             col('field_created_in_uc_at'),
             col('field_last_updated_at')
         ).filter(col('fields_exploded') != '')
-        
-        return df
 
     def execute(self, df_origin: DataFrame, table_name: str) -> DataFrame:        
         if table_name == 'sources':
