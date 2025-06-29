@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 from requests.auth import HTTPBasicAuth
@@ -16,11 +17,7 @@ def start_conn(username: str, password: str, url: str):
   print(response)
   
   try:     
-      es =  Elasticsearch(hosts = url,
-                          http_auth = (username, password),
-                          timeout = 5000)
-      return es
-      
+      return Elasticsearch(hosts=url, http_auth=(username, password), timeout=5000)
   except es.connection.Error as err:
       print(f"Failed connection: {err}, response: {response}, username: {username}, password: {password}")
 
@@ -54,8 +51,7 @@ def convert_to_dataframe(list_element: list):
     return df.info()
 
 
-def save_data_processed(df: 'dataframe' = None,
-                        path: str = 'data/processed/') -> None:
+def save_data_processed(df: 'dataframe' = None, path: str = 'data/processed/') -> None:
     df.to_csv(path_or_buf=path,
               sep=',',
               index=False,
