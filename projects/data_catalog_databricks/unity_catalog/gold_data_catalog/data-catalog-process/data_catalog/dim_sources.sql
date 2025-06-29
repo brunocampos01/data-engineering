@@ -11,7 +11,7 @@ CREATE WIDGET DROPDOWN storage_account DEFAULT "magellanadlsdev"  CHOICES (VALUE
 
 -- COMMAND ----------
 
-SELECT "${data_owner}", "${data_catalog}", "${database_name}", "${storage_account}"
+SELECT "${data_owner}", "${data_catalog}", "${database_name}", "${storage_account}";
 
 -- COMMAND ----------
 
