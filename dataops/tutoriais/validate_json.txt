@@ -1,0 +1,1 @@
+json-select /opt/oracle/bda/install/state/config.json

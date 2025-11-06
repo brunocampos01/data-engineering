@@ -1,0 +1,21 @@
+cookbooks
+└── learn_chef_apache2
+    ├── Berksfile
+    ├── CHANGELOG.md
+    ├── chefignore
+    ├── LICENSE
+    ├── metadata.rb
+    ├── README.md
+    ├── recipes
+    │   └── default.rb
+    ├── spec
+    │   ├── spec_helper.rb
+    │   └── unit
+    │       └── recipes
+    │           └── default_spec.rb
+    └── test
+        └── integration
+            └── default
+                └── default_test.rb
+
+8 directories, 10 files

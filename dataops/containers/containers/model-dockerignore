@@ -1,0 +1,15 @@
+# Temporary Python build
+build/
+dist/
+*.egg
+*.egg-info/
+**/*.pyc
+**/__pycache__/
+
+# Git
+.git/
+.gitignore
+
+# Dockerfile
+Dockerfile
+.dockerignore
