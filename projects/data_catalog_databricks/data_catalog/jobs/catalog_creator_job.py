@@ -22,7 +22,7 @@ dbutils.widgets.removeAll()
 # COMMAND ----------
 
 dbutils.widgets.text("layer_name", "gold")
-dbutils.widgets.text("owner", "bruno.campos@cslships.com")
+dbutils.widgets.text("owner", "bruno.campos@google.com")
 dbutils.widgets.text("create_catalog_and_dbs", "True")
 
 # COMMAND ----------
