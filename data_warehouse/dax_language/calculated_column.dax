@@ -1,0 +1,369 @@
+// ------------------------------------------------------------------------------------------------
+// fChamadoApontamento
+
+Data IDDATA := 
+    DATEVALUE(
+        MID(fChamadoApontamento[IDDATA],
+            1, 4) & "/" & 
+        MID(fChamadoApontamento[IDDATA],
+            5, 2)  & "/" &
+        MID(fChamadoApontamento[IDDATA],
+            7, 2)
+    )
+
+Ano IDDATA := 
+    MID(fChamadoApontamento[IDDATA], 1, 4)
+
+Mês IDDATA := 
+    MID(fChamadoApontamento[IDDATA], 5, 2)
+
+Data IDDATA := 
+    DATEVALUE([Dia IDDATA] & "/" & [Mês IDDATA] & "/" & [Ano IDDATA])
+
+Média Horas Apontadas por Apontamento :=
+    IF(AND([Ano IDDATA] == YEAR(TODAY()), [Mês IDDATA] == MONTH(TODAY())), 
+        fChamadoApontamento[Horas Apontadas],
+        0)
+
+Qtde Apontamento :=
+    1
+// ------------------------------------------------------------------------------------------------
+// fChamadoArtefatoEvolucao
+
+Data IDDTPRAZOSLA := 
+    DATEVALUE(
+        MID(fChamadoArtefatoEvolucao[IDDTPRAZOSLA],
+            1, 4) & "/" & 
+        MID(fChamadoArtefatoEvolucao[IDDTPRAZOSLA],
+            5, 2)  & "/" &
+        MID(fChamadoArtefatoEvolucao[IDDTPRAZOSLA],
+            7, 2)
+    )
+
+Prazo SLA Formatado := 
+    IF(fChamadoArtefatoEvolucao[Data IDDTPRAZOSLA] == DATEVALUE("01/01/1900"), 
+        BLANK(),
+        fChamadoArtefatoEvolucao[Data IDDTPRAZOSLA])
+
+
+// ------------------------------------------------------------------------------------------------
+// fChamadoBacklog
+
+Data IDDTPREVISTA := 
+    DATEVALUE(
+        MID(fChamadoBacklog[IDDTPREVISTA],
+            1, 4) & "/" & 
+        MID(fChamadoBacklog[IDDTPREVISTA],
+            5, 2)  & "/" &
+        MID(fChamadoBacklog[IDDTPREVISTA],
+            7, 2)
+    )
+
+Data IDDTAPURACAO := 
+    DATEVALUE(
+        MID(fChamadoBacklog[IDDTAPURACAO],
+            1, 4) & "/" & 
+        MID(fChamadoBacklog[IDDTAPURACAO],
+            5, 2)  & "/" &
+        MID(fChamadoBacklog[IDDTAPURACAO],
+            7, 2)
+    )
+
+Data IDDTPRAZOSLA := 
+    DATEVALUE(
+        MID(fChamadoBacklog[IDDTPRAZOSLA],
+            1, 4) & "/" & 
+        MID(fChamadoBacklog[IDDTPRAZOSLA],
+            5, 2)  & "/" &
+        MID(fChamadoBacklog[IDDTPRAZOSLA],
+            7, 2)
+    )
+
+Prazo SLA Formatado :=
+    IF(fChamadoBacklog[Data IDDTPRAZOSLA] == DATEVALUE("01/01/1900"), 
+        BLANK(),
+        fChamadoBacklog[Data IDDTPRAZOSLA])
+
+// Tipo SLA = IF(fBacklog[Prazo SLA]=BLANK();"Sem SLA";IF(AND(MONTH(fBacklog[Mês Apuração])=MONTH(TODAY());fBacklog[Prazo SLA]>=TODAY());"SLA a Vencer"; IF(AND(MONTH(fBacklog[Mês Apuração])<>MONTH(TODAY());fBacklog[Prazo SLA]>=fBacklog[Mês Apuração]);"SLA a Vencer";"SLA Vencido")))
+Tipo SLA :=
+    IF(fChamadoBacklog[Data IDDTPRAZOSLA] = DATEVALUE("01/01/1900"),
+        "Sem SLA",
+        IF(AND(MONTH(fChamadoBacklog[Data IDDTAPURACAO]) = MONTH(TODAY()), fChamadoBacklog[Data IDDTAPURACAO] >= TODAY()),
+            "SLA a Vencer",
+            IF(AND(MONTH(fChamadoBacklog[Data IDDTAPURACAO]) <> MONTH(TODAY()), fChamadoBacklog[Data IDDTPRAZOSLA] >= fChamadoBacklog[Data IDDTAPURACAO]), 
+                "SLA a Vencer",
+                "SLA Vencido")
+        )
+    )
+
+// original 
+// SLA Vencido = IF(fBacklog[Prazo SLA]=BLANK(), 0,
+//  IF(and(month(fBacklog[Mês Apuração])=month(today()),year(fBacklog[Mês Apuração])=year(today())),
+//  IF(fBacklog[Prazo SLA]>=TODAY(),0,1), IF(fBacklog[Prazo SLA]>=[Mês Apuração],0,1)))
+SLA Vencido :=
+    IF(fChamadoBacklog[Data IDDTPRAZOSLA] = DATEVALUE("01/01/1900"), 
+        0, 
+        IF(AND(fChamadoBacklog[Data IDDTAPURACAO] = MONTH(TODAY()), fChamadoBacklog[Data IDDTAPURACAO] = YEAR(TODAY())),
+            IF(fChamadoBacklog[Data IDDTPRAZOSLA] >= TODAY(), 
+                0,
+                1), 
+            IF(fChamadoBacklog[Data IDDTPRAZOSLA] >= [Data IDDTAPURACAO],
+                0,
+                1)
+        ) 
+    )	
+
+// original 
+// Sem SLA = IF(fBacklog[Prazo SLA]=BLANK(),1,0)
+Sem SLA :=
+    IF(fChamadoBacklog[Data IDDTPRAZOSLA] = DATEVALUE("01/01/1900"),
+        1,
+        0)
+
+// original
+// SLA a Vencer = IF(fBacklog[Prazo SLA]=BLANK(),
+//     0,
+//     IF(and(month(fBacklog[Mês Apuração])=month(today()),
+//            year(fBacklog[Mês Apuração])=year(today())),
+//     IF(fBacklog[Prazo SLA]>=TODAY(),1,0),
+//     IF(fBacklog[Prazo SLA]>=[Mês Apuração],1,0)))
+SLA a Vencer :=
+    IF(fChamadoBacklog[Data IDDTPRAZOSLA] = DATEVALUE("01/01/1900"), 
+        0,
+        IF(AND(MONTH(fChamadoBacklog[Data IDDTAPURACAO]) = MONTH(TODAY()), YEAR(fChamadoBacklog[Data IDDTAPURACAO]) = YEAR(TODAY())),
+            IF(fChamadoBacklog[Data IDDTPRAZOSLA] >= TODAY(),
+                1,
+                0),
+            IF(fChamadoBacklog[Data IDDTPRAZOSLA] >= [Data IDDTAPURACAO],
+                1,
+                0)
+        )
+    )
+
+// ------------------------------------------------------------------------------------------------
+// fChamadoBacklogZero
+
+Data IDDTPRAZOSLA :=
+    DATEVALUE(
+        MID(fChamadoBacklogZero[IDDTPRAZOSLA],
+            1, 4) & "/" & 
+        MID(fChamadoBacklogZero[IDDTPRAZOSLA],
+            5, 2)  & "/" &
+        MID(fChamadoBacklogZero[IDDTPRAZOSLA],
+            7, 2)
+    )
+
+Prazo SLA Formatado := 
+    IF(fChamadoBacklogZero[Data IDDTPRAZOSLA] == DATEVALUE("01/01/1900"),
+        BLANK(),
+        fChamadoBacklogZero[Data IDDTPRAZOSLA])
+
+
+// ------------------------------------------------------------------------------------------------
+// fChamadoEntrada
+
+Data IDDTPRAZOSLA :=
+    DATEVALUE(
+        MID(fChamadoEntrada[IDDTPRAZOSLA],
+            1, 4) & "/" & 
+        MID(fChamadoEntrada[IDDTPRAZOSLA],
+            5, 2)  & "/" &
+        MID(fChamadoEntrada[IDDTPRAZOSLA],
+            7, 2)
+    )
+
+Prazo SLA Formatado :=
+    IF(fChamadoEntrada[Data IDDTPRAZOSLA] == DATEVALUE("01/01/1900"),
+        BLANK(),
+        fChamadoEntrada[Data IDDTPRAZOSLA])
+
+
+// ------------------------------------------------------------------------------------------------
+// fChamadoNegociado
+
+Data IDDTPRAZOSLA :=
+    DATEVALUE(
+        MID(fChamadoNegociado[IDDTPRAZOSLA],
+            1, 4) & "/" & 
+        MID(fChamadoNegociado[IDDTPRAZOSLA],
+            5, 2)  & "/" &
+        MID(fChamadoNegociado[IDDTPRAZOSLA],
+            7, 2)
+    )
+
+Prazo SLA Formatado := 
+    IF(fChamadoNegociado[Data IDDTPRAZOSLA] == DATEVALUE("01/01/1900"),
+        BLANK(),
+        fChamadoNegociado[Data IDDTPRAZOSLA])
+
+
+// ------------------------------------------------------------------------------------------------
+// fChamadoSaida
+
+Data IDDTRESOLUCAO :=
+    MID(fChamadoSaida[IDDTRESOLUCAO],
+        1, 4) & "/" & 
+    MID(fChamadoSaida[IDDTRESOLUCAO],
+        5, 2)  & "/" &
+    MID(fChamadoSaida[IDDTRESOLUCAO],
+        7, 2) & " "&
+    [IDHRRESOLUCAO]
+
+Data IDDTPRAZOSLA :=
+    DATEVALUE(
+        MID(fChamadoSaida[IDDTPRAZOSLA],
+            1, 4) & "/" & 
+        MID(fChamadoSaida[IDDTPRAZOSLA],
+            5, 2)  & "/" &
+        MID(fChamadoSaida[IDDTPRAZOSLA],
+            7, 2)
+    )
+
+Prazo SLA Formatado := 
+    IF(fChamadoSaida[Data IDDTPRAZOSLA] == DATEVALUE("01/01/1900"),
+        BLANK(),
+        fChamadoSaida[Data IDDTPRAZOSLA])
+
+// original
+// No Prazo = IF(ISBLANK('fSaídas'[Prazo SLA]),1,
+//      IF('fSaídas'[Fase do ciclo]="Release Transition",1, IF('fSaídas'[Fase do ciclo]="Homologação",1, IF('fSaídas'[Fase do ciclo]="Homologação do Cliente",1, IF('fSaídas'[Fase do ciclo]="Homologação do cliente (interno)",1, IF('fSaídas'[Resolution Date]<='fSaídas'[Prazo SLA],1,0))))))
+No Prazo = IF(fChamadoSaida[Data IDDTPRAZOSLA] = DATEVALUE("01/01/1900"),
+    1,
+    IF(fChamadoSaida[IDFASECICLO] = 5,
+        1,
+        IF(fChamadoSaida[IDFASECICLO] = 11,
+            1,
+            IF(fChamadoSaida[IDFASECICLO] = 19,
+                1,
+                IF(fChamadoSaida[Data IDDTRESOLUCAO] <= fChamadoSaida[Data IDDTPRAZOSLA],
+                    1,
+                    0)
+            )
+        )
+    ) 
+)
+
+// Fora Prazo = IF('fSaídas'[No Prazo]=1,0,1)
+Fora Prazo :=
+    IF(fChamadoSaida[No Prazo]=1, 0, 1)
+
+
+// ------------------------------------------------------------------------------------------------
+// fChamadoTempoMedio
+
+Data IDDTINICIOSTATUS :=
+    DATEVALUE(
+        MID(fChamadoTempoMedio[IDDTINICIOSTATUS],
+            1, 4) & "/" & 
+        MID(fChamadoTempoMedio[IDDTINICIOSTATUS],
+            5, 2)  & "/" &
+        MID(fChamadoTempoMedio[IDDTINICIOSTATUS],
+            7, 2)
+    )
+
+Data IDDTFINALSTATUS :=
+    DATEVALUE(
+        MID(fChamadoTempoMedio[IDDTFINALSTATUS],
+            1, 4) & "/" & 
+        MID(fChamadoTempoMedio[IDDTFINALSTATUS],
+            5, 2)  & "/" &
+        MID(fChamadoTempoMedio[IDDTFINALSTATUS],
+            7, 2)
+    )
+
+Diferença Dias Status :=
+    DATEDIFF(fChamadoTempoMedio[Data IDDTINICIOSTATUS],
+        fChamadoTempoMedio[Data IDDTFINALSTATUS],
+        DAY)
+
+// Tempo Gasto = IF(CALCULATE(SUM('dCalendário'[Fim de Semana]),DATESBETWEEN('dCalendário'[Data],'fTempoMédioRTC'[Inicio Status],'fTempoMédioRTC'[Final Status]))=0,0,CALCULATE(SUM('dCalendário'[Fim de Semana]),DATESBETWEEN('dCalendário'[Data],'fTempoMédioRTC'[Inicio Status],'fTempoMédioRTC'[Final Status]))-1)
+Tempo Gasto :=
+    IF(CALCULATE(SUM(dTempo[Binário Flag Dia da Semana]),
+        DATESBETWEEN(dTempo[Data],
+            fChamadoTempoMedio[Data IDDTINICIOSTATUS],
+            fChamadoTempoMedio[Data IDDTFINALSTATUS])) = 0, 
+        0,
+        CALCULATE(SUM(dTempo[Binário Flag Dia da Semana]),
+            DATESBETWEEN(dTempo[Data],
+                fChamadoTempoMedio[Data IDDTINICIOSTATUS],
+                fChamadoTempoMedio[Data IDDTFINALSTATUS])) - 1)
+                                        
+
+
+// ------------------------------------------------------------------------------------------------
+// Dimensões
+// ------------------------------------------------------------------------------------------------
+// dChamado
+Tipo TAG :=
+    IF(SEARCH("#prioridademaxima",dChamado[Tag],,BLANK()) > 0, "#PRIORIDADE MÁXIMA",
+        IF(SEARCH("#NOTIFICACAO",dChamado[Tag],,BLANK())>0,"#NOTIFICAÇÃO",
+            IF(SEARCH("#NOTIFICAÇÃO",dChamado[Tag],,BLANK())>0,"#NOTIFICAÇÃO",
+                IF(AND(dChamado[Flag Performace - origem] = 1,dChamado[Flag Performace Encaminhada - origem]=1),"#PERFORMANCE",
+                    IF(SEARCH("#performance",dChamado[Tag],,BLANK())>0,"#PERFORMANCE","OUTRAS")
+                )
+            )
+        )
+    )
+
+
+Versão Pai :=
+    IF(dChamado[Versão Origem] = BLANK(),
+        "Não Informado",
+        IF(LEN(dChamado[Versão Origem])<=2, 
+            "Outros",LEFT(dChamado[Versão Origem],
+            5)
+        )
+    )
+
+// ------------------------------------------------------------------------------------------------
+// dTempo
+
+Mês Atual :=
+    IF(dTempo[Código Ano] = MONTH(TODAY()), 1, 0)
+
+Ano Atual :=
+    IF(dTempo[Código Mês] = YEAR(TODAY()), 1, 0)
+
+Período Atual :=
+    IF(dTempo[Mês Atual] && dTempo[Ano Atual],
+        "Sim",
+        "Não")
+
+Binário Flag Dia da Semana := 
+    IF(dTempo[Flag Dia de Semana] = "S", 1, 0)
+
+Binário Flag Fim de Semana :=
+    IF(dTempo[Flag Fim de Semana] = "S", 1, 0)
+
+Binário Flag Feriado :=
+    IF(dTempo[Flag Feriado] = "S", 1, 0)
+
+// ------------------------------------------------------------------------------------------------
+// dTempoApontamento
+
+// dTempoApontamento
+Binário Flag Dia da Semana := 
+    IF(dTempoApontamento[Flag Dia de Semana] = "S", 1, 0)
+
+// dTipoChamado
+Flag Defeito Consequência :=
+    IF(dTipoChamado[Tipo Chamado] = "Defeito Consequência", 1, 0)
+
+// dChamado
+Versão Pai :=
+    IF(dChamado[Versão Origem] = BLANK(),
+        "Não Informado",
+        IF(LEN(dChamado[Versão Origem])<=2, "Outros",LEFT(dChamado[Versão Origem], 5)
+        )
+    )
+
+// ------------------------------------------------------------------------------------------------
+// --- Nível de Autorização ---
+
+// LOOKUPVALUE( <result_columnName>,
+//              <search_columnName>,
+//              <search_value>[, <search_columnName>, <search_value>]…[, <alternateResult>])
+
+// role fChamadoApontamento
+=fChamadoApontamento[IDUSUARIO]=LOOKUPVALUE(dUsuario[IDUSUARIO],dUsuario[Login],[Usuário Logado])
+// =colun(JOIN)colun,WHERE
