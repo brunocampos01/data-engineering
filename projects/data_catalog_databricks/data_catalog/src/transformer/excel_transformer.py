@@ -1,5 +1,3 @@
-from typing import List
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -38,7 +36,7 @@ class ExcelTransformer(BaseTransformer):
 
     @staticmethod
     def __join(
-        df_uc: DataFrame, df_landing: DataFrame, join_cond: List, table_name: str
+        df_uc: DataFrame, df_landing: DataFrame, join_cond: list, table_name: str
     ) -> DataFrame:
         """
         This function join df from landing witch contains coments in views
@@ -119,7 +117,7 @@ class ExcelTransformer(BaseTransformer):
         Returns:
             DataFrame: Processed DataFrame containing tables metadata.
         """
-        if place != None:
+        if place is not None:
             if place == 'uc':
                 df = self.spark.sql("""
                     SELECT * FROM `tables` 
@@ -163,7 +161,7 @@ class ExcelTransformer(BaseTransformer):
         Returns:
             DataFrame: Processed df containing fields.
         """
-        if place != None:
+        if place is not None:
             if place == 'uc':
                 df = self.spark.sql("""
                     SELECT * FROM `fields` 

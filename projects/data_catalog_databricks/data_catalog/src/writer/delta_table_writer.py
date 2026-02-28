@@ -1,6 +1,5 @@
 import os
 import tempfile
-from typing import List
 
 import pandas as pd
 from azure.storage.blob import BlobServiceClient
@@ -51,21 +50,21 @@ class DeltaTableWriter(BaseDataCatalog):
             with open(file_name, 'rb') as data:
                 blob_client.upload_blob(data, overwrite=True)
         except Exception as e:
-            raise Exception(
+            raise IOError(
                 f"Failed to upload blob. Check the parameters:\n"
                 f"container_name: {container_name}\n"
-                f"adsl_file_path: {adls_file_path}\n"
-                f"{e}")
+                f"adsl_file_path: {adls_file_path}"
+            ) from e
         else:
             self.logger.info(f"Saved at: {container_name}/{adls_file_path}")
 
     def __save_table_excel(
         self,
-        list_df: List,
+        list_df: list,
         adls_conn: BlobServiceClient,
         folder_name: str,
         file_name: str,
-        list_sheet_tab: List,
+        list_sheet_tab: list,
     ) -> None:
         """
         Save a list of df to an Excel file and upload it to Azure Blob Storage.
@@ -121,7 +120,7 @@ class DeltaTableWriter(BaseDataCatalog):
         table_name: str,
         folder_name: str = None,
         df: DataFrame = None,
-        list_df: List[DataFrame] = None,
+        list_df: list[DataFrame] = None,
     ) -> None:
         if data_format == 'delta':
             self.__save_delta_table(df, table_name)

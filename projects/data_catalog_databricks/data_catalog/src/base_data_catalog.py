@@ -1,6 +1,5 @@
 import os
 from abc import ABC
-from typing import List
 
 import IPython
 from pyspark.sql import SparkSession
@@ -20,6 +19,10 @@ class BaseDataCatalog(ABC):
         ipython = IPython.get_ipython()
         self.dbutils = ipython.user_ns["dbutils"] if ipython else None
 
+    @property
+    def catalog_name(self) -> str:
+        return 'data_catalog' if self.env == 'prod' else f'{self.env}_data_catalog'
+
     @staticmethod
     def get_azure_conn():
         return AzureADSL()._create_conn()
@@ -37,7 +40,7 @@ class BaseDataCatalog(ABC):
         """
         return DataLakeStorage.get_storage_url(container_name, folder)
 
-    def get_folder_names_adsl(self, container_name: str, folder: str) -> List[str]:
+    def get_folder_names_adsl(self, container_name: str, folder: str) -> list[str]:
         """
         Fetches the names of the folders inside a specified folder in
         an Azure Blob Storage container.
@@ -55,13 +58,11 @@ class BaseDataCatalog(ABC):
         container_client = self.get_container_client(container_name)
         blob_list = container_client.list_blobs(folder)
 
-        list_delta_tables = []
-        for blob in blob_list:
-                folder = blob.name.split('/')
-                if len(folder) == 2:
-                    list_delta_tables.append(folder[1])
-
-        return list_delta_tables
+        return [
+            blob.name.split('/')[1]
+            for blob in blob_list
+            if len(blob.name.split('/')) == 2
+        ]
 
     @staticmethod
     def get_list_cols_default():

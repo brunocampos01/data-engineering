@@ -1,4 +1,4 @@
-from typing import Dict
+from collections import defaultdict
 
 from pyspark.sql import (
     DataFrame,
@@ -23,8 +23,6 @@ class MapSourcesTablesLoader(BaseDataCatalog):
         folder: str,
     ):
         super().__init__(spark, layer_name)
-        self.spark = spark
-        self.layer_name = layer_name
         self.container_name = container_name
         self.folder = folder
         self.excel_loader = ExcelLoader(self.spark, self.layer_name, self.container_name, self.folder)
@@ -33,7 +31,7 @@ class MapSourcesTablesLoader(BaseDataCatalog):
     @staticmethod
     def map_excel_uc_sources(
         df: DataFrame, key_col_name: str = 'source', value_col_name: str = 'source_raw'
-    ) -> Dict:
+    ) -> dict:
         """
         Return:
             e.g.:
@@ -77,7 +75,7 @@ class MapSourcesTablesLoader(BaseDataCatalog):
 
         return df_table_list.orderBy('source_raw')
 
-    def map_sources_with_tables(self, df_origin_fields) -> Dict:
+    def map_sources_with_tables(self, df_origin_fields) -> dict:
         """
         Return:
              e.g.:
@@ -92,23 +90,13 @@ class MapSourcesTablesLoader(BaseDataCatalog):
         """
         df = self._agg_sources_and_tables(df_origin_fields)
 
-        dict_source_tables = {}
+        dict_source_tables = defaultdict(lambda: defaultdict(list))
         for row in df.collect():
-            source = row['source']
-            source_raw = row['source_raw']
-            tables_list = row['tables_list']
+            dict_source_tables[row['source']][row['source_raw']].extend(row['tables_list'])
 
-            if source not in dict_source_tables:
-                dict_source_tables[source] = {}
+        return dict(dict_source_tables)
 
-            if source_raw in dict_source_tables[source]:
-                dict_source_tables[source][source_raw].extend(tables_list)
-            else:
-                dict_source_tables[source][source_raw] = tables_list
-
-        return dict_source_tables
-
-    def execute(self, file_name_catalog: str) -> Dict:
+    def execute(self, file_name_catalog: str) -> dict:
         """
         NOTE: Tables tab contains all layers, sources and tables.
 

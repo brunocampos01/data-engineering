@@ -1,5 +1,3 @@
-from typing import List
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -23,7 +21,7 @@ class DataCleaner(BaseDataCatalog):
         super().__init__(spark, layer_name)
 
     @staticmethod
-    def _get_list_cols_to_standard(table_name: str, is_uc: bool) -> List[str]:
+    def _get_list_cols_to_standard(table_name: str, is_uc: bool) -> list[str]:
         """
         Get a list of column names to be standardized based on the table name.
 
@@ -33,19 +31,16 @@ class DataCleaner(BaseDataCatalog):
         Returns:
             list: A list of column names.
         """
-        if table_name == 'layers':
-            return ['layer']
-        elif table_name == 'sources':
-            return ['source']
-        elif table_name == 'tables':
-            if is_uc:
-                return ['layer', 'source_raw', 'source', 'table', 'tag_table_source_system']
-            else:
-                return ['layer', 'source_raw', 'source', 'table', 'source_system']
-        elif table_name == 'fields':
-            return ['layer', 'source_raw', 'source', 'table']
-        elif table_name == 'data_stewards':
-            return ['data_steward']
+        base_cols = {
+            'layers': ['layer'],
+            'sources': ['source'],
+            'fields': ['layer', 'source_raw', 'source', 'table'],
+            'data_stewards': ['data_steward'],
+        }
+        if table_name == 'tables':
+            source_col = 'tag_table_source_system' if is_uc else 'source_system'
+            return ['layer', 'source_raw', 'source', 'table', source_col]
+        return base_cols.get(table_name)
 
     @staticmethod
     def remove_unnamed_cols(df: DataFrame) -> DataFrame:
@@ -84,7 +79,7 @@ class DataCleaner(BaseDataCatalog):
         return df.select(*new_cols_name)
 
     @staticmethod
-    def standardize_col_content(df: DataFrame, list_cols: List) -> DataFrame:
+    def standardize_col_content(df: DataFrame, list_cols: list) -> DataFrame:
         """
         Standardize the content of specified columns in a PySpark DataFrame.
         This func trims leading & trailing spaces & converts the content of specified

@@ -8,12 +8,6 @@ class TableHelper(BaseCreator):
         super().__init__(spark, layer_name, owner)
         self.storage_account = storage_account
     
-    def use_catalog(self) -> None:
-        if self.env == 'prod':
-            return self.spark.sql("USE CATALOG `data_catalog`")
-        else:
-            return self.spark.sql(f"USE CATALOG `{self.env}_data_catalog`")
-
     def drop(self, db: str, table_name: str) -> None:
         return self.spark.sql(f"DROP TABLE IF EXISTS `{db}`.`{table_name}`")
 

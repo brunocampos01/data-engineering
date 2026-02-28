@@ -1,5 +1,3 @@
-from typing import Dict
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -33,7 +31,7 @@ class GoldFactTransformer(AddDWCols):
         self,
         fact_name: str,
         df_base: DataFrame,
-        dict_df_dim_tags: Dict,
+        dict_df_dim_tags: dict,
     ) -> DataFrame:
         """
         Execute data transformation on the provided DataFrame based on

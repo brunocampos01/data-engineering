@@ -1,8 +1,5 @@
 import time
-from typing import (
-    Any,
-    List,
-)
+from typing import Any
 
 from pyspark.errors import (
     AnalysisException,
@@ -16,6 +13,8 @@ from pyspark.sql.functions import when
 
 from data_catalog.src.base_data_catalog import BaseDataCatalog
 
+PROGRESS_LOG_INTERVAL = 100
+
 
 class MetadataUCWriter(BaseDataCatalog):
     def __init__(self, spark: SparkSession, layer_name: str):
@@ -25,21 +24,19 @@ class MetadataUCWriter(BaseDataCatalog):
         """
         Args:
             df (DataFrame): The input DataFrame.
-            tags_aggregated (str): 
+            col_name (str):
                 example: 'tags_aggregated' or 'obj_type' or table_description
         """
-        result = None
         try:
             result = df.select(when(df[col_name].isNotNull(), df[col_name]).otherwise(None))
             return result.first()[0]
-
         except TypeError:
             self.logger.error(f'{col_name} not found in df.')
             return None
 
     def __set_catalog_metadata(self, catalog_description: str) -> None:
         full_layer_name = f'{self.env}_{self.layer_name}'
-        if not isinstance(catalog_description, type(None)):
+        if catalog_description is not None:
             self.spark.sql(f"""
                 COMMENT ON CATALOG {full_layer_name}
                 IS "{catalog_description}"
@@ -78,14 +75,14 @@ class MetadataUCWriter(BaseDataCatalog):
         """
         executed = False
 
-        if not isinstance(db_tags_content, type(None)):
+        if db_tags_content is not None:
             self.spark.sql(f"""
                 ALTER DATABASE {path_db_uc}
                 SET TAGS ({db_tags_content})
             """)
             executed = True
 
-        if not isinstance(db_description, type(None)):
+        if db_description is not None:
             self.spark.sql(f"""
                 COMMENT ON DATABASE {path_db_uc}
                 IS "{db_description}"
@@ -93,7 +90,6 @@ class MetadataUCWriter(BaseDataCatalog):
             executed = True
 
         if executed:
-            # last update
             self.spark.sql(f"""
                 ALTER DATABASE {path_db_uc}
                 SET DBPROPERTIES ('db_catalog_updated_at' = '{current_time}')
@@ -104,7 +100,7 @@ class MetadataUCWriter(BaseDataCatalog):
         df: DataFrame,
         db_name: str,
         path_db_uc: str,
-        list_db_tags_names: List,
+        list_db_tags_names: list,
         current_time: str,
     ) -> None:
         db_description = self.__get_content(df, 'source_description')
@@ -120,7 +116,7 @@ class MetadataUCWriter(BaseDataCatalog):
         except Exception as e:
             self.logger.error(f'Error database: {e}')
 
-    def execute_statements(self, list_statements: List[str], col_name: str) -> None:
+    def execute_statements(self, list_statements: list[str], col_name: str) -> None:
         total_executed = 0
         list_not_executed = []
         for stat in list_statements:
@@ -131,15 +127,8 @@ class MetadataUCWriter(BaseDataCatalog):
                 self.spark.sql(stat)
                 total_executed += 1
 
-                # split logs in notebook
-                if total_executed == 100:
-                    print('100 statements executed.')    
-                elif total_executed == 200:
-                    print('200 statements executed.') 
-                elif total_executed == 300:
-                    print('300 statements executed.') 
-                elif total_executed == 400:
-                    print('400 statements executed.') 
+                if total_executed % PROGRESS_LOG_INTERVAL == 0:
+                    print(f'{total_executed} statements executed.')
 
             except (ParseException, AnalysisException) as e:
                 self.logger.error(f'{e}\n')

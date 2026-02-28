@@ -1,8 +1,4 @@
 import datetime
-from typing import (
-    Dict,
-    List,
-)
 
 from pyspark.sql import (
     DataFrame,
@@ -21,7 +17,7 @@ class Updater(BaseDataCatalog):
     and execute iterations on all objects in Unity Catalog.
     """
     def __init__(
-        self, spark: SparkSession, layer_name: str, dict_map_sources_tables: Dict
+        self, spark: SparkSession, layer_name: str, dict_map_sources_tables: dict
     ):
         super().__init__(spark, layer_name)
         self.full_layer_name = f'{self.env}_{self.layer_name}'
@@ -52,7 +48,7 @@ class Updater(BaseDataCatalog):
                                       for table in db_raw_name]
         return dict_dbs_path
 
-    def get_dict_path_tables(self) -> Dict:
+    def get_dict_path_tables(self) -> dict:
         """
         Return:
             e.g.: { 'compas': ['dev_silver.crew_contact',
@@ -84,7 +80,7 @@ class Updater(BaseDataCatalog):
         df = df_origin_layers.filter(col("layer") == self.layer_name)
         self.writer_uc.execute_set_catalog_metadata(df)
 
-    def __update_db(self, df_origin_sources: DataFrame, list_tags: List[str]) -> None:
+    def __update_db(self, df_origin_sources: DataFrame, list_tags: list[str]) -> None:
         """
         Update the database based on the provided DataFrame and list of tags.
 
@@ -114,7 +110,7 @@ class Updater(BaseDataCatalog):
                 else:
                     self.logger.info(f'The {path} does not exists in UC!')
 
-    def __update_table(self, df_tables: DataFrame, list_tags: List[str]) -> None:
+    def __update_table(self, df_tables: DataFrame, list_tags: list[str]) -> None:
         """
         Updates the table using the provided DataFrame and list of tags.
 
@@ -168,7 +164,7 @@ class Updater(BaseDataCatalog):
         self,
         delta_table_name: str,
         df: DataFrame,
-        list_tags: List = None,
+        list_tags: list = None,
         type_metadata: str = None,
     ) -> None:
         """

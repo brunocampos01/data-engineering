@@ -39,7 +39,7 @@ class AzureADSL:
         try:
             return BlobServiceClient(self.account_url, self._get_access_token())
         except Exception as e:
-            raise Exception(f"Failed to create BlobServiceClient: {e}")
+            raise ConnectionError(f"Failed to create BlobServiceClient: {e}") from e
 
     @staticmethod
     def generate_adsl_path(
@@ -61,10 +61,7 @@ class AzureADSL:
                 e.g.: staging_to_onpremises/csldw/dim_account/dim_account_20230728171730.html
         """
         curr_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
-        return f"{step_layers}" \
-               f"/{schema_target_name}" \
-               f"/{table_target_name}" \
-               f"/{table_target_name}_{curr_datetime}.html"
+        return f"{step_layers}/{schema_target_name}/{table_target_name}/{table_target_name}_{curr_datetime}.html"
 
     def save_report_tests(
             self,
@@ -82,16 +79,16 @@ class AzureADSL:
                 e.g: quality-assurance
         """
         adsl_conn = self._create_conn()
-        adsl_conn.get_container_client(container_name)
         blob_client = adsl_conn.get_blob_client(container_name, adsl_path)
 
         try:
             blob_client.upload_blob(html_result_gx)
         except TypeError as e:
-            raise Exception(
+            raise TypeError(
                 f"Failed to upload blob. Check the parameters:\n"
                 f"container_name: {container_name}\n"
                 f"adsl_path: {adsl_path}\n"
-                f"{e} the html_result_gx needs to be string.")
+                f"html_result_gx needs to be string."
+            ) from e
         else:
             logger.info(f"Saved at: {self.account_url}/{container_name}/{adsl_path}")

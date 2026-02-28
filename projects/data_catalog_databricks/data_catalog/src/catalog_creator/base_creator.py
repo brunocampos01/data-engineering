@@ -1,6 +1,3 @@
-import os
-from typing import Dict
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -13,8 +10,10 @@ from data_catalog.src.loader.delta_table_loader import DeltaTableLoader
 class BaseCreator(BaseDataCatalog):
     def __init__(self, spark: SparkSession, layer_name: str, owner: str):
         super().__init__(spark, layer_name)
-        self.env = os.getenv("Environment").lower()
         self.owner = owner
+
+    def use_catalog(self) -> None:
+        self.spark.sql(f"USE CATALOG `{self.catalog_name}`")
 
     def _load_delta_table(self, table_name: str) -> DataFrame:
         return DeltaTableLoader(
@@ -25,7 +24,7 @@ class BaseCreator(BaseDataCatalog):
         ).execute(table_name)
 
     @staticmethod
-    def get_dict_comment_cols() -> Dict:
+    def get_dict_comment_cols() -> dict[str, str]:
         """
         Returns a dict containing {column_name: comment}.
         """
@@ -114,7 +113,7 @@ class BaseCreator(BaseDataCatalog):
         }
 
     @staticmethod
-    def get_dict_bronze_table_pk() -> Dict:
+    def get_dict_bronze_table_pk() -> dict:
         """
         Returns a dict containing {table_name: primary_key} in a bronze tables.
         """
@@ -127,7 +126,7 @@ class BaseCreator(BaseDataCatalog):
         }
 
     @staticmethod
-    def get_dict_silver_table_pk() -> Dict:
+    def get_dict_silver_table_pk() -> dict:
         """
         Returns a dict containing {table_name: primary_key} in a silver tables.
         """
@@ -142,7 +141,7 @@ class BaseCreator(BaseDataCatalog):
         }
 
     @staticmethod
-    def get_dict_gold_fact_pk() -> Dict:
+    def get_dict_gold_fact_pk() -> dict:
         """
         Returns a dict containing {table_name: primary_key} in a gold tables.
         """

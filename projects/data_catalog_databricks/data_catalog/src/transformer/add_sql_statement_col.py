@@ -1,5 +1,3 @@
-from typing import List
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -140,7 +138,7 @@ class AddSQLStatementCol(BaseDataCatalog):
     def execute(
         self, 
         df: DataFrame,
-        list_origin_tags_names: List[str],
+        list_origin_tags_names: list[str],
         table_name: str,
     ) -> DataFrame:
         df = self._add_col_tags_aggregated(df, list_origin_tags_names)

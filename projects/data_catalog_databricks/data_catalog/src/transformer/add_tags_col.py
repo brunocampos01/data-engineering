@@ -1,5 +1,3 @@
-from typing import List
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -20,14 +18,12 @@ class AddTagsCols(BaseDataCatalog):
 
     @staticmethod
     def _remove_prefix_tag_cols(df: DataFrame, table_name: str) -> DataFrame:
-        for col_name in df.columns:
-            if col_name.startswith(f'tag_{table_name}_'):
-                df = df.withColumnRenamed(col_name,
-                                          col_name.replace(f'tag_{table_name}_', ''))
-        return df
+        prefix = f'tag_{table_name}_'
+        new_names = [c.replace(prefix, '') if c.startswith(prefix) else c for c in df.columns]
+        return df.toDF(*new_names)
 
     @staticmethod
-    def add_new_tag(df: DataFrame, list_new_tags_tables: List[str]) -> DataFrame:
+    def add_new_tag(df: DataFrame, list_new_tags_tables: list[str]) -> DataFrame:
         """
         Create a empty column in df from Azure ADLS.
         This column will use in transformation step.
@@ -61,7 +57,7 @@ class AddTagsCols(BaseDataCatalog):
         df_uc = self._remove_prefix_tag_cols(df=df_uc, table_name=singular_table_name)
         list_new_tags_tables = [c for c in df_origin.columns if c not in df_uc.columns]
 
-        if len(list_new_tags_tables) > 0:
+        if list_new_tags_tables:
             self.logger.info(f'New tags to add in {table_name}: {list_new_tags_tables}')
             df_uc = self.add_new_tag(df=df_uc, list_new_tags_tables=list_new_tags_tables)
 

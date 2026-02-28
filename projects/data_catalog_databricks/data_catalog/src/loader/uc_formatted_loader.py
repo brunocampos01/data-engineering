@@ -21,13 +21,8 @@ class UCFormattedLoader(BaseDataCatalog):
         Load the data from Unity Catalog and format the schema to
         following the same schema from origin (Excel).
         """
-        uc_transformer = UCTransformer(self.spark, self.layer_name)
-
-        # load from UC based on the queries
-        df = uc_transformer.execute(
+        return UCTransformer(self.spark, self.layer_name).execute(
             table_name=table_name,
             file_path_sql_info_schema=file_path_sql_info_schema,
             file_path_sql_tags=file_path_sql_tags,
         )
-
-        return df

@@ -1,8 +1,4 @@
 import os
-from typing import (
-    Dict,
-    List,
-)
 
 from pyspark.sql import (
     DataFrame,
@@ -15,11 +11,13 @@ from library.logger_provider import LoggerProvider
 logger = LoggerProvider.get_logger()
 
 
-def get_list_statements(df: DataFrame, type_statement_col_name: str) -> List[str]:
-    return df.filter(col(type_statement_col_name) != '') \
-        .select(type_statement_col_name) \
-        .rdd.flatMap(lambda x: x) \
+def get_list_statements(df: DataFrame, type_statement_col_name: str) -> list[str]:
+    return (
+        df.filter(col(type_statement_col_name) != '')
+        .select(type_statement_col_name)
+        .rdd.flatMap(lambda x: x)
         .collect()
+    )
 
 
 def get_changes_origin(df_dest: DataFrame, df_origin: DataFrame) -> DataFrame:
@@ -41,7 +39,7 @@ def get_changes_origin(df_dest: DataFrame, df_origin: DataFrame) -> DataFrame:
     return df_origin.subtract(df_dest)
 
 
-def get_tag_names(df: DataFrame) -> List:
+def get_tag_names(df: DataFrame) -> list[str]:
     """
     Extracts column names from a DataFrame
     that start with 'tag_' and returns them as a list.
@@ -50,19 +48,19 @@ def get_tag_names(df: DataFrame) -> List:
         e.g.: df_uc_tables
 
     Returns:
-    List: A list containing column names that start with 'tag_'.
+    list[str]: A list containing column names that start with 'tag_'.
         e.g.: ['tag_table_data_steward', 'tag_table_frequency_ingestion']
     """
     return [c for c in df.columns if c.startswith('tag_')]
 
 
-def count_values_dict(dict_map_sources: Dict[str, List]) -> Dict[str, int]:
+def count_values_dict(dict_map_sources: dict[str, list]) -> dict[str, int]:
     """
     Count the number of elements in each
     value list of the dictionary and log the results.
 
     Args:
-        dict_map_sources (Dict[str, list]): A dictionary mapping keys to lists.
+        dict_map_sources (dict[str, list]): A dictionary mapping keys to lists.
             e.g.: {'a': [1, 2, 3], 'b': [4, 5], 'c': []})
     Return:
         e.g.: {
@@ -80,8 +78,7 @@ def count_values_dict(dict_map_sources: Dict[str, List]) -> Dict[str, int]:
     return count_dict
 
 
-
-def get_common_cols_between_df(df_one: DataFrame, df_two: DataFrame) -> List:
+def get_common_cols_between_df(df_one: DataFrame, df_two: DataFrame) -> list[str]:
     """
     Get common columns between two Spark DataFrames.
 
@@ -90,17 +87,15 @@ def get_common_cols_between_df(df_one: DataFrame, df_two: DataFrame) -> List:
         df_two (pyspark.sql.DataFrame): Second DataFrame.
 
     Returns:
-        list: List of common columns between the two DataFrames.
+        list[str]: Common columns between the two DataFrames.
     """
-    cols_one = set(df_one.columns)
-    cols_two = set(df_two.columns)
-    return list(cols_one.intersection(cols_two))
+    return list(set(df_one.columns) & set(df_two.columns))
 
 
 def generate_list_cols_to_orderby(
-    list_cols_groupby: List,
-    list_fields_tags_names_cols: List,
-) -> List:
+    list_cols_groupby: list[str],
+    list_fields_tags_names_cols: list[str],
+) -> list[str]:
     """
     Generates a list of columns to be used for ordering in a SQL query.
     This function takes two lists of column names and combines them to create a
@@ -118,20 +113,20 @@ def generate_list_cols_to_orderby(
             generate_list_cols_to_orderby(list_cols_groupby, list_fields_tags_names_cols)
             ['category', 'year', 'sales', 'product_name']
     """
-    list_cols = []
-    list_cols.extend(list_cols_groupby)
-    list_cols.extend(list_fields_tags_names_cols)
-    return list_cols
+    return list_cols_groupby + list_fields_tags_names_cols
 
 
-def get_list_tables(df: DataFrame, layer: str, uc_db_name: str) -> List:
+def get_list_tables(df: DataFrame, layer: str, uc_db_name: str) -> list[str]:
     """
     Get a list of tables from a df. Used to at dataCatalog.xlx tab: Tables
     """
-    df = df.filter(col("layer") == layer) \
-           .filter(col("source_raw") == uc_db_name) \
-           .select(col('table'))
-    return [row['table'] for row in df.collect()]
+    rows = (
+        df.filter(col("layer") == layer)
+        .filter(col("source_raw") == uc_db_name)
+        .select(col('table'))
+        .collect()
+    )
+    return [row['table'] for row in rows]
 
 
 def get_remote_spark() -> SparkSession:
@@ -142,19 +137,16 @@ def get_remote_spark() -> SparkSession:
         SparkSession: The Spark session connected to the remote Databricks cluster.
     """
     try:
-        # Retrieve environment variables
-        HOST_DATABRICKS = os.getenv('HOST_DATABRICKS')
-        TOKEN_DATABRICKS = os.getenv('TOKEN_DATABRICKS')
-        CLUSTER_ID_DATABRICKS = os.getenv('CLUSTER_ID_DATABRICKS')
+        host = os.getenv('HOST_DATABRICKS')
+        token = os.getenv('TOKEN_DATABRICKS')
+        cluster_id = os.getenv('CLUSTER_ID_DATABRICKS')
 
-        return SparkSession \
-            .builder \
-            .remote(f'sc://{HOST_DATABRICKS}:443/;'
-                    f'token={TOKEN_DATABRICKS};'
-                    f'use_ssl=true;'
-                    f'x-databricks-cluster-id={CLUSTER_ID_DATABRICKS}') \
-            .appName('spark_remote_connect') \
+        return (
+            SparkSession.builder
+            .remote(f'sc://{host}:443/;token={token};use_ssl=true;x-databricks-cluster-id={cluster_id}')
+            .appName('spark_remote_connect')
             .getOrCreate()
+        )
     except Exception:
         return SparkSession.builder.getOrCreate()
 

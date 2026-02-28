@@ -1,11 +1,5 @@
 import os
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Tuple,
-)
+from typing import Any
 
 from pyspark.sql import SparkSession
 
@@ -27,7 +21,7 @@ class Creator(BaseCreator):
         self.max_execution_time = 60
 
     @staticmethod
-    def find_key_by_value(dictionary: Dict, target_value: Any) -> Optional[Any]:
+    def find_key_by_value(dictionary: dict, target_value: Any) -> Any | None:
         """
         Find and return the key in the dict that corresponds to the given target value.
 
@@ -38,17 +32,14 @@ class Creator(BaseCreator):
         Returns:
             Any: The key in the dict
         """
-        for key, value in dictionary.items():
-            if value == target_value:
-                return key
-        return None
+        return next((key for key, value in dictionary.items() if value == target_value), None)
 
-    def get_sk_names(self, list_delta_tables: List[str]) -> Tuple[Dict, Dict]:
+    def get_sk_names(self, list_delta_tables: list[str]) -> tuple[dict, dict]:
         """
         Get surrogate key names from a list of delta tables.
 
         Parameters:
-            list_delta_tables (List[str]): A list of delta table names.
+            list_delta_tables (list[str]): A list of delta table names.
                 e.g.: ['data_stewards', 'fields', 'layers', 'sources', 'tables']
 
         Returns:
@@ -83,7 +74,7 @@ class Creator(BaseCreator):
 
         return dict_fact_sk, dict_dim_sk
 
-    def add_comments(self, list_delta_tables: List[str]) -> None:
+    def add_comments(self, list_delta_tables: list[str]) -> None:
         """
         Adds a comment to the specified col
 
@@ -100,10 +91,10 @@ class Creator(BaseCreator):
                         ALTER TABLE `{self.env}_data_catalog`.`{self.layer_name}`.`{table_name}`
                         ALTER COLUMN {column_name} COMMENT '{comment_msg}'
                     """)
-                except Exception as e:
+                except Exception:
                     continue
 
-    def add_pk(self, dict_pk: Dict) -> None:
+    def add_pk(self, dict_pk: dict) -> None:
         """
         Adds a primary key constraint to the specified col
 
@@ -126,7 +117,7 @@ class Creator(BaseCreator):
                     """)
 
                 except Exception as e:
-                    raise Exception(f"Error adding PK constraint for {table}:\n{e}")
+                    raise RuntimeError(f"Error adding PK constraint for {table}") from e
 
             else:
                 # composite key
@@ -149,7 +140,7 @@ class Creator(BaseCreator):
                 """)
 
     def add_fk(
-        self, dict_gold_fact_sk: Dict[str, list], dict_gold_dim_sk: Dict[str, str]
+        self, dict_gold_fact_sk: dict[str, list], dict_gold_dim_sk: dict[str, str]
     ) -> None:
         """
         Adds foreign key constraints to the specified columns
@@ -189,10 +180,11 @@ class Creator(BaseCreator):
                     """)
 
                 except Exception as e:
-                    raise Exception(f"Error adding FK for "
-                                    f"{self.env}_data_catalog.{self.layer_name}.{table} in {column_name}:\n{e}")
+                    raise RuntimeError(
+                        f"Error adding FK for {self.env}_data_catalog.{self.layer_name}.{table} in {column_name}"
+                    ) from e
 
-    def create_tables(self, list_delta_tables: List[str]) -> None:
+    def create_tables(self, list_delta_tables: list[str]) -> None:
         table_helper = TableHelper(
             spark=self.spark, 
             layer_name=self.layer_name, 
@@ -209,25 +201,25 @@ class Creator(BaseCreator):
             table_helper.alter_tags(self.layer_name, table_name)
             table_helper.comment_on_table(self.layer_name, table_name)
 
-    def __process_bronze(self, list_delta_tables: List[str]) -> None:
+    def __process_bronze(self, list_delta_tables: list[str]) -> None:
         self.create_tables(list_delta_tables)
         dict_bronze_table_pk = self.get_dict_bronze_table_pk()
         self.add_pk(dict_bronze_table_pk)
         self.add_comments(list_delta_tables)
 
-    def __process_silver(self, list_delta_tables: List[str]) -> None:
+    def __process_silver(self, list_delta_tables: list[str]) -> None:
         self.create_tables(list_delta_tables)
         dict_silver_table_pk = self.get_dict_silver_table_pk()
         self.add_pk(dict_silver_table_pk)
         self.add_comments(list_delta_tables)
 
-    def __process_gold(self, list_delta_tables: List[str]) -> None:
+    def __process_gold(self, list_delta_tables: list[str]) -> None:
         self.create_tables(list_delta_tables)
 
         # constraints
         dict_gold_fact_pk = self.get_dict_gold_fact_pk()
         dict_gold_fact_sk, dict_gold_dim_sk = self.get_sk_names(list_delta_tables)
-        dict_gold_dim_pk = dict_gold_dim_sk # to simplify, create a dict with PK dim
+        dict_gold_dim_pk = dict_gold_dim_sk
         self.add_pk(dict_gold_fact_pk)
         self.add_pk(dict_gold_dim_pk)
         self.add_fk(dict_gold_fact_sk, dict_gold_dim_sk)
@@ -238,9 +230,7 @@ class Creator(BaseCreator):
             spark=self.spark, layer_name=self.layer_name, owner=self.owner
         )
 
-        catalog_name = f'{self.env}_data_catalog'
-        if self.env == 'prod':
-            catalog_name = 'data_catalog'
+        catalog_name = 'data_catalog' if self.env == 'prod' else f'{self.env}_data_catalog'
 
         catalog.create(catalog_name)
         catalog.alter_owner(catalog_name)

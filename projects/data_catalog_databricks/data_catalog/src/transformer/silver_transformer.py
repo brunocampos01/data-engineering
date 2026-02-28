@@ -174,20 +174,19 @@ class SilverTransformer(BaseTransformer):
         # Filter to keep only the rows with the latest values
         return df_origin.filter(df_origin.row_number == 1).drop("row_number")
 
-    def __get_latest_operation_timestamp(self, table_id, type: str, describe_history: DataFrame):
+    def __get_latest_operation_timestamp(self, table_id, operation_type: str, describe_history: DataFrame):
+        operations = {
+            'data': ['WRITE', 'MERGE', 'DELETE', 'TRUNCATE'],
+            'schema': ['CREATE TABLE', 'ALTER TABLE', 'CHANGE COLUMN'],
+        }
         try:
-            if type == 'data':
-                result = describe_history \
-                    .filter(col('operation').isin(['WRITE', 'MERGE', 'DELETE', 'TRUNCATE'])) \
-                    .orderBy(col('timestamp').desc()) \
-                    .limit(1)
-            else:
-                result = describe_history \
-                    .filter(col('operation').isin(['CREATE TABLE', 'ALTER TABLE', 'CHANGE COLUMN'])) \
-                    .orderBy(col('timestamp').desc()) \
-                    .limit(1)
-        except Exception as e: # AnalysisException
-            # when the data has problem in Unity CataLog
+            result = (
+                describe_history
+                .filter(col('operation').isin(operations[operation_type]))
+                .orderBy(col('timestamp').desc())
+                .limit(1)
+            )
+        except Exception:
             return None
         else:
             latest_timestamp = result.select('timestamp').first()
@@ -223,22 +222,20 @@ class SilverTransformer(BaseTransformer):
 
                 try:
                     latest_timestamp_data = self.__get_latest_operation_timestamp(t_id, 'data', describe_history)
-                except Exception as e: # AnalysisException
-                    # when the data has problem in Unity Catlog
+                except Exception:
                     latest_timestamp_data = None
 
                 try:
                     latest_timestamp_schema = self.__get_latest_operation_timestamp(t_id, 'schema', describe_history)
-                except Exception as e: # AnalysisException
-                    # when the data has problem in Unity CataLog
+                except Exception:
                     latest_timestamp_schema = None
 
-            if latest_timestamp_data == None:
+            if latest_timestamp_data is None:
                 latest_timestamp_data = self._get_table_last_updated_at(df, t_id)
 
             last_changed_data.append(latest_timestamp_data)
 
-            if latest_timestamp_schema == None:
+            if latest_timestamp_schema is None:
                 latest_timestamp_schema = self._get_table_last_updated_at(df, t_id)
 
             last_changed_schema.append(latest_timestamp_schema)

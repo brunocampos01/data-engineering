@@ -7,12 +7,6 @@ class DBHelper(BaseCreator):
     def __init__(self, spark: SparkSession, layer_name: str, owner: str):
         super().__init__(spark, layer_name, owner)
 
-    def use_catalog(self) -> None:
-        if self.env == 'prod':
-            return self.spark.sql("USE CATALOG `data_catalog`")
-        else:
-            return self.spark.sql(f"USE CATALOG `{self.env}_data_catalog`")
-
     def create(self, db: str) -> None:
         return self.spark.sql(f"CREATE DATABASE IF NOT EXISTS `{db}`")
 

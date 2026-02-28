@@ -1,5 +1,3 @@
-from typing import List
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -22,7 +20,7 @@ class UCTransformer(BaseTransformer):
         super().__init__(spark, layer_name)
 
     @staticmethod
-    def _pivot_df_tags(df: DataFrame, list_to_group_by: List[str]) -> DataFrame:
+    def _pivot_df_tags(df: DataFrame, list_to_group_by: list[str]) -> DataFrame:
         """
         Pivot DataFrame on tag_name.
 

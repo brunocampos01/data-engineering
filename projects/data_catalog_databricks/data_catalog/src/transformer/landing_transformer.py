@@ -1,8 +1,3 @@
-from typing import (
-    Dict,
-    List,
-)
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -33,7 +28,7 @@ class LandingTransformer(BaseTransformer):
     def _filter_layer(self, df: DataFrame) -> DataFrame:
         return df.filter(col("layer") == self.layer_name)
 
-    def __process_sources(self, df_origin: DataFrame, list_origin_tags_names: List[str]) -> DataFrame:
+    def __process_sources(self, df_origin: DataFrame, list_origin_tags_names: list[str]) -> DataFrame:
         """
         Process source data.
 
@@ -53,7 +48,7 @@ class LandingTransformer(BaseTransformer):
         )
 
     def __process_tables(
-        self, df_origin: DataFrame,  df_uc: DataFrame, list_origin_tags_names: List[str]
+        self, df_origin: DataFrame,  df_uc: DataFrame, list_origin_tags_names: list[str]
     ) -> DataFrame:
         """
         Process table data.
@@ -90,7 +85,7 @@ class LandingTransformer(BaseTransformer):
         return df_origin
 
     def __process_fields(
-        self, df_origin: DataFrame, df_uc: DataFrame, list_origin_tags_names: List[str]
+        self, df_origin: DataFrame, df_uc: DataFrame, list_origin_tags_names: list[str]
     ) -> DataFrame:
         """
         Process field data.
@@ -125,8 +120,8 @@ class LandingTransformer(BaseTransformer):
         self,
         df_origin: DataFrame,
         table_name: str,
-        dict_map_sources_tables: Dict,
-        list_origin_tags_names: List[str],
+        dict_map_sources_tables: dict,
+        list_origin_tags_names: list[str],
         df_uc: DataFrame = None,
     ) -> DataFrame:
         """

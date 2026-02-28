@@ -18,8 +18,7 @@ class DeltaTableLoader(BaseDataCatalog):
         super().__init__(spark, layer_name)
         self.container_name = container_name
         self.folder = folder_name
-        self.delta_path = DataLakeStorage \
-            .get_storage_url(self.container_name, self.folder)
+        self.delta_path = DataLakeStorage.get_storage_url(self.container_name, self.folder)
         self.spark.conf.set("spark.sql.broadcastTimeout", "600")
 
     # TODO: change to uc_loader
@@ -39,20 +38,16 @@ class DeltaTableLoader(BaseDataCatalog):
             |           bloomberg|       database|                    |
             |           bloomberg|       database|                None|
         """
-        environment = self.env
-        if environment == 'prod':
-            environment = ''
-        else:
-            environment = f'{environment}_'
+        environment = '' if self.env == 'prod' else f'{self.env}_'
 
         try:
             with open(query_file_path) as f:
                 query = f.read()
             query = query.replace('<env>', environment)
-        except OSError:
-            raise OSError(f"File not found! Check if is correct: {query_file_path}")
+        except OSError as e:
+            raise FileNotFoundError(f"File not found! Check if is correct: {query_file_path}") from e
         except Exception as e:
-            raise Exception(f"Error loading data from {query_file_path}:\n{str(e)}")
+            raise RuntimeError(f"Error loading data from {query_file_path}") from e
 
         df = self.spark.sql(query)
         return df.cache()

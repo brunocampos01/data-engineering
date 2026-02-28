@@ -1,8 +1,3 @@
-from typing import (
-    Dict,
-    List,
-)
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -33,8 +28,8 @@ class GoldFactMeasuresTransformer(AddDWCols):
 
     @staticmethod
     def __get_list_possible_cols_to_document(
-            fact_name: str, list_tags_names: List[str], list_not_dim: List[str]
-    ) -> List[str]:
+            fact_name: str, list_tags_names: list[str], list_not_dim: list[str]
+    ) -> list[str]:
         """
         Return a list of columns (places) that is possible to fill in.
 
@@ -58,7 +53,7 @@ class GoldFactMeasuresTransformer(AddDWCols):
         return list(set(list_tags_names + list_not_dim + [f"{fact_name}_description"]))
 
     def __generate_report(
-            self, fact_name: str, dict_list_tags: Dict, df: DataFrame, list_cols_to_document: List
+            self, fact_name: str, dict_list_tags: dict, df: DataFrame, list_cols_to_document: list
     ) -> None:
         getter_method = getattr(self, f'get_list_{fact_name}s_tags_not_dim', None)
         list_not_dim = getter_method()
@@ -90,7 +85,7 @@ class GoldFactMeasuresTransformer(AddDWCols):
         self.logger.info(f"******************************************")
         df.display()
 
-    def __join_all_fact(self, df: DataFrame, dict_df: Dict) -> DataFrame:
+    def __join_all_fact(self, df: DataFrame, dict_df: dict) -> DataFrame:
         df.createOrReplaceTempView("fact_sources")
         dict_df.get('fact_tables').createOrReplaceTempView("fact_tables")
         dict_df.get('fact_fields').createOrReplaceTempView("fact_fields")
@@ -137,7 +132,7 @@ class GoldFactMeasuresTransformer(AddDWCols):
                         when(col("total_tables_by_source_by_data_steward").isNull(), 0) \
                         .otherwise(col("total_tables_by_source_by_data_steward")))
 
-    def __join_tables_and_fields_fact(self, df: DataFrame, dict_df: Dict) -> DataFrame:
+    def __join_tables_and_fields_fact(self, df: DataFrame, dict_df: dict) -> DataFrame:
         df.createOrReplaceTempView("fact_tables")
         dict_df.get('fact_fields').createOrReplaceTempView("fact_fields")
         return self.spark.sql("""
@@ -169,7 +164,7 @@ class GoldFactMeasuresTransformer(AddDWCols):
         return df.dropDuplicates(['pk_fact_table'])
 
     def __process_sources(
-            self, df_fact: DataFrame, dict_df: Dict, to_doc_fields: int, to_doc_tables: int,
+            self, df_fact: DataFrame, dict_df: dict, to_doc_fields: int, to_doc_tables: int,
     ) -> DataFrame:
         df = self.add_col_total_tables_by_source(df_fact, dict_df.get('fact_tables'))
         df = self.add_col_sum_qty_table_documented_by_source(df)
@@ -185,7 +180,7 @@ class GoldFactMeasuresTransformer(AddDWCols):
 
         return df
 
-    def __process_tables(self, df: DataFrame, dict_df: Dict, to_doc_fields: int) -> DataFrame:
+    def __process_tables(self, df: DataFrame, dict_df: dict, to_doc_fields: int) -> DataFrame:
         # Metric rules:
         # The only 'fact_table' and 'fact_source' need to have the qty_total columns
         # fact_fields will use directly the qty_field_document and qty_field_documented
@@ -209,9 +204,11 @@ class GoldFactMeasuresTransformer(AddDWCols):
         fact_name: str,
         df_fact: DataFrame,
         df_base: DataFrame,
-        dict_list_tags: Dict,
-        dict_df: Dict = {},
+        dict_list_tags: dict,
+        dict_df: dict | None = None,
     ) -> DataFrame:
+        if dict_df is None:
+            dict_df = {}
         list_cols_to_document = self.__get_list_cols_to_document(df_base, fact_name)
         list_not_dim = getattr(self, f"get_list_{fact_name}s_tags_not_dim")()
         total_to_doc = len(list_cols_to_document)

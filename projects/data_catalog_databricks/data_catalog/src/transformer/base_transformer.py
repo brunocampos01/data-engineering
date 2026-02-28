@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from typing import List
 
 from pyspark.dbutils import DBUtils
 from pyspark.sql import (
@@ -67,7 +66,7 @@ class BaseTransformer(BaseDataCatalog):
 
     @staticmethod
     def add_prefix_tag_cols(
-            df: DataFrame, table_name: str, list_tag_names: List
+            df: DataFrame, table_name: str, list_tag_names: list
     ) -> DataFrame:
         for col_name in list_tag_names:
             df = df.withColumnRenamed(col_name, f'tag_{table_name}_{col_name}')
@@ -75,7 +74,7 @@ class BaseTransformer(BaseDataCatalog):
         return df
 
     @staticmethod
-    def clean_col_name(df: DataFrame, table_name: str, list_to_exclude: List[str]) -> DataFrame:
+    def clean_col_name(df: DataFrame, table_name: str, list_to_exclude: list[str]) -> DataFrame:
         list_cols = [c for c in df.columns if c not in list_to_exclude]
         return df.select(
             *[
@@ -259,7 +258,7 @@ class BaseTransformer(BaseDataCatalog):
         ).withColumn("field_id", lower(col("field_id")))
 
     def add_col_sql_statement(
-        self, df: DataFrame, list_origin_tags_names: List[str], table_name: str
+        self, df: DataFrame, list_origin_tags_names: list[str], table_name: str
     ) -> DataFrame:
         """
         Encapsulated function to add new column.

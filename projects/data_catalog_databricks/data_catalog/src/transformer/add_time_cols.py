@@ -1,5 +1,3 @@
-from typing import List
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -17,7 +15,7 @@ class AddTimeCols(BaseDataCatalog):
     def __init__(self, spark: SparkSession, layer_name: str):
         super().__init__(spark, layer_name)
 
-    def _get_df_table_info_schema(self, list_cols_selected: List) -> DataFrame:
+    def _get_df_table_info_schema(self, list_cols_selected: list) -> DataFrame:
         return self.spark \
             .sql('SELECT * FROM `system`.`information_schema`.`tables`') \
             .select(list_cols_selected)

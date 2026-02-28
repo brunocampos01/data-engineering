@@ -1,5 +1,3 @@
-from typing import List
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -167,7 +165,7 @@ class AddDWCols(DWTransformer):
         return df.withColumn(f"qty_{fact_name}_document", lit(total_to_document))
 
     def add_qty_documented_col(
-        self, df_fact: DataFrame, df_dim: DataFrame, fact_name: str, list_cols_to_document: List[str], list_not_dim: List[str] 
+        self, df_fact: DataFrame, df_dim: DataFrame, fact_name: str, list_cols_to_document: list[str], list_not_dim: list[str]
     ) -> DataFrame:
         """
         Add a column, in df_base or df_dim, to count total columns that was documented.

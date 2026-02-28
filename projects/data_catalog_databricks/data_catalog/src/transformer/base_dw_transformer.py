@@ -1,5 +1,3 @@
-from typing import List
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -29,32 +27,29 @@ class DWTransformer(BaseTransformer):
         super().__init__(spark, layer_name)
 
     @staticmethod
-    def get_list_sources_tags_not_dim() -> List[str]:
+    def get_list_sources_tags_not_dim() -> list[str]:
         return ['tag_source_active_system', 'tag_source_csl_internal_system']
 
     @staticmethod
-    def get_list_tables_tags_not_dim() -> List[str]:
+    def get_list_tables_tags_not_dim() -> list[str]:
         return ['tag_table_data_steward', 'tag_table_last_data_steward', 'tag_table_source_system']
 
     @staticmethod
-    def get_list_fields_tags_not_dim() -> List[str]:
+    def get_list_fields_tags_not_dim() -> list[str]:
         return ['tag_field_imo_data_number', 'tag_field_source_of_truth', 'tag_field_data_element']
 
-    def get_list_all_fields_tags_not_dim(self) -> List[str]:
+    def get_list_all_fields_tags_not_dim(self) -> list[str]:
         return self.get_list_fields_tags_not_dim()
 
-    def get_list_all_tables_tags_not_dim(self) -> List[str]:
-        list_all_values = []
-        list_all_values.extend(self.get_list_fields_tags_not_dim())
-        list_all_values.extend(self.get_list_tables_tags_not_dim())
-        return list_all_values
+    def get_list_all_tables_tags_not_dim(self) -> list[str]:
+        return self.get_list_fields_tags_not_dim() + self.get_list_tables_tags_not_dim()
 
-    def get_list_all_sources_tags_not_dim(self) -> List[str]:
-        list_all_values = []
-        list_all_values.extend(self.get_list_fields_tags_not_dim())
-        list_all_values.extend(self.get_list_tables_tags_not_dim())
-        list_all_values.extend(self.get_list_sources_tags_not_dim())
-        return list_all_values
+    def get_list_all_sources_tags_not_dim(self) -> list[str]:
+        return (
+            self.get_list_fields_tags_not_dim()
+            + self.get_list_tables_tags_not_dim()
+            + self.get_list_sources_tags_not_dim()
+        )
 
     @staticmethod
     def get_list_cols_dim_layers():
@@ -72,19 +67,7 @@ class DWTransformer(BaseTransformer):
         Get a list of column names for the dimension sources.
 
         Returns:
-            List[str]: List of column names for the dimension sources.
-        """
-        return ['source', 'source_description',
-                'source_created_in_uc_at', 'source_last_updated_at',
-                'tag_source_active_system', 'tag_source_csl_internal_system']
-
-    @staticmethod
-    def get_list_cols_dim_sources():
-        """
-        Get a list of column names for the dimension sources.
-
-        Returns:
-            List[str]: List of column names for the dimension sources.
+            list[str]: List of column names for the dimension sources.
         """
         return ['source', 'source_description',
                 'source_created_in_uc_at', 'source_last_updated_at',
@@ -119,7 +102,7 @@ class DWTransformer(BaseTransformer):
                 'tag_field_imo_data_number', 'tag_field_source_of_truth']
 
     @staticmethod
-    def select_only_fact_cols(df: DataFrame, fact_name: str, list_not_dim: List[str] = []) -> DataFrame:
+    def select_only_fact_cols(df: DataFrame, fact_name: str, list_not_dim: list[str] | None = None) -> DataFrame:
         """
         Select cols from a PySpark DataFrame that start with 'pk', 'sk', or 'qty'.
 
@@ -129,17 +112,15 @@ class DWTransformer(BaseTransformer):
         Returns:
             DataFrame: DataFrame with selected columns.
         """
-        selected_cols = [c for c in df.columns
-                         if c.startswith('pk')
-                         or c.startswith('sk')
-                         or c.startswith('qty')
-                         or c.startswith('total')]
+        prefixes = ('pk', 'sk', 'qty', 'total')
+        selected_cols = [c for c in df.columns if c.startswith(prefixes)]
 
-        if fact_name == 'table':
-            selected_cols = [c for c in selected_cols if c not in ['qty_field_documented']]
-
-        elif fact_name == 'field':
-            selected_cols = [c for c in selected_cols if c not in ['qty_table_documented']]
+        exclude = {
+            'table': {'qty_field_documented'},
+            'field': {'qty_table_documented'},
+        }
+        if fact_name in exclude:
+            selected_cols = [c for c in selected_cols if c not in exclude[fact_name]]
 
         return df.select(*selected_cols)
 

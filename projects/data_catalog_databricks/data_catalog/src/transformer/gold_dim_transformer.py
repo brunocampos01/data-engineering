@@ -1,8 +1,3 @@
-from typing import (
-    List,
-    Dict,
-)
-
 from pyspark.sql import (
     DataFrame,
     SparkSession,
@@ -66,10 +61,10 @@ class GoldDimTransformer(AddDWCols):
     def execute_by_tags(
         self,
         df: DataFrame,
-        list_tags_names: List,
+        list_tags_names: list,
         writer_delta_table: DeltaTableWriter,
-        list_tags_not_dim: List = [],
-    ) -> Dict:
+        list_tags_not_dim: list | None = None,
+    ) -> dict:
         """
         Return:
             A dict that will use to generate the fact table
@@ -79,6 +74,9 @@ class GoldDimTransformer(AddDWCols):
                     'tag_field_category': DataFrame[tag_field_category: string, ...
                 }
         """
+        if list_tags_not_dim is None:
+            list_tags_not_dim = []
+
         dict_df_dim_tags = {}
         list_tags_names = [tag_name for tag_name in list_tags_names
                            if tag_name not in list_tags_not_dim]
