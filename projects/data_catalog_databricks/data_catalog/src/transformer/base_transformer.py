@@ -52,10 +52,10 @@ class BaseTransformer(BaseDataCatalog):
     def _load_delta_table(
         self, table_name: str, layer_name: str = None, folder_name: str = None
     ) -> DataFrame:
-        if layer_name == None:
+        if layer_name is None:
             layer_name = self.layer_name
 
-        if folder_name == None:
+        if folder_name is None:
             folder_name = self.folder_name
 
         return DeltaTableLoader(

@@ -21,8 +21,8 @@ class Creator(BaseCreator):
         self.catalog_name = f"{self.env}_data_catalog"
         self.folder_name = 'data_catalog'
         self.storage_account = storage_account
-        self.sql_base_path = "".join(os.getcwd() + "/../" + "src/catalog_creator/").replace('/Workspace', '')
-        self.sql_path_create_table = "".join(self.sql_base_path + "create_table")
+        self.sql_base_path = os.path.join(os.getcwd(), '..', 'src', 'catalog_creator').replace('/Workspace', '')
+        self.sql_path_create_table = os.path.join(self.sql_base_path, 'create_table')
         self.parent_folder = os.path.dirname(os.getcwd())
         self.max_execution_time = 60
 
@@ -141,7 +141,7 @@ class Creator(BaseCreator):
                         # the NOT NULL can already exists
                         continue
 
-                key_composite = str(list_cols).replace('[', '').replace(']', '').replace('\'', '`')
+                key_composite = ', '.join(f'`{c}`' for c in list_cols)
                 constraint_name = f'{self.layer_name}_{table}_{list_cols[0]}_{list_cols[1]}_pk_composite'
                 self.spark.sql(f"""
                     ALTER TABLE `{self.env}_data_catalog`.`{self.layer_name}`.`{table}`

@@ -59,14 +59,14 @@ class ExcelLoader(BaseDataCatalog):
                 with open(excel_file_path, "wb") as blob:
                     data = blob_client.download_blob()
                     data.readinto(blob)
-            except FileExistsError as e:
-                self.logger.warn(
+            except IOError as e:
+                self.logger.warning(
                     f"Failed to download blob. Check the parameters:\n"
                     f"container_name: {self.container_name}\n"
                     f"adls_file_path: {adls_file_path}\n"
                     f"{e}")
             except Exception as e:
-                self.logger.warn(f'The blob does not exist in {self.container_name}. Using {file_name} file.')
+                self.logger.warning(f'The blob does not exist in {self.container_name}. Using {file_name} file.')
                 excel_file_path = file_name
 
             pdf = pd.read_excel(excel_file_path, sheet_tab, header=0, engine='openpyxl')

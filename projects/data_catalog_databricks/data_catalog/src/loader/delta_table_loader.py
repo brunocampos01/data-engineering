@@ -46,15 +46,16 @@ class DeltaTableLoader(BaseDataCatalog):
             environment = f'{environment}_'
 
         try:
-            query = open(query_file_path).read()
+            with open(query_file_path) as f:
+                query = f.read()
             query = query.replace('<env>', environment)
         except OSError:
             raise OSError(f"File not found! Check if is correct: {query_file_path}")
         except Exception as e:
-            Exception(f"Error loading data from {query_file_path}:\n{str(e)}")
-        else:
-            df = self.spark.sql(query)
-            return df.cache()
+            raise Exception(f"Error loading data from {query_file_path}:\n{str(e)}")
+
+        df = self.spark.sql(query)
+        return df.cache()
 
     def execute(self, table_name: str) -> DataFrame:
         """

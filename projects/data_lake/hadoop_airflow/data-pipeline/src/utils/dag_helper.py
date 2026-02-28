@@ -29,9 +29,9 @@ def check_next_dag(**context) -> [str, dict]:
 
 
 def check_len_list_processed_dates(**context) -> [str, dict]:
-    if len(context["list_all_dates"]) >= 0:
+    if len(context["list_all_dates"]) > 0:
         logging.info(f"List contains {len(context['list_all_dates'])} elements")
         return context['true_case']
 
-    self.log.info(f"List not contains elements")
+    logging.info("List contains no elements")
     return context['false_case']

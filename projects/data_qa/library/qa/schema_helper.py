@@ -1,4 +1,5 @@
 from typing import (
+    Any,
     Dict,
     Tuple,
     List,
@@ -79,7 +80,7 @@ class SchemaHelper:
         return StructType(new_fields)
     
     @staticmethod
-    def get_data_type_mapping() -> Dict[str, any]:
+    def get_data_type_mapping() -> Dict[str, Any]:
         """
         ### Get a dict mapping data type strings to their corresponding PySpark data types.
 

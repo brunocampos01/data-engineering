@@ -56,7 +56,7 @@ def get_tag_names(df: DataFrame) -> List:
     return [c for c in df.columns if c.startswith('tag_')]
 
 
-def count_values_dict(dict_map_sources: Dict[str, List]) -> dict[str, int]:
+def count_values_dict(dict_map_sources: Dict[str, List]) -> Dict[str, int]:
     """
     Count the number of elements in each
     value list of the dictionary and log the results.
@@ -79,35 +79,6 @@ def count_values_dict(dict_map_sources: Dict[str, List]) -> dict[str, int]:
 
     return count_dict
 
-
-# def get_obj_type(spark: SparkSession, path_uc: str) -> str:
-#     """
-#     Get the type of an object (table or view) from Unity Catalog
-#
-#     Parameters:
-#     - spark (SparkSession): The Spark session.
-#     - path_uc (str): The path in UC.
-#         e.g.: dev_silver.shipsure_api.crewrank
-#
-#     Returns:
-#         The type of the object, which can be 'VIEW' or 'TABLE'.
-#         If the object does not exist or an error occurs, it returns 'NULL'.
-#     """
-#     try:
-#         desc_table = spark \
-#             .sql(f"describe table extended {path_uc}") \
-#             .filter(col('col_name') == 'Type') \
-#             .collect()[0]
-#     except Exception as e:
-#         logger.error(f'The table/view {path_uc} not found. '
-#                      f'Check if the origin (excel file) is updated.\n{e}')
-#         return 'null'
-#     else:
-#         if desc_table.data_type == 'VIEW':
-#             return 'VIEW'
-#         else:
-#             # in Unity catalog is called: EXTERNAL
-#             return 'TABLE'
 
 
 def get_common_cols_between_df(df_one: DataFrame, df_two: DataFrame) -> List:
@@ -178,7 +149,7 @@ def get_remote_spark() -> SparkSession:
 
         return SparkSession \
             .builder \
-            .remote(f'{HOST_DATABRICKS};'
+            .remote(f'sc://{HOST_DATABRICKS}:443/;'
                     f'token={TOKEN_DATABRICKS};'
                     f'use_ssl=true;'
                     f'x-databricks-cluster-id={CLUSTER_ID_DATABRICKS}') \
@@ -209,7 +180,7 @@ class DbUtils:
 
     def removeAll(self):
         try:
-            dbutils.removeAll()
+            self.dbutils.removeAll()
         except Exception:
             logger.warning('remote mode')
 
@@ -218,7 +189,7 @@ class DbUtils:
             self.dbutils.text(key_name, value)
         except Exception:
             logger.warning('remote mode')
-            path_tmp_file = ''.join('/tmp' + f'/{key_name}.txt')
+            path_tmp_file = f'/tmp/{key_name}.txt'
 
             if os.path.exists(path_tmp_file):
                 os.remove(path_tmp_file)
@@ -231,6 +202,6 @@ class DbUtils:
             return self.dbutils.get(key_name)
         except Exception:
             logger.warning('remote mode')
-            path_tmp_file = ''.join('/tmp' + f'/{key_name}.txt')
+            path_tmp_file = f'/tmp/{key_name}.txt'
             with open(path_tmp_file, 'r') as file:
                 return file.read()

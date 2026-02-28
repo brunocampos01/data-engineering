@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l /Users/nsx001414/projects/data-engineering/**/*.py)",
+      "Bash(git -C /Users/nsx001414/projects/data-engineering log --oneline)"
+    ]
+  }
+}

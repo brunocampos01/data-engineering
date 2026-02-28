@@ -70,7 +70,7 @@ class BaseDataCatalog(ABC):
         """
         return ['layer_raw', 'layer', 'table', 'field',
                 'source_raw', 'source',
-                'data_type', 'path_table_uc', 'path_col_uc'
+                'data_type', 'path_table_uc', 'path_col_uc',
                 'type_obj', 'obj_type',
                 'created_at', 'last_updated_at',
                 'source_created_at', 'source_last_updated_at',

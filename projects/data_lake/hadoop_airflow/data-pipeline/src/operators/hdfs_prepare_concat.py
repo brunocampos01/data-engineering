@@ -26,12 +26,12 @@ class HdfsPrepareConcat(BaseHook):
         hdfs.remove_empty_files(list_hdfs_path=list_path)
 
         self.log.info(f'\n{template}\nGetting paths to concat\n{template}')
-        if context['agg_by'] is 'month':
+        if context['agg_by'] == 'month':
             hdfs.create_dir_first_day(list_hdfs_path=list_path)
 
         self.log.info(list_path)
 
-        if context['agg_by'] is 'month':
+        if context['agg_by'] == 'month':
             self.log.info(f'\n{template}\nCreating folder YEAR/MONTH/01 each month\n{template}')
             list_path_to_mv = hdfs.remove_path_first_day(list_path)
 
