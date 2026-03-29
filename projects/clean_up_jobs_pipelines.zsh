@@ -44,10 +44,10 @@ echo "Deleting jobs..."
 while IFS=$'\t' read -r job_id job_name; do
   [[ -z "${job_id:-}" ]] && continue
 
-  echo "Deleting $job_id -> $job_name"
+  echo "$job_id -> $job_name"
 
   if databricks jobs delete "$job_id"; then
-    echo "Deleted $job_id"
+    echo ""
   else
     echo "Job $job_id does not exist or was already deleted. Skipping."
   fi
